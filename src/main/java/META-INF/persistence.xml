@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+      http://java.sun.com/xml/ns/persistence
+      http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	<persistence-unit name="jpapi">
+
+		<!--
+			Uncomment one of the following to enable a non-default JPA provider
+		-->
+                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<!--
+			
+			<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		-->
+
+
+		<!--
+			Glassfish Default Datasource
+                -->
+		<jta-data-source>jdbc/__default</jta-data-source>
+		<!---->
+
+		<!--
+			JBoss Default Datasource
+			<jta-data-source>java:/DefaultDS</jta-data-source>
+		-->
+                <class>org.jpapi.model.BussinesEntity</class>
+                <class>org.jpapi.model.BussinesEntityType</class>
+                <class>org.jpapi.model.BussinesEntityAttribute</class>
+                <class>org.jpapi.model.management.Organization</class>
+                <class>org.jpapi.model.management.Owner</class>
+                <class>org.jpapi.model.Group</class>
+                <class>org.jpapi.model.Membership</class>
+                <class>org.jpapi.model.Member</class>
+                <class>org.jpapi.model.Property</class>
+                <class>org.jpapi.model.Structure</class>
+                <class>org.jpapi.model.profile.Profile</class>
+                <!-- Security schema based on Picketlink-->
+                <class>org.jpapi.model.security.IdentityObject</class>
+                <class>org.jpapi.model.security.IdentityObjectAttribute</class>
+                <class>org.jpapi.model.security.IdentityObjectCredential</class>
+                <class>org.jpapi.model.security.IdentityObjectRelationship</class>
+                <class>org.jpapi.model.security.IdentityObjectRelationshipType</class>
+                <class>org.jpapi.model.security.IdentityObjectType</class>
+                <class>org.jpapi.model.security.IdentityRoleName</class>
+        </persistence-unit>
+		<properties>
+			<!-- Properties for Hibernate (default provider for JBoss AS) -->
+			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.transaction.flush_before_completion"
+				value="true" />
+			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.HashtableCacheProvider" />
+                        <property name="hibernate.dialect" value="org.hibernate.dialect.DerbyTenSevenDialect"/>
+
+			<!-- Properties for EclipseLink (default provider for GlassFish) 
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+			<property name="eclipselink.logging.level" value="FINE" />
+                        -->
+
+		</properties>
+	</persistence-unit>
+</persistence>
