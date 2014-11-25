@@ -1,4 +1,3 @@
 jpapi
 =====
-
-JPA API for start a new project
+JPA API for start a new project. Set of base model and controller for persistence. Included some utils class for strings, lists and more...
