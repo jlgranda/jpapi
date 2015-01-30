@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  */
 @Entity
 @Table(name = "GROUP")
-@DiscriminatorValue(value = "FTGR")
+@DiscriminatorValue(value = "GRP")
 @PrimaryKeyJoinColumn(name = "groupId")
 /*
  * Group querynamed

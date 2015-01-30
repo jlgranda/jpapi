@@ -27,10 +27,10 @@
     <class>org.jpapi.model.Membership</class>
     <class>org.jpapi.model.Property</class>
     <class>org.jpapi.model.Structure</class>
-    <class>org.jpapi.model.profile.Profile</class>
     <class>org.jpapi.model.security.IdentityObject</class>
     <class/>
     <class/>
+    <class>org.jpapi.model.profile.Subject</class>
     <properties>
       <!-- Properties for Hibernate (default provider for JBoss AS) -->
       <property name="hibernate.hbm2ddl.auto" value="create-drop"/>

@@ -52,7 +52,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.jpapi.model.management.Organization;
-import org.jpapi.model.profile.Profile;
+import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Dates;
 
 
@@ -76,7 +76,7 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     
     @ManyToOne(optional = true)
     @JoinColumn(name = "author", nullable = true)
-    private Profile author;
+    private Subject author;
 
     //Best practice http://java.dzone.com/articles/deterring-%E2%80%9Ctomany%E2%80%9D?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3a+javalobby/frontpage+%28Javalobby+/+Java+Zone%29
     //Replace ManyToMany fro OneToMany and link entity
@@ -179,11 +179,11 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
         return false;
     }
 
-    public Profile getAuthor() {
+    public Subject getAuthor() {
         return author;
     }
 
-    public void setAuthor(Profile author) {
+    public void setAuthor(Subject author) {
         this.author = author;
     }
 

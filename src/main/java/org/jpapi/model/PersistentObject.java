@@ -35,6 +35,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -45,6 +47,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import org.jpapi.model.management.Organization;
 
 @MappedSuperclass
 public abstract class PersistentObject<E extends PersistentObject<E>> implements Serializable {
@@ -56,6 +59,9 @@ public abstract class PersistentObject<E extends PersistentObject<E>> implements
     private Long id = null;
     @Column(nullable = true)
     private String code;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CodeType codeType;
     @Column(nullable = true)
     private String name;
     @Column(nullable = true, length = 2048)
@@ -188,6 +194,14 @@ public abstract class PersistentObject<E extends PersistentObject<E>> implements
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public CodeType getCodeType() {
+        return codeType;
+    }
+
+    public void setCodeType(CodeType codeType) {
+        this.codeType = codeType;
     }
     
         

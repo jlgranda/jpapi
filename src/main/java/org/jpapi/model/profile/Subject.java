@@ -41,22 +41,27 @@ import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.Group;
 import org.jpapi.util.Strings;
 
+/**
+ * Un sujeto que tiene acceso y usa el sistema. 
+ * Puede ser un usuario, organización y/o sistema
+ * @author jlgranda
+ */
 
 @Entity
-@Table(name = "Profile")
+@Table(name = "Subject")
 @DiscriminatorValue(value = "PR")
 @PrimaryKeyJoinColumn(name = "id")
 /*
- * Consultas nombradas para Profile
+ * Consultas nombradas para Subject
  */
 @NamedQueries({
-    @NamedQuery(name = "Profile.findUserByLogin", query = "select u from Profile u where u.username = :username"),
-    @NamedQuery(name = "Profile.findRoleById", query = "select u.role from Profile u where u.id = :id"),
-    /*@NamedQuery(name = "Profile.findGroupsByUserAndType", query = "select g FROM Profile u JOIN u.groups g WHERE u=:user and g.type=:groupType"),
-     @NamedQuery(name = "Profile.findUserByGroupsAndRole", query = "select entity From Profile entity join entity.groups g where g in (:groups) and entity.role.name=:role"),*/
-    @NamedQuery(name = "Profile.findUsersByNameOrUsername", query = "select u from Profile u where lower(u.username)  LIKE lower(:name) or lower(u.name) LIKE lower(:name)"),
-    @NamedQuery(name = "Profile.findUserByEmail", query = "from Profile u where u.email = :email")})
-public class Profile extends BussinesEntity implements Serializable {
+    @NamedQuery(name = "Subject.findUserByLogin", query = "select u from Subject u where u.username = :username"),
+    @NamedQuery(name = "Subject.findRoleById", query = "select u.role from Subject u where u.id = :id"),
+    /*@NamedQuery(name = "Subject.findGroupsByUserAndType", query = "select g FROM Subject u JOIN u.groups g WHERE u=:user and g.type=:groupType"),
+     @NamedQuery(name = "Subject.findUserByGroupsAndRole", query = "select entity From Subject entity join entity.groups g where g in (:groups) and entity.role.name=:role"),*/
+    @NamedQuery(name = "Subject.findUsersByNameOrUsername", query = "select u from Subject u where lower(u.username)  LIKE lower(:name) or lower(u.name) LIKE lower(:name)"),
+    @NamedQuery(name = "Subject.findUserByEmail", query = "from Subject u where u.email = :email")})
+public class Subject extends BussinesEntity implements Serializable {
 
     private static final long serialVersionUID = 274770881776410973L;
     @Column(nullable = true)
@@ -221,7 +226,7 @@ public class Profile extends BussinesEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Profile other = (Profile) obj;
+        Subject other = (Subject) obj;
         if (username == null) {
             if (other.username != null) {
                 return false;
@@ -266,7 +271,7 @@ public class Profile extends BussinesEntity implements Serializable {
     @Override
     public String toString() {
         return String.valueOf(getId());
-        /*return Profile.class.getName()
+        /*return Subject.class.getName()
                 + "id=" + getId() + ","
                 + "fullName=" + getFullName() + ","
                 + "IdentityKeys=" + getIdentityKeys() + ","

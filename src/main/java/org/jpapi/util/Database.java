@@ -29,12 +29,12 @@ public class Database {
 
     public static Connection getConnection() throws NamingException,
             SQLException {
-        return Database.getConnection("java:/datasources/ficha-tecnica");
+        return Database.getConnection("java:/datasources/matidoo-db");
     }
     
     public static DataSource getDataSource() throws NamingException,
             SQLException {
-        return Database.getDataSource("java:/datasources/ficha-tecnica");
+        return Database.getDataSource("java:/datasources/matidoo-db");
     }
 
     private static Connection getConnection(String jndiName)
