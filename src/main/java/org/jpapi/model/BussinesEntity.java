@@ -87,7 +87,7 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bussinesEntity", fetch = FetchType.LAZY)
     private List<BussinesEntityAttribute> attributes = new ArrayList<BussinesEntityAttribute>();
     @ManyToOne
-    @JoinColumn(name = "property_id")
+    @JoinColumn(name = "property_id", nullable = true)
     private Property property;
     
     @ManyToOne

@@ -48,7 +48,7 @@ import org.jpapi.util.Strings;
  */
 
 @Entity
-@Table(name = "Subject")
+@Table(name = "SUBJECT")
 @DiscriminatorValue(value = "PR")
 @PrimaryKeyJoinColumn(name = "id")
 /*
@@ -72,7 +72,7 @@ public class Subject extends BussinesEntity implements Serializable {
     private String username;
     @Column(nullable = false)
     private String password;
-    @Column(length = 2147483647)
+    @Column(length = 1024)
     @Basic(fetch = FetchType.LAZY)
     private byte[] photo;
     @Column(nullable = false, length = 128, unique = false)

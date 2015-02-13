@@ -184,4 +184,65 @@ public class Strings {
 	    arr[N] = element;
 	    return arr;
 	}
+        
+        
+    public static String toUpperCase(String str) {
+        if (str == null) {
+            return str;
+        }
+        return str.toUpperCase();
+    }
+    
+    private static final int MINIMUM_SUPPORTED_LENGTH = 4;
+
+    /**
+     * Truncate text on a whitespace boundary (near a specified length). The
+     * length of the resultant string will be in the range:<br>
+     * <code> (requested-length * .25) ~ (requested-length * 1.5) </code>
+     *
+     * @param text
+     *            Text to truncate
+     * @param length
+     *            Target length
+     * @return Truncated text
+     */
+    public static String truncateAtWhitespace(String text, int length) {
+        int desired, lowerBound, upperBound;
+        /*
+         * Make sure we have a reasonable length to work with
+         */
+        if (length < MINIMUM_SUPPORTED_LENGTH) {
+            throw new IllegalArgumentException(
+                    "Requested length too short (must be "
+                            + MINIMUM_SUPPORTED_LENGTH + " or greated)");
+        }
+        /*
+         * No need to truncate - the original string "fits"
+         */
+        if (text.length() <= length) {
+            return text;
+        }
+        /*
+         * Try to find whitespace befor the requested maximum
+         */
+        lowerBound = length / 4;
+        upperBound = length + (length / 2);
+        for (int i = length - 1; i > lowerBound; i--) {
+            if (Character.isWhitespace(text.charAt(i))) {
+                return text.substring(0, i);
+            }
+        }
+        /*
+         * No whitespace - look beyond the desired maximum
+         */
+        for (int i = (length); i < upperBound; i++) {
+            if (Character.isWhitespace(text.charAt(i))) {
+                return text.substring(0, i);
+            }
+        }
+        /*
+         * No whitespace, just truncate the text at the requested length
+         */
+        return text.substring(0, length);
+    }
 }

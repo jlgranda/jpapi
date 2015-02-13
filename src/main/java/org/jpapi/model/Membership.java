@@ -19,6 +19,7 @@ import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -27,6 +28,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author jlgranda
  */
 @Entity
+@Table(name = "MEMBERSHIP")
 public class Membership extends DeletableObject<Membership> implements Serializable {
     private static final long serialVersionUID = -7034844401678558748L;
     

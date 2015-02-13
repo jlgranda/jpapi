@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 @Entity
-@Table(name = "GROUP")
+@Table(name = "GGROUP")
 @DiscriminatorValue(value = "GRP")
 @PrimaryKeyJoinColumn(name = "groupId")
 /*
