@@ -22,6 +22,8 @@ package org.jpapi.model;
  * @author jlgranda
  */
 public enum CodeType {
+    NONE,
+    SYSTEM,
     DNI,
     RUC,
     PASSPORT

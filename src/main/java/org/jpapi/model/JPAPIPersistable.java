@@ -15,27 +15,25 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package org.jpapi.util;
+package org.jpapi.model;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import org.hibernate.annotations.Tuplizer;
 
 /**
- * This class uses CDI to alias Java EE resources, such as the persistence context, to CDI beans
- * 
- * <p>
- * Example injection on a managed bean field:
- * </p>
- * 
- * <pre>
- * &#064;Inject
- * private EntityManager em;
- * </pre>
+ *
+ * @author jlgranda
+ * @param <E>
  */
-public class Resources {
-   // use @SuppressWarnings to tell IDE to ignore warnings about field not being referenced directly
-   @SuppressWarnings("unused")
-   @PersistenceContext
-   private EntityManager em;
-   
+@Entity
+@Tuplizer(impl = JPAPIEntityTuplizer.class)
+public interface JPAPIPersistable <E extends JPAPIPersistable<E>>{
+    
+    @Id
+    @GeneratedValue
+    public Long getId();
+    public E setId(Long id);
+
 }

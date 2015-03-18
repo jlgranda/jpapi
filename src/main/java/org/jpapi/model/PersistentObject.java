@@ -1,33 +1,19 @@
-/**
- * This file is part of Glue: Adhesive BRMS
- * 
-* Copyright (c)2012 José Luis Granda <jlgranda@eqaula.org> (Eqaula Tecnologías
- * Cia Ltda) Copyright (c)2012 Eqaula Tecnologías Cia Ltda (http://eqaula.org)
- * 
-* If you are developing and distributing open source applications under the GNU
- * General Public License (GPL), then you are free to re-distribute Glue under
- * the terms of the GPL, as follows:
- * 
-* GLue is free software: you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
-* Glue is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
-* You should have received a copy of the GNU General Public License along with
- * Glue. If not, see <http://www.gnu.org/licenses/>.
- * 
-* For individuals or entities who wish to use Glue privately, or internally,
- * the following terms do not apply:
- * 
-* For OEMs, ISVs, and VARs who wish to distribute Glue with their products, or
- * host their product online, Eqaula provides flexible OEM commercial licenses.
- * 
-* Optionally, Customers may choose a Commercial License. For additional
- * details, contact an Eqaula representative (sales@eqaula.org)
+/*
+ * Copyright (C) 2015 jlgranda
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.jpapi.model;
 
@@ -47,10 +33,15 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import org.jpapi.model.management.Organization;
+import javax.persistence.Version;
 
+/**
+ *
+ * @author jlgranda
+ * @param <E>
+ */
 @MappedSuperclass
-public abstract class PersistentObject<E extends PersistentObject<E>> implements Serializable {
+public abstract class PersistentObject<E extends PersistentObject<E>> implements JPAPIPersistable, Serializable {
 
     private static final long serialVersionUID = -1272280183658745494L;
     @Id
@@ -60,30 +51,30 @@ public abstract class PersistentObject<E extends PersistentObject<E>> implements
     @Column(nullable = true)
     private String code;
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private CodeType codeType;
     @Column(nullable = true)
     private String name;
     @Column(nullable = true, length = 2048)
     private String description;
-    //@Version
-    @Column(name = "version", nullable=false)
+    @Version
+    @Column(name = "version", nullable = false)
     private int version = 0;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "lastUpdate", nullable=false)
+    @Column(name = "lastUpdate", nullable = false)
     private Date lastUpdate;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdOn", updatable = false, nullable = false)
     private Date createdOn;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable=true)
+    @Column(nullable = true)
     private Date activationTime;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable=true)
+    @Column(nullable = true)
     private Date expirationTime;
-    @Column(nullable=true)
+    @Column(nullable = true)
     private Integer priority;
-    @Column(nullable=true)
+    @Column(nullable = true)
     private Boolean active;
     @Column(nullable = true)
     private String status;
@@ -124,7 +115,7 @@ public abstract class PersistentObject<E extends PersistentObject<E>> implements
         return version;
     }
 
-	public void setVersion(final int version) {
+    public void setVersion(final int version) {
         this.version = version;
     }
 
@@ -203,10 +194,9 @@ public abstract class PersistentObject<E extends PersistentObject<E>> implements
     public void setCodeType(CodeType codeType) {
         this.codeType = codeType;
     }
-    
-        
+
     @Override
-    public String toString(){
+    public String toString() {
         return String.valueOf(getId());
     }
 
@@ -217,19 +207,19 @@ public abstract class PersistentObject<E extends PersistentObject<E>> implements
     public void setActive(Boolean active) {
         this.active = active;
     }
-    
+
     @Transient
-    public boolean isExpired(){
+    public boolean isExpired() {
         Calendar now = Calendar.getInstance();
         return now.after(getExpirationTime());
     }
 
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
 }

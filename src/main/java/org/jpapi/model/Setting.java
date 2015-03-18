@@ -15,27 +15,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package org.jpapi.util;
+package org.jpapi.model;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
- * This class uses CDI to alias Java EE resources, such as the persistence context, to CDI beans
- * 
- * <p>
- * Example injection on a managed bean field:
- * </p>
- * 
- * <pre>
- * &#064;Inject
- * private EntityManager em;
- * </pre>
+ * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ * @adapter <a href="mailto:jlgranda81@gmail.com">José Luis Granda</a>
+ *
  */
-public class Resources {
-   // use @SuppressWarnings to tell IDE to ignore warnings about field not being referenced directly
-   @SuppressWarnings("unused")
-   @PersistenceContext
-   private EntityManager em;
-   
+@Entity
+@Table(name = "Setting")
+public class Setting extends PersistentObject<Setting> {
+
+    private static final long serialVersionUID = -7485883311296510018L;
+    private String value;
+
+    public Setting() {
+    }
+
+    public Setting(String name, String value) {
+        this.setName(name);
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+    
 }
