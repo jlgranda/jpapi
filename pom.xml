@@ -12,8 +12,22 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <hibernate.version>4.3.5.Final</hibernate.version>
+        <!-- PicketLink dependency versions -->
+        <version.picketlink.javaee.bom>2.7.0.Final</version.picketlink.javaee.bom>
     </properties>
-    
+    <dependencyManagement>
+        <dependencies>
+            <!-- Dependency Management for PicketLink and Java EE 6.0. -->
+            <dependency>
+                <groupId>org.picketlink</groupId>
+                <artifactId>picketlink-javaee-6.0</artifactId>
+                <version>${version.picketlink.javaee.bom}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <!--  
          Just temporary - should be removed once the javaee7-api
          will be released to the maven central repository
@@ -22,12 +36,6 @@
         <repository>
             <id>maven.java.net</id>
             <url>https://maven.java.net/content/groups/promoted/</url>
-        </repository>
-        <repository>
-            <id>prime-repo</id>
-            <name>PrimeFaces Maven Repository</name>
-            <url>http://repository.primefaces.org</url>
-            <layout>default</layout>
         </repository>
     </repositories>
     
@@ -42,7 +50,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>4.3.7.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
         
         <!-- Annotation processor to generate the JPA 2.0 metamodel classes 
@@ -50,7 +58,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
-            <version>4.3.7.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
         
         <dependency>
@@ -110,6 +118,14 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.7</version>
+        </dependency>
+        
+        <!--picketlink-->
+        <dependency>
+            <groupId>org.picketlink</groupId>
+            <artifactId>picketlink</artifactId>
+            <version>${version.picketlink.javaee.bom}</version>
+            <scope>compile</scope>
         </dependency>
         
     </dependencies>

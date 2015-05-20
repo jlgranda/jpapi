@@ -69,8 +69,8 @@ public class Subject extends BussinesEntity implements Serializable {
     private String workPhoneNumber;
     @Column
     private boolean confirmed;
-    @Column
-    private boolean showBootcamp;
+    @Transient
+    private boolean loggedIn;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_profiles_keys")
     private Set<String> identityKeys = new HashSet<String>();
@@ -193,6 +193,14 @@ public class Subject extends BussinesEntity implements Serializable {
         this.confirmed = confirmed;
     }
 
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -221,14 +229,6 @@ public class Subject extends BussinesEntity implements Serializable {
             return false;
         }
         return true;
-    }
-
-    public boolean isShowBootcamp() {
-        return showBootcamp;
-    }
-
-    public void setShowBootcamp(final boolean showBootcamp) {
-        this.showBootcamp = showBootcamp;
     }
 
     public boolean isConfirmed() {
