@@ -24,7 +24,50 @@ package org.jpapi.model;
 public enum CodeType {
     NONE,
     SYSTEM,
-    DNI,
+    CEDULA,
     RUC,
-    PASSPORT
+    PASSPORT,
+    DEFAULT_CUSTOMER,
+    DNI,
+    BADGE,
+    NUMERO_FACTURA,
+    CLAVE_ACCESO,
+    GROUP,
+    TAG;
+    
+    public static CodeType encode(String tipoIdentificacionComprador){
+        CodeType t = NONE;
+        if ("04".equalsIgnoreCase(tipoIdentificacionComprador)){
+            t = RUC;
+        } else if ("05".equalsIgnoreCase(tipoIdentificacionComprador)){
+            t = CEDULA;
+        } else if ("06".equalsIgnoreCase(tipoIdentificacionComprador)){
+            t = PASSPORT;
+        } else if ("07".equalsIgnoreCase(tipoIdentificacionComprador)){
+            t = DEFAULT_CUSTOMER;
+        } else if ("08".equalsIgnoreCase(tipoIdentificacionComprador)){
+            t = DNI;
+        } else if ("09".equalsIgnoreCase(tipoIdentificacionComprador)){
+            t = BADGE;
+        } 
+        return t;
+    }
+    
+    public static String decode(CodeType t){
+        String s = "";
+        if (RUC.equals(t)){
+            s = "04";
+        } else if (CEDULA.equals(t)){
+            s = "05";
+        } else if (PASSPORT.equals(t)){
+            s = "06";
+        } else if (DEFAULT_CUSTOMER.equals(t)){
+            s = "07";
+        } else if (DNI.equals(t)){
+            s = "08";
+        } else if (BADGE.equals(t)){
+            s = "09";
+        } 
+        return s;
+    }
 }

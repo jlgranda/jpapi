@@ -18,6 +18,8 @@
 package org.jpapi.model;
 
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -27,6 +29,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "Setting")
+@NamedQueries({ @NamedQuery(name = "Setting.findByName", query = "select s FROM Setting s WHERE s.name =?1 ORDER BY 1")
+    /*@NamedQuery(name = "BussinesEntity.findBussinesEntityByParentIdAndType", query = "select m FROM Group JOIN g.members m WHERE g.id=:id and m.type=:type ORDER BY g.name")*/})
 public class Setting extends PersistentObject<Setting> {
 
     private static final long serialVersionUID = -7485883311296510018L;

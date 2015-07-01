@@ -33,6 +33,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -51,9 +52,11 @@ import org.jpapi.util.Dates;
 @Table(name = "BUSSINESENTITY")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "ENTITY_TYPE", discriminatorType = DiscriminatorType.STRING, length = 7)
-@NamedQueries({ /*@NamedQuery(name = "BussinesEntity.findBussinesEntityByParentIdAndType",
- query = "select m FROM Group "
- + "g JOIN g.members m WHERE g.id=:id and m.type=:type ORDER BY g.name")*/})
+@NamedQueries({
+    @NamedQuery(name = "BussinesEntity.findByCode", query = "select b FROM BussinesEntity b WHERE b.code =?1 ORDER BY 1"),
+    @NamedQuery(name = "BussinesEntity.findByCodeAndCodeType", query = "select b FROM BussinesEntity b WHERE b.code =?1 and b.codeType = ?2 ORDER BY 1"),
+    @NamedQuery(name = "BussinesEntity.findBussinesEntityByGroup", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1")
+})
 public class BussinesEntity extends DeletableObject<BussinesEntity> {
 
     public static final String SEPARATOR= " » ";
@@ -63,10 +66,14 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     @ManyToOne(optional = true)
     @JoinColumn(name = "author", nullable = true)
     private Subject author;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "owner", nullable = true)
+    private Subject owner;
 
     //Best practice http://java.dzone.com/articles/deterring-%E2%80%9Ctomany%E2%80%9D?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3a+javalobby/frontpage+%28Javalobby+/+Java+Zone%29
     //Replace ManyToMany fro OneToMany and link entity
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group", fetch = FetchType.LAZY)
     private List<Membership> memberships = new ArrayList<Membership>();
     @ManyToOne
     private BussinesEntityType type;
@@ -136,14 +143,13 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     }
 
     public void add(Group g) {
-        Date now = Calendar.getInstance().getTime();
         Membership membershipt = new Membership();
         membershipt.setGroup(g);
         membershipt.setBussinesEntity(this);
-        membershipt.setCreatedOn(now);
-        membershipt.setLastUpdate(now);
-        membershipt.setActivationTime(now);
-        membershipt.setExpirationTime(Dates.addDays(now, 364));
+        membershipt.setCreatedOn(Dates.now());
+        membershipt.setLastUpdate(Dates.now());
+        membershipt.setActivationTime(Dates.now());
+        membershipt.setExpirationTime(Dates.addDays(Dates.now(), 364));
         if (!getMemberships().contains(membershipt)) {
             getMemberships().add(membershipt);
         }
@@ -171,6 +177,14 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
 
     public void setAuthor(Subject author) {
         this.author = author;
+    }
+
+    public Subject getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Subject owner) {
+        this.owner = owner;
     }
 
     public BussinesEntityType getType() {

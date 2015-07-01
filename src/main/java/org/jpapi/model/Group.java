@@ -63,6 +63,12 @@ public class Group extends BussinesEntity implements Serializable {
     public Group() {
         super();
     }
+    
+    public Group(String code, String name) {
+        super();
+        setCode(code);
+        setName(name);
+    }
 
     public List<BussinesEntity> getMembers() {
         List<BussinesEntity> members = new ArrayList<BussinesEntity>();

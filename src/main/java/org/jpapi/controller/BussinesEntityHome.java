@@ -71,7 +71,7 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
     }
 
     public String update() {
-        super.save(getInstance());
+        super.update(getInstance());
         getEntityManager().flush();
         updatedMessage();
         return "updated";
@@ -125,6 +125,42 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
     public void setBussinesEntity(BussinesEntity bussinesEntity) {
         this.bussinesEntity = bussinesEntity;
     }
-
     
+    public E save(E _instance){
+        this.setInstance(_instance);
+        if (isIdDefined()){
+            this.update();
+        } else {
+            this.persist();
+        }
+        return this.getInstance();
+    }
+    
+    public E remove(E _instance){
+        this.setInstance(_instance);
+        if (isIdDefined()){
+            this.remove();
+        } 
+        return this.getInstance();
+    }
+    
+    public E save(Object id, E _instance){
+        this.setId(id);
+        this.setInstance(_instance);
+        if (isIdDefined()){
+            this.update();
+        } else {
+            this.persist();
+        }
+        return this.getInstance();
+    }
+    
+    public E remove(Object id, E _instance){
+        this.setId(id);
+        this.setInstance(_instance);
+        if (isIdDefined()){
+            this.remove();
+        } 
+        return this.getInstance();
+    }
 }

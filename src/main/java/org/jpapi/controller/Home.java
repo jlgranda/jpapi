@@ -74,14 +74,14 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         }
     }
 
-    public E getInstance() {
+    protected E getInstance() {
         if (instance == null) {
             initInstance();
         }
         return instance;
     }
 
-    public void clearInstance() {
+    protected void clearInstance() {
         setInstance(null);
         setId(null);
     }
@@ -122,7 +122,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         }
     }
 
-    public Class<E> getEntityClass() {
+    protected Class<E> getEntityClass() {
         if (entityClass == null) {
             Type type = getClass().getGenericSuperclass();
             if (type instanceof ParameterizedType) {
@@ -139,11 +139,11 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         this.entityClass = entityClass;
     }
 
-    public Object getId() {
+    protected Object getId() {
         return id;
     }
 
-    public void setId(Object id) {
+    protected void setId(Object id) {
         if (setDirty(this.id, id)) {
             setInstance(null);
         }
@@ -155,11 +155,11 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         this.id = id;
     }
 
-    public boolean isIdDefined() {
+    protected boolean isIdDefined() {
         return getId() != null && !"".equals(getId());
     }
 
-    public void setInstance(E instance) {
+    protected void setInstance(E instance) {
         setDirty(this.instance, instance);
         this.instance = instance;
     }
@@ -235,7 +235,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         getEntityManager().persist(entity);
     }
     
-    protected <E> void save(final E entity) {
+    protected <E> void update(final E entity) {
         if (getEntityManager() == null) {
             throw new IllegalStateException("Must initialize EntityManager before using Services!");
         }
@@ -279,12 +279,12 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
     }
 
     @SuppressWarnings("unchecked")
-    protected <E> List<E> findByNamedQuery(final String namedQueryName) {
+    public <E> List<E> findByNamedQuery(final String namedQueryName) {
         return getEntityManager().createNamedQuery(namedQueryName).getResultList();
     }
 
     @SuppressWarnings("unchecked")
-    protected <E> List<E> findByNamedQuery(final String namedQueryName, final Object... params) {
+    public <E> List<E> findByNamedQuery(final String namedQueryName, final Object... params) {
         Query query = getEntityManager().createNamedQuery(namedQueryName);
         int i = 1;
         for (Object p : params) {
@@ -300,27 +300,31 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
     }
 
     @SuppressWarnings("unchecked")
-    protected <E> E findUniqueByNamedQuery(final String namedQueryName) throws NoResultException {
+    public <E> E findUniqueByNamedQuery(final String namedQueryName) throws NoResultException {
         return (E) getEntityManager().createNamedQuery(namedQueryName).getSingleResult();
     }
 
     @SuppressWarnings("unchecked")
-    protected <E> E findUniqueByNamedQuery(final String namedQueryName, final Object... params)
+    public <E> E findUniqueByNamedQuery(final String namedQueryName, final Object... params)
             throws NoResultException {
         Query query = getEntityManager().createNamedQuery(namedQueryName);
         int i = 1;
         for (Object p : params) {
             query.setParameter(i++, p);
         }
-
-        return (E) query.getSingleResult();
+        
+        try {
+            return (E) query.getSingleResult();
+        } catch (javax.persistence.NoResultException nre){
+            return null;
+        }
     }
 
-    protected <E> E getSingleResult(final CriteriaQuery<E> query) {
+    public <E> E getSingleResult(final CriteriaQuery<E> query) {
         return this.<E>getTypedSingleResult(query);
     }
 
-    protected <E> E getTypedSingleResult(final CriteriaQuery<E> query) {
+    public <E> E getTypedSingleResult(final CriteriaQuery<E> query) {
         try {
             return getEntityManager().createQuery(query).getSingleResult();
         } catch (NoResultException e) {
@@ -328,11 +332,11 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         }
     }
 
-    protected <E> List<E> getResultList(final CriteriaQuery<E> query) {
+    public <E> List<E> getResultList(final CriteriaQuery<E> query) {
         return getEntityManager().createQuery(query).getResultList();
     }
 
-    protected <E> List<E> getResultList(final CriteriaQuery<E> query,
+    public <E> List<E> getResultList(final CriteriaQuery<E> query,
             int maxresults, int firstresult) {
         return getEntityManager().createQuery(query).setMaxResults(maxresults)
                 .setFirstResult(firstresult).getResultList();
@@ -342,7 +346,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         return getEntityManager().getCriteriaBuilder();
     }
 
-    protected TypedQuery<?> createQuery(CriteriaQuery<?> criteriaQuery) {
+    public TypedQuery<?> createQuery(CriteriaQuery<?> criteriaQuery) {
         return getEntityManager().createQuery(criteriaQuery);
     }
 

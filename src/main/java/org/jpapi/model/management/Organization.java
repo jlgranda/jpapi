@@ -46,6 +46,7 @@ public class Organization extends BussinesEntity implements Serializable {
     private static final long serialVersionUID = 3095488521256724258L;
     private String ruc;
     private String initials;
+    private String numeroContribuyenteEspecial;
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Owner> owners = new ArrayList<>();
 //    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -94,6 +95,14 @@ public class Organization extends BussinesEntity implements Serializable {
 
     public void setInitials(String initials) {
         this.initials = initials;
+    }
+
+    public String getNumeroContribuyenteEspecial() {
+        return numeroContribuyenteEspecial;
+    }
+
+    public void setNumeroContribuyenteEspecial(String numeroContribuyenteEspecial) {
+        this.numeroContribuyenteEspecial = numeroContribuyenteEspecial;
     }
 
     public List<Owner> getOwners() {

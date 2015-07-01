@@ -170,7 +170,7 @@ public class Strings {
 
 	public static int toInt(Object object) {
 		Integer _i = Strings.toInteger(object);
-		return _i == null ? 1 : _i.intValue();
+		return _i == null ? 0 : _i.intValue();
 	}
 
 	public static Boolean toBoolean(Object object) {
