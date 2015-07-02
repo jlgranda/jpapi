@@ -43,6 +43,8 @@ public abstract class BaseObject<E extends BaseObject<E>> implements Serializabl
         return Boolean.valueOf(String.valueOf(value));
     }
     @Column(nullable = true)
+    protected String uuid;
+    @Column(nullable = true)
     protected String code;
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
@@ -156,6 +158,15 @@ public abstract class BaseObject<E extends BaseObject<E>> implements Serializabl
         return code;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    
     public void setCode(String code) {
         this.code = code;
     }

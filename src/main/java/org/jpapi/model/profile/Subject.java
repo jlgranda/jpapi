@@ -46,7 +46,8 @@ import org.jpapi.util.Strings;
     /*@NamedQuery(name = "Subject.findGroupsByUserAndType", query = "select g FROM Subject u JOIN u.groups g WHERE u=:user and g.type=:groupType"),
      @NamedQuery(name = "Subject.findUserByGroupsAndRole", query = "select entity From Subject entity join entity.groups g where g in (:groups) and entity.role.name=:role"),*/
     @NamedQuery(name = "Subject.findUsersByNameOrUsername", query = "select u from Subject u where lower(u.username)  LIKE lower(:name) or lower(u.name) LIKE lower(:name)"),
-    @NamedQuery(name = "Subject.findUserByEmail", query = "from Subject u where u.email = :email")})
+    @NamedQuery(name = "Subject.findUserByEmail", query = "from Subject u where u.email = ?1"),
+    @NamedQuery(name = "Subject.findUserByUUID", query = "from Subject u where u.uuid = ?1")})
 public class Subject extends BussinesEntity implements Serializable {
 
     private static final long serialVersionUID = 274770881776410973L;
