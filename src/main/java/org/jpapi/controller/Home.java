@@ -27,6 +27,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -370,13 +371,15 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         countQ.select(cb.count(accountCount));
 
         List<Predicate> criteria = new ArrayList<Predicate>();
-        for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
-            String filterProperty = it.next();
-            Object filterValue = filters.get(filterProperty);
-            ParameterExpression<?> pexp = cb.parameter(filterValue != null ? filterValue.getClass() : Object.class,
-                    filterProperty);
-            Predicate predicate = cb.equal(account.get(filterProperty), pexp);
-            criteria.add(predicate);
+        if (filters != null){
+            for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
+                String filterProperty = it.next();
+                Object filterValue = filters.get(filterProperty);
+                ParameterExpression<?> pexp = cb.parameter(filterValue != null ? filterValue.getClass() : Object.class,
+                        filterProperty);
+                Predicate predicate = cb.equal(account.get(filterProperty), pexp);
+                criteria.add(predicate);
+            }
         }
 
         if (criteria.size() == 1) {
@@ -401,15 +404,20 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         TypedQuery<Long> countquery = (TypedQuery<Long>) createQuery(countQ);
         // countquery.setHint("org.hibernate.cacheable", true);
 
-        for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
-            String filterProperty = it.next();
-            Object filterValue = filters.get(filterProperty);
-            q.setParameter(filterProperty, filterValue);
-            countquery.setParameter(filterProperty, filterValue);
+        if (filters != null){
+            for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
+                String filterProperty = it.next();
+                Object filterValue = filters.get(filterProperty);
+                q.setParameter(filterProperty, filterValue);
+                countquery.setParameter(filterProperty, filterValue);
+            }
         }
 
-        q.setMaxResults(end - start);
-        q.setFirstResult(start);
+        if (start != -1 && end != -1){
+            q.setMaxResults(end - start);
+            q.setFirstResult(start);
+        }
+        
 
         queryData.setResult(q.getResultList());
         Long totalResultCount = countquery.getSingleResult();

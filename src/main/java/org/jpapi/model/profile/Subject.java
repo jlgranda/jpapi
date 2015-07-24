@@ -62,7 +62,7 @@ public class Subject extends BussinesEntity implements Serializable {
     @Column(length = 1024)
     @Basic(fetch = FetchType.LAZY)
     private byte[] photo;
-    @Column(nullable = false, length = 128, unique = false)
+    @Column(nullable = false, length = 128, unique = true)
     private String email;
     @ManyToOne
     private Group role;
@@ -81,6 +81,12 @@ public class Subject extends BussinesEntity implements Serializable {
     private String screenName;
     @Column
     private String bio;
+    
+    @Column(nullable = true, length = 128, unique = true)
+    private String fedeEmail;
+    @Column(nullable = true, length = 128)
+    private String fedeEmailPassword;
+    
 
     public String getFirstname() {
         return firstname;
@@ -110,7 +116,8 @@ public class Subject extends BussinesEntity implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = new BasicPasswordEncryptor().encryptPassword(password);
+        //this.password = new BasicPasswordEncryptor().encryptPassword(password);
+        this.password = password;
     }
 
     public String getPassword() {
@@ -200,6 +207,22 @@ public class Subject extends BussinesEntity implements Serializable {
 
     public void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
+    }
+
+    public String getFedeEmail() {
+        return fedeEmail;
+    }
+
+    public void setFedeEmail(String fedeEmail) {
+        this.fedeEmail = fedeEmail;
+    }
+
+    public String getFedeEmailPassword() {
+        return fedeEmailPassword;
+    }
+
+    public void setFedeEmailPassword(String fedeEmailPassword) {
+        this.fedeEmailPassword = fedeEmailPassword;
     }
 
     @Override

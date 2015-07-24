@@ -44,6 +44,7 @@ import org.jpapi.model.BussinesEntity;
 public class Organization extends BussinesEntity implements Serializable {
 
     private static final long serialVersionUID = 3095488521256724258L;
+    @Column(nullable = false, unique = true)
     private String ruc;
     private String initials;
     private String numeroContribuyenteEspecial;

@@ -34,8 +34,10 @@
 package org.jpapi.util;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 public class Strings {
 	/**
@@ -244,5 +246,39 @@ public class Strings {
          * No whitespace, just truncate the text at the requested length
          */
         return text.substring(0, length);
+    }
+    
+    public static List<String> splitAtWhitepace(String text, int skip){
+        List<String> parts = new ArrayList<>();
+        int index = text.indexOf(' ');
+        skip = skip > 2 ? 2: skip;
+        for (int i = 1; i < skip; i++){
+            index = text.indexOf(' ', index + 1);
+        }
+        if (index != -1){
+            parts.add(text.substring(0, index));
+            parts.add(text.substring(index+1, text.length()));
+        } else {
+            parts.add(text);
+        }
+        return parts;
+    }
+    
+    public static List<String> splitNamesAt(String text, String seperator){
+        int count = StringUtils.countMatches(text, seperator);
+        System.out.println("count --> " + count);
+        return splitAtWhitepace(text, count);
+    }
+    
+    public static List<String> splitNamesAt(String text){
+        return splitNamesAt(text, " ");
+    }
+    
+    public static void main(String args[]){
+        System.out.println(Strings.splitNamesAt("José Luis Granda Sivisapa"));
+        System.out.println(Strings.splitNamesAt("José Luis Granda"));
+        System.out.println(Strings.splitNamesAt("José Granda"));
+        System.out.println(Strings.splitNamesAt("José"));
+        System.out.println(Strings.canonicalize("josé luis GRANDA Sivisapa"));
     }
 }
