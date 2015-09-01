@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.routines.UrlValidator;
 
 public class Strings {
 	/**
@@ -274,11 +275,23 @@ public class Strings {
         return splitNamesAt(text, " ");
     }
     
+    public static boolean isUrl(String url){
+        String[] schemes = {"http","https", "ftp"}; // DEFAULT schemes = "http", "https", "ftp"
+        UrlValidator urlValidator = new UrlValidator(schemes);
+        return urlValidator.isValid(url);
+    }
+    
     public static void main(String args[]){
-        System.out.println(Strings.splitNamesAt("José Luis Granda Sivisapa"));
-        System.out.println(Strings.splitNamesAt("José Luis Granda"));
-        System.out.println(Strings.splitNamesAt("José Granda"));
-        System.out.println(Strings.splitNamesAt("José"));
-        System.out.println(Strings.canonicalize("josé luis GRANDA Sivisapa"));
+//        System.out.println(Strings.splitNamesAt("José Luis Granda Sivisapa"));
+//        System.out.println(Strings.splitNamesAt("José Luis Granda"));
+//        System.out.println(Strings.splitNamesAt("José Granda"));
+//        System.out.println(Strings.splitNamesAt("José"));
+//        System.out.println(Strings.canonicalize("josé luis GRANDA Sivisapa"));
+        System.out.println(Strings.isUrl("josé luis GRANDA Sivisapa"));
+        
+        System.out.println(Strings.isUrl("dsadsadsa"));
+        
+        System.out.println(Strings.isUrl("http://jlgranda.com"));
+        
     }
 }

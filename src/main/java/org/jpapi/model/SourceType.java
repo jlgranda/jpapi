@@ -22,6 +22,7 @@ package org.jpapi.model;
  * @author jlgranda
  */
 public enum SourceType {
+    URL,
     EMAIL,
     DATABASE,
     MANUAL,

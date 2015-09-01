@@ -23,6 +23,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jpapi.model.BussinesEntity;
@@ -35,6 +36,7 @@ import org.jpapi.model.BussinesEntity;
 @Table(name = "Owner")
 @DiscriminatorValue(value = "OWN")
 @PrimaryKeyJoinColumn(name = "id")
+@XmlRootElement
 public class Owner extends BussinesEntity implements Serializable {
 
     private static final long serialVersionUID = 117029006983960496L;

@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jpapi.model.BussinesEntity;
@@ -48,6 +49,7 @@ import org.jpapi.util.Strings;
     @NamedQuery(name = "Subject.findUsersByNameOrUsername", query = "select u from Subject u where lower(u.username)  LIKE lower(:name) or lower(u.name) LIKE lower(:name)"),
     @NamedQuery(name = "Subject.findUserByEmail", query = "from Subject u where u.email = ?1"),
     @NamedQuery(name = "Subject.findUserByUUID", query = "from Subject u where u.uuid = ?1")})
+@XmlRootElement
 public class Subject extends BussinesEntity implements Serializable {
 
     private static final long serialVersionUID = 274770881776410973L;

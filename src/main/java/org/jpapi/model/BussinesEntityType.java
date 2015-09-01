@@ -29,6 +29,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -43,6 +45,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
     @NamedQuery(name = "BussinesEntityType.findForName",
     query = "select t FROM BussinesEntityType t where t.name = :name")    
 })
+@XmlRootElement
 public class BussinesEntityType implements Serializable {
 
     private static final long serialVersionUID = -2155543217133636282L;
@@ -92,6 +95,7 @@ public class BussinesEntityType implements Serializable {
     
     
 
+    @XmlTransient
     public List<Structure> getStructures() {
         return structures;
     }

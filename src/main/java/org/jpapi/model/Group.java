@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.jpapi.util.Dates;
 
 import org.slf4j.Logger;
@@ -55,10 +56,21 @@ import org.slf4j.LoggerFactory;
      @NamedQuery(name = "Group.findGroupsByType", query = "from Group g where g.type = :type"),
      @NamedQuery(name = "Group.findGroupByName", query = "from Group g where lower(g.name) = lower(:name) and g.type = :type"),
     @NamedQuery(name = "Group.findByBussinesEntityIdAndPropertyId", query = "Select m.group from BussinesEntity be JOIN be.memberships m where m.bussinesEntity.id = :bussinesEntityId and m.group.property.id = :propertyId")*/})
+@XmlRootElement
 public class Group extends BussinesEntity implements Serializable {
 
     private static final long serialVersionUID = 5665775223006691311L;
     private static Logger log = LoggerFactory.getLogger(Group.class);
+    
+    /*
+    HTML code color valid
+    */
+    private String color;
+    
+    /*
+    Bootstraps valid icon
+    */
+    private String icon;
 
     public Group() {
         super();
@@ -68,6 +80,22 @@ public class Group extends BussinesEntity implements Serializable {
         super();
         setCode(code);
         setName(name);
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public List<BussinesEntity> getMembers() {

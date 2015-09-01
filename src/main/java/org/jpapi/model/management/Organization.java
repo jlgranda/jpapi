@@ -31,6 +31,8 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import org.jpapi.model.BussinesEntity;
 
 /**
@@ -41,6 +43,7 @@ import org.jpapi.model.BussinesEntity;
 @Table(name = "Organization")
 @DiscriminatorValue(value = "ORG")
 @PrimaryKeyJoinColumn(name = "id")
+@XmlRootElement
 public class Organization extends BussinesEntity implements Serializable {
 
     private static final long serialVersionUID = 3095488521256724258L;
@@ -106,6 +109,7 @@ public class Organization extends BussinesEntity implements Serializable {
         this.numeroContribuyenteEspecial = numeroContribuyenteEspecial;
     }
 
+    @XmlTransient
     public List<Owner> getOwners() {
         return owners;
     }

@@ -31,6 +31,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -46,6 +47,7 @@ import org.jpapi.util.Lists;
     query = "select p FROM Property p "
     + "WHERE p.structure.bussinesEntityType.name = :bussinesEntityTypeName ORDER BY p.id")
 })
+@XmlRootElement
 public class Property implements Comparable<Property>, Serializable {
 
     private static final long serialVersionUID = 1020047606754217515L;

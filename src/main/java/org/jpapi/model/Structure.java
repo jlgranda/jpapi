@@ -27,6 +27,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -36,6 +38,7 @@ import javax.persistence.OrderBy;
 @NamedQueries(value = {
     @NamedQuery(name = "Structure.findForId", query = "SELECT s FROM Structure s WHERE s.id = :id")
 })
+@XmlRootElement
 public class Structure extends DeletableObject<Structure> implements Serializable {
 
     private static final long serialVersionUID = -1939876087269734534L;
@@ -53,6 +56,7 @@ public class Structure extends DeletableObject<Structure> implements Serializabl
         this.bussinesEntityType = bussinesEntityType;
     }
 
+    @XmlTransient
     public List<Property> getProperties() {
         return properties;
     }

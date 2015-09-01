@@ -30,6 +30,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -50,6 +51,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
     @NamedQuery(name = "BussinesEntityAttribute.countCompletedRequiredProperties",
     query = "select count(a)  FROM BussinesEntityAttribute a WHERE a.bussinesEntity.id = :bussinesEntityId AND a.property.structure.bussinesEntityType.name = :bussinesEntityTypeName AND a.property.required = true AND a.valueByteArray != a.property.valueByteArray GROUP BY a.property.structure")
 })
+@XmlRootElement
 public class BussinesEntityAttribute implements Serializable, Comparable<BussinesEntityAttribute> {
 
     private static final long serialVersionUID = 7807041724651919898L;
