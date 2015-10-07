@@ -16,18 +16,6 @@
         <!-- PicketLink dependency versions -->
         <version.picketlink.javaee.bom>2.7.0.Final</version.picketlink.javaee.bom>
     </properties>
-    <dependencyManagement>
-        <dependencies>
-            <!-- Dependency Management for PicketLink and Java EE 6.0. -->
-            <dependency>
-                <groupId>org.picketlink</groupId>
-                <artifactId>picketlink-javaee-6.0</artifactId>
-                <version>${version.picketlink.javaee.bom}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <!--  
          Just temporary - should be removed once the javaee7-api
          will be released to the maven central repository
@@ -51,6 +39,12 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>antlr</groupId>
+                    <artifactId>antlr</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <!-- Annotation processor to generate the JPA 2.0 metamodel classes 
@@ -125,14 +119,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.7</version>
-        </dependency>
-        
-        <!--picketlink-->
-        <dependency>
-            <groupId>org.picketlink</groupId>
-            <artifactId>picketlink</artifactId>
-            <version>${version.picketlink.javaee.bom}</version>
-            <scope>compile</scope>
         </dependency>
         
     </dependencies>
