@@ -17,10 +17,14 @@
  */
 package org.jpapi.model;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.jpapi.model.profile.Subject;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
@@ -29,12 +33,16 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "Setting")
-@NamedQueries({ @NamedQuery(name = "Setting.findByName", query = "select s FROM Setting s WHERE s.name =?1 ORDER BY 1")
-    /*@NamedQuery(name = "BussinesEntity.findBussinesEntityByParentIdAndType", query = "select m FROM Group JOIN g.members m WHERE g.id=:id and m.type=:type ORDER BY g.name")*/})
-public class Setting extends PersistentObject<Setting> {
+@NamedQueries({ @NamedQuery(name = "Setting.findByName", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
+    @NamedQuery(name = "Setting.findByNameAndOwner", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
+public class Setting extends PersistentObject<Setting> implements Serializable {
 
     private static final long serialVersionUID = -7485883311296510018L;
     private String value;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "owner", nullable = true)
+    private Subject owner;
 
     public Setting() {
     }
@@ -50,6 +58,14 @@ public class Setting extends PersistentObject<Setting> {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Subject getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Subject owner) {
+        this.owner = owner;
     }
     
 }

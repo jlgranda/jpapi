@@ -38,7 +38,6 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.jpapi.model.management.Organization;
 import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Dates;
 
@@ -54,8 +53,8 @@ import org.jpapi.util.Dates;
 @DiscriminatorColumn(name = "ENTITY_TYPE", discriminatorType = DiscriminatorType.STRING, length = 7)
 @NamedQueries({
     @NamedQuery(name = "BussinesEntity.findByCode", query = "select b FROM BussinesEntity b WHERE b.code = ?1 ORDER BY 1"),
-    @NamedQuery(name = "BussinesEntity.findByIds", query = "select b FROM BussinesEntity b WHERE b.id in (?1) ORDER BY 1"),
-    @NamedQuery(name = "BussinesEntity.findByCodes", query = "select b FROM BussinesEntity b WHERE b.code in (?1) ORDER BY 1"),
+    @NamedQuery(name = "BussinesEntity.findByIds", query = "select b FROM BussinesEntity b WHERE b.id in (?1)"),
+    @NamedQuery(name = "BussinesEntity.findByCodes", query = "select b FROM BussinesEntity b WHERE b.code in (?1)"),
     @NamedQuery(name = "BussinesEntity.findByCodesAndOwner", query = "select b FROM BussinesEntity b WHERE b.code in (?1) and b.owner = ?2 ORDER BY 1"),
     @NamedQuery(name = "BussinesEntity.findByCodeAndCodeType", query = "select b FROM BussinesEntity b WHERE b.code =?1 and b.codeType = ?2 ORDER BY 1"),
     @NamedQuery(name = "BussinesEntity.findBussinesEntityByGroup", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1")
@@ -77,7 +76,7 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
 
     //Best practice http://java.dzone.com/articles/deterring-%E2%80%9Ctomany%E2%80%9D?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3a+javalobby/frontpage+%28Javalobby+/+Java+Zone%29
     //Replace ManyToMany fro OneToMany and link entity
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bussinesEntity", orphanRemoval = false,  fetch = FetchType.LAZY)
     private List<Membership> memberships = new ArrayList<Membership>();
     @ManyToOne
     private BussinesEntityType type;
@@ -86,18 +85,6 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     @ManyToOne
     @JoinColumn(name = "property_id", nullable = true)
     private Property property;
-    
-    @ManyToOne
-    private Organization organization;
-
-    
-    public Organization getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
-    }
     
     @XmlTransient
     public List<Membership> getMemberships() {

@@ -19,14 +19,21 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
+import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CollectionJoin;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Path;
@@ -34,6 +41,14 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.jpapi.controller.Expressions.ValueExpression;
+import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.BussinesEntity_;
+import org.jpapi.model.Group;
+import org.jpapi.model.Group_;
+import org.jpapi.model.Membership;
+import org.jpapi.model.Membership_;
+import org.jpapi.model.profile.Subject;
+import org.jpapi.model.profile.Subject_;
 import org.jpapi.util.QueryData;
 import org.jpapi.util.QuerySortOrder;
 
@@ -266,7 +281,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         }
         return result;
     }
-
+    
     protected Class<?> getObjectClass(final Object type) throws IllegalArgumentException {
         Class<?> clazz = null;
         if (type == null) {
@@ -359,26 +374,83 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
     public QueryData<E> find(int start, int end, String sortField,
             QuerySortOrder order, Map<String, Object> filters) {
 
-        QueryData<E> queryData = new QueryData<E>();
+        QueryData<E> queryData = new QueryData<>();
 
         CriteriaBuilder cb = getCriteriaBuilder();
         CriteriaQuery<E> c = cb.createQuery(entityClass);
-        Root<E> account = c.from(entityClass);
-        c.select(account);
+        Root<E> root = c.from(entityClass);
+        c.select(root);
 
         CriteriaQuery<Long> countQ = cb.createQuery(Long.class);
-        Root<E> accountCount = countQ.from(entityClass);
-        countQ.select(cb.count(accountCount));
+        Root<E> rootCount = countQ.from(entityClass);
+        countQ.select(cb.count(rootCount));
 
-        List<Predicate> criteria = new ArrayList<Predicate>();
+        List<Predicate> criteria = new ArrayList<>();
         if (filters != null){
-            for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
-                String filterProperty = it.next();
+            for (String filterProperty : filters.keySet()) {
                 Object filterValue = filters.get(filterProperty);
-                ParameterExpression<?> pexp = cb.parameter(filterValue != null ? filterValue.getClass() : Object.class,
-                        filterProperty);
-                Predicate predicate = cb.equal(account.get(filterProperty), pexp);
-                criteria.add(predicate);
+                //System.out.println("//---> Processing filterProperty: " + filterProperty);
+                if ("tag".equalsIgnoreCase(filterProperty)){
+                    Root<BussinesEntity> bussinesEntity = (Root<BussinesEntity>) root;
+                    
+                    ListJoin<BussinesEntity, Membership> joinBussinesEntity = bussinesEntity.join(BussinesEntity_.memberships, JoinType.LEFT);
+                    Join<Membership, Group> joinMembershipGroup = joinBussinesEntity.join(Membership_.group, JoinType.LEFT);
+                    
+                    //Agregar relación a rootCount
+                    ListJoin<BussinesEntity, Membership> joinCountBussinesEntity = ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.memberships, JoinType.LEFT);
+                    joinCountBussinesEntity.join(Membership_.group, JoinType.LEFT);
+                    
+                    Path<String> groupPath = joinMembershipGroup.get(BussinesEntity_.code); // mind these Path objects
+                    ParameterExpression<String> pexpGroup = cb.parameter(String.class,
+                                        filterProperty);
+                    Predicate predicate = cb.equal(groupPath, pexpGroup);
+                    criteria.add(predicate);
+                } else if ("keyword".equalsIgnoreCase(filterProperty)){
+                    Root<BussinesEntity> bussinesEntity = (Root<BussinesEntity>) root;
+                    
+                    Join<BussinesEntity, Subject> joinBussinesEntity = bussinesEntity.join(BussinesEntity_.author, JoinType.LEFT);
+                    
+                    //Agregar relación a rootCount
+                    ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.author, JoinType.LEFT);
+                    
+                    Path<String> authorPath = joinBussinesEntity.get(BussinesEntity_.name); // mind these Path objects
+                    Path<String> codePath = bussinesEntity.get(BussinesEntity_.code); // mind these Path objects
+                    ParameterExpression<String> pexpAuthor = cb.parameter(String.class,
+                                        "author");
+                    ParameterExpression<String> pexpCode = cb.parameter(String.class,
+                                        "code");
+                    Predicate predicate = cb.or(cb.like(cb.lower(authorPath), pexpAuthor), cb.like(cb.lower(codePath), pexpCode));
+                    criteria.add(predicate);
+                } else {
+                    if (filterValue instanceof Map){ //has multiples values
+                        for (Object key : ((Map) filterValue).keySet()){
+                            Object value = ((Map) filterValue).get((String) key);
+                            //Verify data content for build
+                            if (value instanceof Date){ 
+                                Path<Date> filterPropertyPath = root.<Date>get(filterProperty);
+                                ParameterExpression<Date> pexpStart = cb.parameter(Date.class,
+                                        "start");
+                                ParameterExpression<Date> pexpEnd = cb.parameter(Date.class,
+                                        "end");
+                                Predicate predicate = cb.between(filterPropertyPath, pexpStart, pexpEnd);
+                                criteria.add(predicate);
+                            } else {
+                                //TODO construir un criterio para una lista de valores
+                            }
+                            break;
+                        }
+                    } else if (filterValue instanceof String) {
+                        ParameterExpression<String> pexp = cb.parameter(String.class,
+                                filterProperty);
+                        Predicate predicate = cb.like(cb.lower(root.<String>get(filterProperty)), pexp);
+                        criteria.add(predicate);
+                    } else {
+                        ParameterExpression<?> pexp = cb.parameter(filterValue != null ? filterValue.getClass() : Object.class,
+                                filterProperty);
+                        Predicate predicate = cb.equal(root.get(filterProperty), pexp);
+                        criteria.add(predicate);
+                    }
+                }
             }
         }
 
@@ -391,7 +463,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         }
 
         if (sortField != null) {
-            Path<String> path = account.get(sortField);
+            Path<String> path = root.get(sortField);
             if (order == QuerySortOrder.ASC) {
                 c.orderBy(cb.asc(path));
             } else {
@@ -405,11 +477,39 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         // countquery.setHint("org.hibernate.cacheable", true);
 
         if (filters != null){
-            for (Iterator<String> it = filters.keySet().iterator(); it.hasNext();) {
-                String filterProperty = it.next();
+            for (String filterProperty : filters.keySet()) {
                 Object filterValue = filters.get(filterProperty);
-                q.setParameter(filterProperty, filterValue);
-                countquery.setParameter(filterProperty, filterValue);
+//                System.out.println("//---> filterProperty: " + filterProperty);
+//                System.out.println("//---> filterValue: " + filterValue);
+                if ("tag".equalsIgnoreCase(filterProperty)){
+                    q.setParameter(filterProperty, filterValue);
+                    countquery.setParameter(filterProperty, filterValue);
+                } else if ("keyword".equalsIgnoreCase(filterProperty)){
+                    filterValue = "%" + filterValue.toString().toLowerCase() + "%";
+                    q.setParameter("author", filterValue);
+                    q.setParameter("code", filterValue);
+                    countquery.setParameter("author", filterValue);
+                    countquery.setParameter("code", filterValue);
+                } else {
+                    if (filterValue instanceof Map){ 
+                        for (Object key : ((Map) filterValue).keySet()){
+                            Object value = ((Map) filterValue).get((String) key);
+                            //Verify data content for build
+                            if (value instanceof Date){ 
+                                q.setParameter(q.getParameter((String)key, Date.class), (Date) value, TemporalType.DATE);
+                                countquery.setParameter(q.getParameter((String)key, Date.class), (Date) value, TemporalType.DATE);
+                            }
+
+                        }
+                    } else if (filterValue instanceof String) {
+                        filterValue = "%" + filterValue + "%";
+                        q.setParameter(filterProperty, filterValue);
+                        countquery.setParameter(filterProperty, filterValue);
+                    } else {//Todo verificar que sea un String
+                        q.setParameter(filterProperty, filterValue);
+                        countquery.setParameter(filterProperty, filterValue);
+                    }
+                }
             }
         }
 

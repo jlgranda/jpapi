@@ -18,7 +18,9 @@
 package org.jpapi.model.profile;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -89,7 +91,32 @@ public class Subject extends BussinesEntity implements Serializable {
     @Column(nullable = true, length = 128)
     private String fedeEmailPassword;
     
+    @Column(nullable = true, unique = true)
+    private String ruc;
+    private String initials;
+    private String numeroContribuyenteEspecial;
 
+    public enum Type {
+        NATURAL,
+        GOVERMENT,
+        PUBLIC,
+        PRIVATE,
+        SYSTEM;
+        private Type() {
+        }
+    }
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Subject.Type subjectType;
+
+    public Type getSubjectType() {
+        return subjectType;
+    }
+
+    public void setSubjectType(Type subjectType) {
+        this.subjectType = subjectType;
+    }
+    
     public String getFirstname() {
         return firstname;
     }
@@ -227,6 +254,30 @@ public class Subject extends BussinesEntity implements Serializable {
         this.fedeEmailPassword = fedeEmailPassword;
     }
 
+    public String getRuc() {
+        return ruc;
+    }
+
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
+    }
+
+    public String getInitials() {
+        return initials;
+    }
+
+    public void setInitials(String initials) {
+        this.initials = initials;
+    }
+
+    public String getNumeroContribuyenteEspecial() {
+        return numeroContribuyenteEspecial;
+    }
+
+    public void setNumeroContribuyenteEspecial(String numeroContribuyenteEspecial) {
+        this.numeroContribuyenteEspecial = numeroContribuyenteEspecial;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -288,5 +339,9 @@ public class Subject extends BussinesEntity implements Serializable {
                 + "fullName=" + getFullName() + ","
                 + "IdentityKeys=" + getIdentityKeys() + ","
                 + " ]";*/
+    }
+    
+    public List<Subject.Type> getSubjectTypes() {
+        return Arrays.asList(Subject.Type.values());
     }
 }
