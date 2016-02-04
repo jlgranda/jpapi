@@ -246,6 +246,21 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         cq.select(qb.count(cq.from(type)));
         return getEntityManager().createQuery(cq).getSingleResult();
     }
+    
+    protected <E> long countByNamedQuery(final String namedQueryName, final Object... params) {
+
+        Query query = getEntityManager().createNamedQuery(namedQueryName);
+        int i = 1;
+        for (Object p : params) {
+            query.setParameter(i++, p);
+        }
+        
+        try {
+            return ((Number) query.getSingleResult()).intValue();
+        } catch (javax.persistence.NoResultException nre){
+            return -1L;
+        }
+    }
 
     protected <E> void create(final E entity) {
         getEntityManager().persist(entity);
