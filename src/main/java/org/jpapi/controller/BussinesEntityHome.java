@@ -167,4 +167,9 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
         } 
         return this.getInstance();
     }
+    
+    
+    public long count(String namedQuery, Object... params) {
+        return super.countByNamedQuery(namedQuery, params); 
+    }
 }

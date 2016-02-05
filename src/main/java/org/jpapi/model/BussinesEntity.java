@@ -57,7 +57,9 @@ import org.jpapi.util.Dates;
     @NamedQuery(name = "BussinesEntity.findByCodes", query = "select b FROM BussinesEntity b WHERE b.code in (?1)"),
     @NamedQuery(name = "BussinesEntity.findByCodesAndOwner", query = "select b FROM BussinesEntity b WHERE b.code in (?1) and b.owner = ?2 ORDER BY 1"),
     @NamedQuery(name = "BussinesEntity.findByCodeAndCodeType", query = "select b FROM BussinesEntity b WHERE b.code =?1 and b.codeType = ?2 ORDER BY 1"),
-    @NamedQuery(name = "BussinesEntity.findBussinesEntityByGroup", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1")
+    @NamedQuery(name = "BussinesEntity.findBussinesEntityByGroup", query = "select m.bussinesEntity FROM Group g JOIN g.memberships m WHERE g.code=?1"),
+    @NamedQuery(name = "BussinesEntity.countByOwner", query = "select count(b) FROM BussinesEntity b WHERE b.owner = ?1"),
+    
 })
 @XmlRootElement
 public class BussinesEntity extends DeletableObject<BussinesEntity> {
