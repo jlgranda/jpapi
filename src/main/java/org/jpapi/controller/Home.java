@@ -313,6 +313,13 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
     public <E> List<E> findByNamedQuery(final String namedQueryName) {
         return getEntityManager().createNamedQuery(namedQueryName).getResultList();
     }
+    
+    @SuppressWarnings("unchecked")
+    public <E> List<E> findByNamedQuery(final String namedQueryName, int limit) {
+        Query query = getEntityManager().createNamedQuery(namedQueryName);
+        query.setMaxResults(limit);
+        return query.getResultList();
+    }
 
     @SuppressWarnings("unchecked")
     public <E> List<E> findByNamedQuery(final String namedQueryName, final Object... params) {
@@ -334,7 +341,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
     public <E> E findUniqueByNamedQuery(final String namedQueryName) throws NoResultException {
         return (E) getEntityManager().createNamedQuery(namedQueryName).getSingleResult();
     }
-
+    
     @SuppressWarnings("unchecked")
     public <E> E findUniqueByNamedQuery(final String namedQueryName, final Object... params)
             throws NoResultException {
