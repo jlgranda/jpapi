@@ -20,21 +20,17 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
-import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CollectionJoin;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ListJoin;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -44,11 +40,9 @@ import org.jpapi.controller.Expressions.ValueExpression;
 import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.BussinesEntity_;
 import org.jpapi.model.Group;
-import org.jpapi.model.Group_;
 import org.jpapi.model.Membership;
 import org.jpapi.model.Membership_;
 import org.jpapi.model.profile.Subject;
-import org.jpapi.model.profile.Subject_;
 import org.jpapi.util.QueryData;
 import org.jpapi.util.QuerySortOrder;
 
@@ -330,7 +324,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         }
         return query.getResultList();
     }
-
+    
     protected <E> List<E> findAll(final Class<E> type) {
         CriteriaQuery<E> query = getEntityManager().getCriteriaBuilder().createQuery(type);
         query.from(type);
