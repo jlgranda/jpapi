@@ -450,10 +450,17 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                                         "end");
                                 Predicate predicate = cb.between(filterPropertyPath, pexpStart, pexpEnd);
                                 criteria.add(predicate);
+                                break;
+                            } else if (value instanceof String){ //busqueda de palabra clave en varias columnas
+                                Path<String> filterPropertyPath = root.<String>get((String)key);
+                                ParameterExpression<String> pexp = cb.parameter(String.class,
+                                        (String)key);
+                                Predicate predicate = cb.or(cb.like(cb.lower(filterPropertyPath), pexp));
+                                criteria.add(predicate);
                             } else {
                                 //TODO construir un criterio para una lista de valores
                             }
-                            break;
+                            
                         }
                     } else if (filterValue instanceof String) {
                         ParameterExpression<String> pexp = cb.parameter(String.class,
@@ -495,8 +502,6 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         if (filters != null){
             for (String filterProperty : filters.keySet()) {
                 Object filterValue = filters.get(filterProperty);
-//                System.out.println("//---> filterProperty: " + filterProperty);
-//                System.out.println("//---> filterValue: " + filterValue);
                 if ("tag".equalsIgnoreCase(filterProperty)){
                     q.setParameter(filterProperty, filterValue);
                     countquery.setParameter(filterProperty, filterValue);
@@ -514,8 +519,12 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                             if (value instanceof Date){ 
                                 q.setParameter(q.getParameter((String)key, Date.class), (Date) value, TemporalType.DATE);
                                 countquery.setParameter(q.getParameter((String)key, Date.class), (Date) value, TemporalType.DATE);
+                            } else {
+                                 
+                                String _filterValue = "%" + (String) value + "%";
+                                q.setParameter(q.getParameter((String)key, String.class), _filterValue);
+                                countquery.setParameter(q.getParameter((String)key, String.class), _filterValue);
                             }
-
                         }
                     } else if (filterValue instanceof String) {
                         filterValue = "%" + filterValue + "%";
