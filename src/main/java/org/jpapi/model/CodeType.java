@@ -24,6 +24,7 @@ package org.jpapi.model;
 public enum CodeType {
     NONE,
     SYSTEM,
+    SUBJECT,
     CEDULA,
     RUC,
     PASSPORT,

@@ -18,6 +18,7 @@
 package org.jpapi.model;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -35,21 +36,50 @@ import org.jpapi.model.profile.Subject;
 @Table(name = "Setting")
 @NamedQueries({ @NamedQuery(name = "Setting.findByName", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
     @NamedQuery(name = "Setting.findByNameAndOwner", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
-public class Setting extends PersistentObject<Setting> implements Serializable {
+public final class Setting extends PersistentObject<Setting> implements Serializable {
 
     private static final long serialVersionUID = -7485883311296510018L;
+    
+    private String category;
+    
+    private String label;
+    
     private String value;
     
     @ManyToOne(optional = true)
     @JoinColumn(name = "owner", nullable = true)
     private Subject owner;
+    
+    @Column(nullable = true)
+    private boolean overwritable = true; 
 
     public Setting() {
+    }
+    
+     public Setting(String label, String name, String value) {
+        this(name, value);
+        this.setLabel(label);
     }
 
     public Setting(String name, String value) {
         this.setName(name);
         this.value = value;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public String getValue() {
@@ -66,6 +96,14 @@ public class Setting extends PersistentObject<Setting> implements Serializable {
 
     public void setOwner(Subject owner) {
         this.owner = owner;
+    }
+
+    public boolean isOverwritable() {
+        return overwritable;
+    }
+
+    public void setOverwritable(boolean overwritable) {
+        this.overwritable = overwritable;
     }
     
 }

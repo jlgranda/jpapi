@@ -476,7 +476,13 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                     } else {
                         ParameterExpression<?> pexp = cb.parameter(filterValue != null ? filterValue.getClass() : Object.class,
                                 filterProperty);
-                        Predicate predicate = cb.equal(root.get(filterProperty), pexp);
+                        Predicate predicate = null;
+                        if (filterValue == null){
+                            predicate = cb.isNull(root.get(filterProperty));
+                        } else {
+                            predicate = cb.equal(root.get(filterProperty), pexp);
+                        }
+                        
                         criteria.add(predicate);
                     }
                 }
@@ -537,8 +543,10 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                         q.setParameter(filterProperty, filterValue);
                         countquery.setParameter(filterProperty, filterValue);
                     } else {//Todo verificar que sea un String
-                        q.setParameter(filterProperty, filterValue);
-                        countquery.setParameter(filterProperty, filterValue);
+                        if (filterValue != null){
+                            q.setParameter(filterProperty, filterValue);
+                            countquery.setParameter(filterProperty, filterValue);
+                        }
                     }
                 }
             }
