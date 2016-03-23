@@ -31,6 +31,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ListJoin;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -45,7 +46,6 @@ import org.jpapi.model.Membership_;
 import org.jpapi.model.profile.Subject;
 import org.jpapi.util.QueryData;
 import org.jpapi.util.QuerySortOrder;
-
 
 /**
  * Seam 2 Home Class Clone
@@ -230,17 +230,19 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
 
     protected abstract String getEntityName();
     private static final long serialVersionUID = 7520839069908084915L;
-    
-    /******************************************************
+
+    /**
+     * ****************************************************
      * Adapted from PersistenceUtil
-     ******************************************************/
+     *****************************************************
+     */
     protected <E> long count(final Class<E> type) {
         CriteriaBuilder qb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Long> cq = qb.createQuery(Long.class);
         cq.select(qb.count(cq.from(type)));
         return getEntityManager().createQuery(cq).getSingleResult();
     }
-    
+
     protected <E> long countByNamedQuery(final String namedQueryName, final Object... params) {
 
         Query query = getEntityManager().createNamedQuery(namedQueryName);
@@ -248,10 +250,10 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         for (Object p : params) {
             query.setParameter(i++, p);
         }
-        
+
         try {
             return ((Number) query.getSingleResult()).intValue();
-        } catch (javax.persistence.NoResultException nre){
+        } catch (javax.persistence.NoResultException nre) {
             return -1L;
         }
     }
@@ -259,7 +261,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
     protected <E> void create(final E entity) {
         getEntityManager().persist(entity);
     }
-    
+
     protected <E> void update(final E entity) {
         if (getEntityManager() == null) {
             throw new IllegalStateException("Must initialize EntityManager before using Services!");
@@ -290,7 +292,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         }
         return result;
     }
-    
+
     protected Class<?> getObjectClass(final Object type) throws IllegalArgumentException {
         Class<?> clazz = null;
         if (type == null) {
@@ -307,7 +309,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
     public <E> List<E> findByNamedQuery(final String namedQueryName) {
         return findByNamedQuery(namedQueryName, 0);
     }
-    
+
     @SuppressWarnings("unchecked")
     public <E> List<E> findByNamedQuery(final String namedQueryName, int limit) {
         Query query = getEntityManager().createNamedQuery(namedQueryName);
@@ -319,7 +321,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
     public <E> List<E> findByNamedQuery(final String namedQueryName, final Object... params) {
         return findByNamedQueryWithLimit(namedQueryName, 0, params);
     }
-    
+
     @SuppressWarnings("unchecked")
     public <E> List<E> findByNamedQueryWithLimit(final String namedQueryName, final int limit, final Object... params) {
         Query query = getEntityManager().createNamedQuery(namedQueryName);
@@ -330,7 +332,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         query.setMaxResults(limit);
         return query.getResultList();
     }
-    
+
     protected <E> List<E> findAll(final Class<E> type) {
         CriteriaQuery<E> query = getEntityManager().getCriteriaBuilder().createQuery(type);
         query.from(type);
@@ -341,7 +343,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
     public <E> E findUniqueByNamedQuery(final String namedQueryName) throws NoResultException {
         return (E) getEntityManager().createNamedQuery(namedQueryName).getSingleResult();
     }
-    
+
     @SuppressWarnings("unchecked")
     public <E> E findUniqueByNamedQuery(final String namedQueryName, final Object... params)
             throws NoResultException {
@@ -350,10 +352,10 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         for (Object p : params) {
             query.setParameter(i++, p);
         }
-        
+
         try {
             return (E) query.getSingleResult();
-        } catch (javax.persistence.NoResultException nre){
+        } catch (javax.persistence.NoResultException nre) {
             return null;
         }
     }
@@ -388,11 +390,10 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         return getEntityManager().createQuery(criteriaQuery);
     }
 
-
     public E find(final long id) {
         return getEntityManager().find(entityClass, id);
     }
-    
+
     public QueryData<E> find(int start, int end, String sortField,
             QuerySortOrder order, Map<String, Object> filters) {
 
@@ -408,83 +409,86 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         countQ.select(cb.count(rootCount));
 
         List<Predicate> criteria = new ArrayList<>();
-        if (filters != null){
+        if (filters != null) {
             for (String filterProperty : filters.keySet()) {
                 Object filterValue = filters.get(filterProperty);
                 //System.out.println("//---> Processing filterProperty: " + filterProperty);
-                if ("tag".equalsIgnoreCase(filterProperty)){
+                if ("tag".equalsIgnoreCase(filterProperty)) {
                     Root<BussinesEntity> bussinesEntity = (Root<BussinesEntity>) root;
-                    
+
                     ListJoin<BussinesEntity, Membership> joinBussinesEntity = bussinesEntity.join(BussinesEntity_.memberships, JoinType.LEFT);
                     Join<Membership, Group> joinMembershipGroup = joinBussinesEntity.join(Membership_.group, JoinType.LEFT);
-                    
+
                     //Agregar relación a rootCount
                     ListJoin<BussinesEntity, Membership> joinCountBussinesEntity = ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.memberships, JoinType.LEFT);
                     joinCountBussinesEntity.join(Membership_.group, JoinType.LEFT);
-                    
+
                     Path<String> groupPath = joinMembershipGroup.get(BussinesEntity_.code); // mind these Path objects
                     ParameterExpression<String> pexpGroup = cb.parameter(String.class,
-                                        filterProperty);
+                            filterProperty);
                     Predicate predicate = cb.equal(groupPath, pexpGroup);
                     criteria.add(predicate);
-                } else if ("keyword".equalsIgnoreCase(filterProperty)){
+                } else if ("keyword".equalsIgnoreCase(filterProperty)) {
                     Root<BussinesEntity> bussinesEntity = (Root<BussinesEntity>) root;
-                    
+
                     Join<BussinesEntity, Subject> joinBussinesEntity = bussinesEntity.join(BussinesEntity_.author, JoinType.LEFT);
-                    
+
                     //Agregar relación a rootCount
                     ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.author, JoinType.LEFT);
-                    
+
                     Path<String> authorPath = joinBussinesEntity.get(BussinesEntity_.name); // mind these Path objects
                     Path<String> codePath = bussinesEntity.get(BussinesEntity_.code); // mind these Path objects
                     ParameterExpression<String> pexpAuthor = cb.parameter(String.class,
-                                        "author");
+                            "author");
                     ParameterExpression<String> pexpCode = cb.parameter(String.class,
-                                        "code");
+                            "code");
                     Predicate predicate = cb.or(cb.like(cb.lower(authorPath), pexpAuthor), cb.like(cb.lower(codePath), pexpCode));
                     criteria.add(predicate);
-                } else {
-                    if (filterValue instanceof Map){ //has multiples values
-                        for (Object key : ((Map) filterValue).keySet()){
-                            Object value = ((Map) filterValue).get((String) key);
-                            //Verify data content for build
-                            if (value instanceof Date){ 
-                                Path<Date> filterPropertyPath = root.<Date>get(filterProperty);
-                                ParameterExpression<Date> pexpStart = cb.parameter(Date.class,
-                                        "start");
-                                ParameterExpression<Date> pexpEnd = cb.parameter(Date.class,
-                                        "end");
-                                Predicate predicate = cb.between(filterPropertyPath, pexpStart, pexpEnd);
-                                criteria.add(predicate);
-                                break;
-                            } else if (value instanceof String){ //busqueda de palabra clave en varias columnas
-                                Path<String> filterPropertyPath = root.<String>get((String)key);
-                                ParameterExpression<String> pexp = cb.parameter(String.class,
-                                        (String)key);
-                                Predicate predicate = cb.or(cb.like(cb.lower(filterPropertyPath), pexp));
-                                criteria.add(predicate);
-                            } else {
-                                //TODO construir un criterio para una lista de valores
-                            }
-                            
-                        }
-                    } else if (filterValue instanceof String) {
-                        ParameterExpression<String> pexp = cb.parameter(String.class,
-                                filterProperty);
-                        Predicate predicate = cb.like(cb.lower(root.<String>get(filterProperty)), pexp);
-                        criteria.add(predicate);
-                    } else {
-                        ParameterExpression<?> pexp = cb.parameter(filterValue != null ? filterValue.getClass() : Object.class,
-                                filterProperty);
-                        Predicate predicate = null;
-                        if (filterValue == null){
-                            predicate = cb.isNull(root.get(filterProperty));
+                } else if (filterValue instanceof Map) { //has multiples values
+                    List<Predicate> predicates = new ArrayList<>();
+                    for (Object key : ((Map) filterValue).keySet()) {
+                        Object value = ((Map) filterValue).get((String) key);
+                        //Verify data content for build
+                        if (value instanceof Date) {
+                            Path<Date> filterPropertyPath = root.<Date>get(filterProperty);
+                            ParameterExpression<Date> pexpStart = cb.parameter(Date.class,
+                                    "start");
+                            ParameterExpression<Date> pexpEnd = cb.parameter(Date.class,
+                                    "end");
+                            Predicate predicate = cb.between(filterPropertyPath, pexpStart, pexpEnd);
+                            criteria.add(predicate);
+                            break;
+                        } else if (value instanceof String) { //busqueda de palabra clave en varias columnas
+                            Path<String> filterPropertyPath = root.<String>get((String) key);
+                            ParameterExpression<String> pexp = cb.parameter(String.class,
+                                    (String) key);
+                            Predicate predicate = cb.like(cb.lower(filterPropertyPath), pexp);
+                            predicates.add(predicate);
                         } else {
-                            predicate = cb.equal(root.get(filterProperty), pexp);
+                            //TODO construir un criterio para una lista de valores, generalmente into
                         }
-                        
-                        criteria.add(predicate);
                     }
+                    //Si se han definido 
+                    if (!predicates.isEmpty()) {
+                        Predicate[] array = new Predicate[predicates.size()];
+                        criteria.add(cb.or(predicates.toArray(array)));
+                    }
+                } else if (filterValue instanceof String) {
+                    ParameterExpression<String> pexp = cb.parameter(String.class,
+                            filterProperty);
+                    Predicate predicate = cb.like(cb.lower(root.<String>get(filterProperty)), pexp);
+                    criteria.add(predicate);
+                } else {
+                    ParameterExpression<?> pexp = cb.parameter(filterValue != null ? filterValue.getClass() : Object.class,
+                            filterProperty);
+                    Predicate predicate = null;
+                    if (filterValue == null) {
+                        predicate = cb.isNull(root.get(filterProperty));
+                    } else {
+                        predicate = cb.equal(root.get(filterProperty), pexp);
+                    }
+
+                    criteria.add(predicate);
                 }
             }
         }
@@ -498,11 +502,22 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         }
 
         if (sortField != null) {
-            Path<String> path = root.get(sortField);
-            if (order == QuerySortOrder.ASC) {
-                c.orderBy(cb.asc(path));
+            List<Order> orders = new ArrayList<>();
+            Path<String> path = null;
+            if (!sortField.contains(",")) {
+                path = root.get(sortField);
+                orders.add(cb.asc(path));
             } else {
-                c.orderBy(cb.desc(path));
+                for (String field : sortField.split(",")) {
+                    path = root.get(field.trim());
+                    orders.add(cb.asc(path));
+                }
+            }
+
+            if (order == QuerySortOrder.ASC) {
+                c.orderBy(orders);
+            } else {
+                c.orderBy(orders);
             }
         }
 
@@ -511,52 +526,48 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         TypedQuery<Long> countquery = (TypedQuery<Long>) createQuery(countQ);
         // countquery.setHint("org.hibernate.cacheable", true);
 
-        if (filters != null){
+        if (filters != null) {
             for (String filterProperty : filters.keySet()) {
                 Object filterValue = filters.get(filterProperty);
-                if ("tag".equalsIgnoreCase(filterProperty)){
+                if ("tag".equalsIgnoreCase(filterProperty)) {
                     q.setParameter(filterProperty, filterValue);
                     countquery.setParameter(filterProperty, filterValue);
-                } else if ("keyword".equalsIgnoreCase(filterProperty)){
+                } else if ("keyword".equalsIgnoreCase(filterProperty)) {
                     filterValue = "%" + filterValue.toString().toLowerCase() + "%";
                     q.setParameter("author", filterValue);
                     q.setParameter("code", filterValue);
                     countquery.setParameter("author", filterValue);
                     countquery.setParameter("code", filterValue);
-                } else {
-                    if (filterValue instanceof Map){ 
-                        for (Object key : ((Map) filterValue).keySet()){
-                            Object value = ((Map) filterValue).get((String) key);
-                            //Verify data content for build
-                            if (value instanceof Date){ 
-                                q.setParameter(q.getParameter((String)key, Date.class), (Date) value, TemporalType.DATE);
-                                countquery.setParameter(q.getParameter((String)key, Date.class), (Date) value, TemporalType.DATE);
-                            } else {
-                                 
-                                String _filterValue = "%" + (String) value + "%";
-                                q.setParameter(q.getParameter((String)key, String.class), _filterValue);
-                                countquery.setParameter(q.getParameter((String)key, String.class), _filterValue);
-                            }
-                        }
-                    } else if (filterValue instanceof String) {
-                        filterValue = "%" + filterValue + "%";
-                        q.setParameter(filterProperty, filterValue);
-                        countquery.setParameter(filterProperty, filterValue);
-                    } else {//Todo verificar que sea un String
-                        if (filterValue != null){
-                            q.setParameter(filterProperty, filterValue);
-                            countquery.setParameter(filterProperty, filterValue);
+                } else if (filterValue instanceof Map) {
+                    for (Object key : ((Map) filterValue).keySet()) {
+                        Object value = ((Map) filterValue).get((String) key);
+                        //Verify data content for build
+                        if (value instanceof Date) {
+                            q.setParameter(q.getParameter((String) key, Date.class), (Date) value, TemporalType.DATE);
+                            countquery.setParameter(q.getParameter((String) key, Date.class), (Date) value, TemporalType.DATE);
+                        } else {
+
+                            String _filterValue = "%" + (String) value + "%";
+                            q.setParameter(q.getParameter((String) key, String.class), _filterValue);
+                            countquery.setParameter(q.getParameter((String) key, String.class), _filterValue);
                         }
                     }
+                } else if (filterValue instanceof String) {
+                    filterValue = "%" + filterValue + "%";
+                    q.setParameter(filterProperty, filterValue);
+                    countquery.setParameter(filterProperty, filterValue);
+                } else//Todo verificar que sea un String
+                if (filterValue != null) {
+                    q.setParameter(filterProperty, filterValue);
+                    countquery.setParameter(filterProperty, filterValue);
                 }
             }
         }
 
-        if (start != -1 && end != -1){
+        if (start != -1 && end != -1) {
             q.setMaxResults(end - start);
             q.setFirstResult(start);
         }
-        
 
         queryData.setResult(q.getResultList());
         Long totalResultCount = countquery.getSingleResult();
