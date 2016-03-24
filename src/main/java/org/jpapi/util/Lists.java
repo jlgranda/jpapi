@@ -27,6 +27,25 @@ import java.util.List;
  * @author jlgranda
  */
 public class Lists {
+    
+    /**
+     * Convierte una lista de objetos en una cadena separada por comas, con los
+     * elementos de la lista. Los objetos de la lista deben implementar el
+     * método toString
+     *
+     * @param iter
+     *            la lista sobre la cual se construye la cadena de elementos
+     *            seperadas por comas
+     * @return una cadena separada por comas, con los elementos de la lista.
+     */
+    public static String toString(Iterable iter) {
+        List list = new ArrayList();
+        for (Object obj : iter){
+            list.add(obj);
+        }
+        return Lists.toString(list, ',', (char) Character.SPACE_SEPARATOR);
+    }
+    
     /**
      * Convierte una lista de objetos en una cadena separada por comas, con los
      * elementos de la lista. Los objetos de la lista deben implementar el

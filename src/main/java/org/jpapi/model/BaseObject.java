@@ -75,6 +75,9 @@ public abstract class BaseObject<E extends BaseObject<E>> implements Serializabl
     @Column(nullable = true)
     protected String status;
 
+    @Column(nullable = true)
+    protected Short orden;
+    
     @PrePersist
     void prePersist() {
         createdOn = new Date();
@@ -199,6 +202,14 @@ public abstract class BaseObject<E extends BaseObject<E>> implements Serializabl
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Short getOrden() {
+        return orden;
+    }
+
+    public void setOrden(Short orden) {
+        this.orden = orden;
     }
     
 }

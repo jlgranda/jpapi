@@ -35,8 +35,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.jpapi.model.profile.Subject;
 import org.jpapi.util.Dates;
@@ -61,7 +59,6 @@ import org.jpapi.util.Dates;
     @NamedQuery(name = "BussinesEntity.countByOwner", query = "select count(b) FROM BussinesEntity b WHERE b.owner = ?1"),
     
 })
-@XmlRootElement
 public class BussinesEntity extends DeletableObject<BussinesEntity> {
 
     public static final String SEPARATOR= " » ";
@@ -88,7 +85,6 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     @JoinColumn(name = "property_id", nullable = true)
     private Property property;
     
-    @XmlTransient
     public List<Membership> getMemberships() {
         return memberships;
     }
@@ -121,7 +117,7 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     }
 
     public List<Group> findGroups(final String... names) {
-        List<Group> _buffer = new ArrayList<Group>();
+        List<Group> _buffer = new ArrayList<>();
         Group g = null;
         for (String name : names) {
             g = getGroup(name);
@@ -189,7 +185,6 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
         this.type = type;
     }
 
-    @XmlTransient
     public List<BussinesEntityAttribute> getAttributes() {
         Collections.sort(attributes);
         return attributes;
