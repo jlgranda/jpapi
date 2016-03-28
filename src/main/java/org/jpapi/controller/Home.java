@@ -46,6 +46,7 @@ import org.jpapi.model.Membership_;
 import org.jpapi.model.profile.Subject;
 import org.jpapi.util.QueryData;
 import org.jpapi.util.QuerySortOrder;
+import org.jpapi.util.Strings;
 
 /**
  * Seam 2 Home Class Clone
@@ -464,8 +465,6 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                                     (String) key);
                             Predicate predicate = cb.like(cb.lower(filterPropertyPath), pexp);
                             predicates.add(predicate);
-                        } else {
-                            //TODO construir un criterio para una lista de valores, generalmente into
                         }
                     }
                     //Si se han definido 
@@ -473,6 +472,13 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                         Predicate[] array = new Predicate[predicates.size()];
                         criteria.add(cb.or(predicates.toArray(array)));
                     }
+                } else if (filterValue instanceof List) { //has multiples values for a column
+                    Path<String> filterPropertyPath = root.<String>get((String) filterProperty);
+                    ParameterExpression<List> pexp = cb.parameter(List.class,
+                            filterProperty);
+                    Predicate predicate = filterPropertyPath.in(pexp);
+                    criteria.add(predicate);
+
                 } else if (filterValue instanceof String) {
                     ParameterExpression<String> pexp = cb.parameter(String.class,
                             filterProperty);
@@ -522,9 +528,9 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         }
 
         TypedQuery<E> q = (TypedQuery<E>) createQuery(c);
-        // q.setHint("org.hibernate.cacheable", true);
+        q.setHint("org.hibernate.cacheable", true);
         TypedQuery<Long> countquery = (TypedQuery<Long>) createQuery(countQ);
-        // countquery.setHint("org.hibernate.cacheable", true);
+        countquery.setHint("org.hibernate.cacheable", true);
 
         if (filters != null) {
             for (String filterProperty : filters.keySet()) {
@@ -552,6 +558,9 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                             countquery.setParameter(q.getParameter((String) key, String.class), _filterValue);
                         }
                     }
+                } else if (filterValue instanceof List) { //has multiples values for a column
+                    q.setParameter(filterProperty, filterValue);
+                    countquery.setParameter(filterProperty, filterValue);
                 } else if (filterValue instanceof String) {
                     filterValue = "%" + filterValue + "%";
                     q.setParameter(filterProperty, filterValue);
