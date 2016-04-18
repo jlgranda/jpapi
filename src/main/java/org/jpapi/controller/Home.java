@@ -410,10 +410,10 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         countQ.select(cb.count(rootCount));
 
         List<Predicate> criteria = new ArrayList<>();
+        List<Predicate> predicates = null;
         if (filters != null) {
             for (String filterProperty : filters.keySet()) {
                 Object filterValue = filters.get(filterProperty);
-                //System.out.println("//---> Processing filterProperty: " + filterProperty);
                 if ("tag".equalsIgnoreCase(filterProperty)) {
                     Root<BussinesEntity> bussinesEntity = (Root<BussinesEntity>) root;
 
@@ -446,7 +446,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                     Predicate predicate = cb.or(cb.like(cb.lower(authorPath), pexpAuthor), cb.like(cb.lower(codePath), pexpCode));
                     criteria.add(predicate);
                 } else if (filterValue instanceof Map) { //has multiples values
-                    List<Predicate> predicates = new ArrayList<>();
+                    predicates = new ArrayList<>();
                     for (Object key : ((Map) filterValue).keySet()) {
                         Object value = ((Map) filterValue).get((String) key);
                         //Verify data content for build
@@ -535,6 +535,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         if (filters != null) {
             for (String filterProperty : filters.keySet()) {
                 Object filterValue = filters.get(filterProperty);
+                //System.err.println("---------------> filterProperty: " + filterProperty + ", filterValue: " + filterValue);
                 if ("tag".equalsIgnoreCase(filterProperty)) {
                     q.setParameter(filterProperty, filterValue);
                     countquery.setParameter(filterProperty, filterValue);
@@ -552,7 +553,6 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                             q.setParameter(q.getParameter((String) key, Date.class), (Date) value, TemporalType.DATE);
                             countquery.setParameter(q.getParameter((String) key, Date.class), (Date) value, TemporalType.DATE);
                         } else {
-
                             String _filterValue = "%" + (String) value + "%";
                             q.setParameter(q.getParameter((String) key, String.class), _filterValue);
                             countquery.setParameter(q.getParameter((String) key, String.class), _filterValue);
@@ -565,8 +565,8 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                     filterValue = "%" + filterValue + "%";
                     q.setParameter(filterProperty, filterValue);
                     countquery.setParameter(filterProperty, filterValue);
-                } else//Todo verificar que sea un String
-                if (filterValue != null) {
+                } else if (filterValue != null) {
+                    //System.err.println("--------------->Setted filterProperty: " + filterProperty + ", filterValue: " + filterValue);
                     q.setParameter(filterProperty, filterValue);
                     countquery.setParameter(filterProperty, filterValue);
                 }
