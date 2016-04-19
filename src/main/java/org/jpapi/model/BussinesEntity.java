@@ -98,7 +98,7 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     }
 
     public List<Group> getGroups() {
-        List<Group> groups = new ArrayList<Group>();
+        List<Group> groups = new ArrayList<>();
         for (Membership m : getMemberships()) {
             groups.add(m.getGroup());
         }

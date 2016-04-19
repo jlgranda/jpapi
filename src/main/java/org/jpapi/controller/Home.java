@@ -550,8 +550,8 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                         Object value = ((Map) filterValue).get((String) key);
                         //Verify data content for build
                         if (value instanceof Date) {
-                            q.setParameter(q.getParameter((String) key, Date.class), (Date) value, TemporalType.DATE);
-                            countquery.setParameter(q.getParameter((String) key, Date.class), (Date) value, TemporalType.DATE);
+                            q.setParameter(q.getParameter((String) key, Date.class), (Date) value, TemporalType.TIMESTAMP);
+                            countquery.setParameter(q.getParameter((String) key, Date.class), (Date) value, TemporalType.TIMESTAMP);
                         } else {
                             String _filterValue = "%" + (String) value + "%";
                             q.setParameter(q.getParameter((String) key, String.class), _filterValue);
