@@ -512,19 +512,25 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
             Path<String> path = null;
             if (!sortField.contains(",")) {
                 path = root.get(sortField);
-                orders.add(cb.asc(path));
+                if (order == QuerySortOrder.ASC) {
+                    orders.add(cb.asc(path));
+                } else {
+                    orders.add(cb.desc(path));
+                }
+                
             } else {
                 for (String field : sortField.split(",")) {
                     path = root.get(field.trim());
-                    orders.add(cb.asc(path));
+                    if (order == QuerySortOrder.ASC) {
+                        orders.add(cb.asc(path));
+                    } else {
+                        orders.add(cb.desc(path));
+                    }
                 }
             }
-
-            if (order == QuerySortOrder.ASC) {
-                c.orderBy(orders);
-            } else {
-                c.orderBy(orders);
-            }
+            
+            c.orderBy(orders);
+            
         }
 
         TypedQuery<E> q = (TypedQuery<E>) createQuery(c);
