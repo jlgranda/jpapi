@@ -326,8 +326,16 @@ public class Subject extends BussinesEntity implements Serializable {
 
     @Transient
     public String getFullName() {
-        String fullName = Strings.nullToEmpty(this.getFirstname() + " " + this.getSurname());
-        boolean flag = Strings.isNullOrEmpty(this.getFirstname()) && Strings.isNullOrEmpty(this.getSurname());
+        StringBuilder builder = new StringBuilder();
+        if (!Strings.isNullOrEmpty(this.getFirstname()))
+            builder.append(this.getFirstname());
+        
+        if (!Strings.isNullOrEmpty(this.getSurname())){
+            builder.append(" ");
+            builder.append(this.getSurname());
+        }
+        String fullName = builder.toString();
+        boolean flag = Strings.isNullOrEmpty(fullName);
         return flag ? getUsername() : fullName;
     }
 
