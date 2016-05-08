@@ -49,9 +49,9 @@ public abstract class BaseObject<E extends BaseObject<E>> implements Serializabl
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
     protected CodeType codeType;
-    @Column(nullable = true)
+    @Column(nullable = true, length = 1024)
     protected String name;
-    @Column(nullable = true, length = 2048)
+    @Column(nullable = true, length = 4096)
     protected String description;
     @Version
     @Column(name = "version", nullable = false)
