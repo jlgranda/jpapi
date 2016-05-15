@@ -26,5 +26,7 @@ public enum StatusType {
     INACTIVE,
     LOCKED,
     DEPRECATED,
-    IMPORTANT
+    IMPORTANT,
+    SUCCESS,
+    FAIL
 }

@@ -338,6 +338,11 @@ public class Subject extends BussinesEntity implements Serializable {
         boolean flag = Strings.isNullOrEmpty(fullName);
         return flag ? getUsername() : fullName;
     }
+    
+    @Transient
+    public String getEmailAddress(){
+        return getFullName() + " <" + getEmail() + ">";
+    }
 
     @Override
     public String toString() {

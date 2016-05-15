@@ -17,6 +17,7 @@
  */
 package org.jpapi.util;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
@@ -26,11 +27,20 @@ import javax.faces.context.FacesContext;
  * @author jlgranda
  */
 public class I18nUtil {
-     public static String getMessages(String key) {
+    public static String getMessages(String key) {
          FacesContext fc = FacesContext.getCurrentInstance();
          Locale myLocale = fc.getExternalContext().getRequestLocale();
          ResourceBundle myResources = ResourceBundle.getBundle("MessageResources", myLocale);
 
          return myResources.containsKey(key) ? myResources.getString(key) : key;
+    }
+    
+    public static String getFormat(String key, String... args) {
+        MessageFormat mf = new MessageFormat(I18nUtil.getMessages(key));
+        return  mf.format(args);
+    }
+    
+    public static String getMessages(String key, String... args) {
+         return I18nUtil.getFormat(key, args);
     }
 }
