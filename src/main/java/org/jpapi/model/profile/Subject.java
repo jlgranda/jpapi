@@ -44,7 +44,7 @@ import org.jpapi.util.Strings;
  * Consultas nombradas para Subject
  */
 @NamedQueries({
-    @NamedQuery(name = "Subject.findUserByLogin", query = "select u from Subject u where u.username = :username"),
+    @NamedQuery(name = "Subject.findUserByLogin", query = "select u from Subject u where u.username = ?1"),
     @NamedQuery(name = "Subject.findRoleById", query = "select u.role from Subject u where u.id = :id"),
     /*@NamedQuery(name = "Subject.findGroupsByUserAndType", query = "select g FROM Subject u JOIN u.groups g WHERE u=:user and g.type=:groupType"),
      @NamedQuery(name = "Subject.findUserByGroupsAndRole", query = "select entity From Subject entity join entity.groups g where g in (:groups) and entity.role.name=:role"),*/
@@ -334,6 +334,11 @@ public class Subject extends BussinesEntity implements Serializable {
             builder.append(" ");
             builder.append(this.getSurname());
         }
+        
+        if (!Strings.isNullOrEmpty(this.getEmail()) && builder.length() == 0){
+            builder.append(this.getEmail());
+        }
+        
         String fullName = builder.toString();
         boolean flag = Strings.isNullOrEmpty(fullName);
         return flag ? getUsername() : fullName;

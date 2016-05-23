@@ -281,6 +281,25 @@ public class Strings {
         return urlValidator.isValid(url);
     }
     
+    public static String complete(int longitud, Long secuencia, char caracter) {
+
+        String valor_s;
+        valor_s = secuencia.toString();
+        String nueva_cadena = "";
+        int j = 0;
+        if (valor_s.length() < longitud) {
+            String cadena_ceros = "";
+            int faltan = longitud - valor_s.length();
+            for (j = 0; j < faltan; j++) {
+                cadena_ceros = cadena_ceros + caracter;
+            }
+            nueva_cadena = cadena_ceros + valor_s;
+        } else {
+            nueva_cadena = valor_s;
+        }
+        return nueva_cadena;
+    }
+    
     public static void main(String args[]){
 //        System.out.println(Strings.splitNamesAt("José Luis Granda Sivisapa"));
 //        System.out.println(Strings.splitNamesAt("José Luis Granda"));
@@ -292,6 +311,8 @@ public class Strings {
         System.out.println(Strings.isUrl("dsadsadsa"));
         
         System.out.println(Strings.isUrl("http://jlgranda.com"));
+        
+        System.out.println(Strings.complete(55, 23L, '$'));
         
     }
 }
