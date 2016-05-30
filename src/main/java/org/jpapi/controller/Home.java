@@ -46,7 +46,6 @@ import org.jpapi.model.Membership_;
 import org.jpapi.model.profile.Subject;
 import org.jpapi.util.QueryData;
 import org.jpapi.util.QuerySortOrder;
-import org.jpapi.util.Strings;
 
 /**
  * Seam 2 Home Class Clone
