@@ -87,7 +87,33 @@ public class Dates {
         }
         return false;
     }
-
+    
+    public static Date minimumDate(Date date){
+        Date _date = new Date();
+        _date.setTime(date.getTime());
+        _date= DateUtils.setHours(_date, 0);
+        _date= DateUtils.setMinutes(_date, 0);
+        _date= DateUtils.setSeconds(_date, 0);
+        _date= DateUtils.setMilliseconds(_date, 0);
+        return _date;
+    }
+    
+    public static Date maximumDate(Date date){
+        Date _date = new Date();
+        _date.setTime(date.getTime());
+        _date= DateUtils.setHours(_date, 23);
+        _date= DateUtils.setMinutes(_date, 59);
+        _date= DateUtils.setSeconds(_date, 59);
+        _date= DateUtils.setMilliseconds(_date, 999);
+        return _date;
+    }
+    
+    public static int get(Date date, int field){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(field);
+    }
+    
     public static boolean isInRange(final Date start, final Date end, final Date date) {
         if ((date.compareTo(start) >= 0) && (date.compareTo(end) <= 0)) {
             return true;

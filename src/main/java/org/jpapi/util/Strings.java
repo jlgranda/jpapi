@@ -36,7 +36,11 @@ package org.jpapi.util;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 
@@ -300,6 +304,23 @@ public class Strings {
         return nueva_cadena;
     }
     
+    public static String toString(Date date, int field) {
+        
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        Map<String, String> map = new HashMap<>();
+        map.put("7_1", "Domingo");
+        map.put("7_2", "Lunes");
+        map.put("7_3", "Martes");
+        map.put("7_4", "Miércoles");
+        map.put("7_5", "Jueves");
+        map.put("7_6", "Viernes");
+        map.put("7_7", "Sábado");
+        
+        int value = calendar.get(field);
+        return map.get(field + "_" + value);
+    }
+    
     public static void main(String args[]){
 //        System.out.println(Strings.splitNamesAt("José Luis Granda Sivisapa"));
 //        System.out.println(Strings.splitNamesAt("José Luis Granda"));
@@ -313,6 +334,18 @@ public class Strings {
         System.out.println(Strings.isUrl("http://jlgranda.com"));
         
         System.out.println(Strings.complete(55, 23L, '$'));
+        System.out.println(Strings.toString(Dates.now(), Calendar.DAY_OF_WEEK));
+        System.out.println(Strings.toString(Dates.addDays(Dates.now(), 1), Calendar.DAY_OF_WEEK));
+        System.out.println(Strings.toString(Dates.addDays(Dates.now(), -1), Calendar.DAY_OF_WEEK));
+        System.out.println(Strings.toString(Dates.addDays(Dates.now(), -2), Calendar.DAY_OF_WEEK));
+        System.out.println(Strings.toString(Dates.addDays(Dates.now(), -4), Calendar.DAY_OF_WEEK));
+        
+        
+        System.out.println(Dates.minimumDate(Dates.now()));
+        System.out.println(Dates.maximumDate(Dates.now()));
+        System.out.println(Strings.toString(Dates.minimumDate(Dates.now()), Calendar.DAY_OF_WEEK));
+        
+        
         
     }
 }
