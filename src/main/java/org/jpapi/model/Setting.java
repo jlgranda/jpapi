@@ -25,6 +25,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jpapi.model.profile.Subject;
 
 /**
@@ -36,7 +38,7 @@ import org.jpapi.model.profile.Subject;
 @Table(name = "Setting")
 @NamedQueries({ @NamedQuery(name = "Setting.findByName", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
     @NamedQuery(name = "Setting.findByNameAndOwner", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
-public final class Setting extends PersistentObject<Setting> implements Serializable {
+public final class Setting extends PersistentObject<Setting> implements Comparable<Setting>, Serializable {
 
     private static final long serialVersionUID = -7485883311296510018L;
     
@@ -105,5 +107,55 @@ public final class Setting extends PersistentObject<Setting> implements Serializ
     public void setOverwritable(boolean overwritable) {
         this.overwritable = overwritable;
     }
-    
+
+    @Override
+    public int hashCode() {
+        HashCodeBuilder hcb = new HashCodeBuilder(17, 31); // two randomly chosen prime numbers
+        // if deriving: appendSuper(super.hashCode()).
+
+        hcb.append(getName()).
+                append(getCategory());
+
+        return hcb.toHashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Setting other = (Setting) obj;
+        EqualsBuilder eb = new EqualsBuilder();
+
+        eb.append(getName(), other.getName()).
+                append(getCategory(), other.getCategory());
+
+        return eb.isEquals();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        str.append("")
+        .append(getId())
+        .append(": ")
+        .append(getCategory())
+        .append(", ")
+        .append(" ")
+        .append(getName());
+        return str.toString();
+    }
+    @Override
+    public int compareTo(Setting other) {
+        if (other.getLabel() == null || this.getLabel() == null){
+            return -1;
+        }
+        return this.getLabel().compareTo(other.getLabel());
+    }
 }
