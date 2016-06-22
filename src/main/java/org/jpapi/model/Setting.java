@@ -38,7 +38,7 @@ import org.jpapi.model.profile.Subject;
 @Table(name = "Setting")
 @NamedQueries({ @NamedQuery(name = "Setting.findByName", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
     @NamedQuery(name = "Setting.findByNameAndOwner", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
-public final class Setting extends PersistentObject<Setting> implements Comparable<Setting>, Serializable {
+public class Setting extends PersistentObject<Setting> implements Comparable<Setting>, Serializable {
 
     private static final long serialVersionUID = -7485883311296510018L;
     
@@ -60,7 +60,7 @@ public final class Setting extends PersistentObject<Setting> implements Comparab
     
      public Setting(String label, String name, String value) {
         this(name, value);
-        this.setLabel(label);
+       this.label = label;
     }
 
     public Setting(String name, String value) {
