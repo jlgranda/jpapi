@@ -76,11 +76,11 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     //Best practice http://java.dzone.com/articles/deterring-%E2%80%9Ctomany%E2%80%9D?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3a+javalobby/frontpage+%28Javalobby+/+Java+Zone%29
     //Replace ManyToMany fro OneToMany and link entity
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bussinesEntity", orphanRemoval = false,  fetch = FetchType.LAZY)
-    private List<Membership> memberships = new ArrayList<Membership>();
+    private List<Membership> memberships = new ArrayList<>();
     @ManyToOne
     private BussinesEntityType type;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bussinesEntity", fetch = FetchType.LAZY)
-    private List<BussinesEntityAttribute> attributes = new ArrayList<BussinesEntityAttribute>();
+    private List<BussinesEntityAttribute> attributes = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "property_id", nullable = true)
     private Property property;
