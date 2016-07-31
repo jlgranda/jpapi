@@ -146,12 +146,14 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     }
 
     public void remove(Group g) {
-        /*if (groups.contains(g)) {
-         this.getGroups().remove(g);
-         }
-         */
+        Membership membershipt = new Membership();
+        membershipt.setGroup(g);
+        membershipt.setBussinesEntity(this);
+        if (getMemberships().contains(membershipt)) {
+            getMemberships().remove(membershipt);
+        }
     }
-
+    
     public boolean containsGroup(String name) {
         for (Group g : getGroups()) {
             if (name.equalsIgnoreCase(g.getName())) {
@@ -234,7 +236,7 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
      * Retrieve all attributes for strcuture name list
      */
     public List<BussinesEntityAttribute> getBussinessEntityAttributes(String... structureNames) {
-        List<BussinesEntityAttribute> _buffer = new ArrayList<BussinesEntityAttribute>();
+        List<BussinesEntityAttribute> _buffer = new ArrayList<>();
         for (BussinesEntityAttribute a : getAttributes()) {
             for (String sn : structureNames) {
                 if (sn.equalsIgnoreCase(a.getProperty().getStructure().getBussinesEntityType().getName())) {
@@ -267,6 +269,8 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
         return new org.apache.commons.lang.builder.HashCodeBuilder(17, 31). // two randomly chosen prime numbers
                 // if deriving: appendSuper(super.hashCode()).
                 append(getName()).
+                append(getCode()).
+                append(getCodeType()).
                 toHashCode();
     }
 
@@ -286,6 +290,7 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
                 // if deriving: appendSuper(super.equals(obj)).
                 append(getName(), other.getName()).
                 append(getCode(), other.getCode()).
+                append(getCodeType(), other.getCodeType()).
                 isEquals();
     }
 

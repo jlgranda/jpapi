@@ -144,7 +144,7 @@ public class Group extends BussinesEntity implements Serializable {
 
     public List<BussinesEntity> findOtherMembers(BussinesEntity me) {
 
-        List<BussinesEntity> _buffer = new ArrayList<BussinesEntity>();
+        List<BussinesEntity> _buffer = new ArrayList<>();
 
         if (me == null) {
             return _buffer;
@@ -175,11 +175,12 @@ public class Group extends BussinesEntity implements Serializable {
     }
 
     public void remove(BussinesEntity be) {
+        System.out.print(">>> Intentando remover: " + be + " desge grupo " + this);
         Membership membershipt = new Membership();
         membershipt.setGroup(this);
         membershipt.setBussinesEntity(be);
         if (getMemberships().contains(membershipt)) {
-            //log.infof("remove to membershipt {0}. Group {1}, BussinesEntity {2}", membershipt, this, be);
+//            log.infof("remove to membershipt {0}. Group {1}, BussinesEntity {2}", membershipt, this, be);
             getMemberships().remove(membershipt);
         }
     }
@@ -208,7 +209,6 @@ public class Group extends BussinesEntity implements Serializable {
         return new org.apache.commons.lang.builder.EqualsBuilder().
                 // if deriving: appendSuper(super.equals(obj)).
                 append(getName(), other.getName()).
-                append(getCode(), other.getCode()).
                 append(getGroupType(), other.getGroupType()).
                 isEquals();
     }

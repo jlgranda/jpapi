@@ -26,6 +26,7 @@ import javax.persistence.Table;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import javax.persistence.EmbeddedId;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  *
@@ -101,6 +102,11 @@ public class Membership extends BaseObject<Membership> implements Serializable {
                 isEquals();
     }
     
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+    
     @Embeddable
     public static class Id implements Serializable {
         private static final long serialVersionUID = 6048903634744057702L;
@@ -145,6 +151,11 @@ public class Membership extends BaseObject<Membership> implements Serializable {
                     append(this.bussinesEntityId, other.bussinesEntityId).
                     append(this.groupId, other.groupId).
                     isEquals();
+        }
+        
+        @Override
+        public String toString(){
+            return ToStringBuilder.reflectionToString(this);
         }
 
     }
