@@ -36,6 +36,7 @@ import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.SetJoin;
 
 import org.jpapi.controller.Expressions.ValueExpression;
 import org.jpapi.model.BussinesEntity;
@@ -427,11 +428,11 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                 if ("tag".equalsIgnoreCase(filterProperty)) {
                     Root<BussinesEntity> bussinesEntity = (Root<BussinesEntity>) root;
 
-                    ListJoin<BussinesEntity, Membership> joinBussinesEntity = bussinesEntity.join(BussinesEntity_.memberships, JoinType.LEFT);
+                    SetJoin<BussinesEntity, Membership> joinBussinesEntity = bussinesEntity.join(BussinesEntity_.memberships, JoinType.LEFT);
                     Join<Membership, Group> joinMembershipGroup = joinBussinesEntity.join(Membership_.group, JoinType.LEFT);
 
                     //Agregar relación a rootCount
-                    ListJoin<BussinesEntity, Membership> joinCountBussinesEntity = ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.memberships, JoinType.LEFT);
+                    SetJoin<BussinesEntity, Membership> joinCountBussinesEntity = ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.memberships, JoinType.LEFT);
                     joinCountBussinesEntity.join(Membership_.group, JoinType.LEFT);
 
                     Path<String> groupPath = joinMembershipGroup.get(BussinesEntity_.code); // mind these Path objects

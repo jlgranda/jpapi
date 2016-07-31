@@ -19,7 +19,9 @@ package org.jpapi.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
@@ -75,8 +77,9 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
 
     //Best practice http://java.dzone.com/articles/deterring-%E2%80%9Ctomany%E2%80%9D?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3a+javalobby/frontpage+%28Javalobby+/+Java+Zone%29
     //Replace ManyToMany fro OneToMany and link entity
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bussinesEntity", orphanRemoval = false,  fetch = FetchType.LAZY)
-    private List<Membership> memberships = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bussinesEntity",  fetch = FetchType.LAZY)
+    private Set<Membership> memberships = new HashSet<>();
+    
     @ManyToOne
     private BussinesEntityType type;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bussinesEntity", fetch = FetchType.LAZY)
@@ -85,11 +88,11 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     @JoinColumn(name = "property_id", nullable = true)
     private Property property;
     
-    public List<Membership> getMemberships() {
+    public Set<Membership> getMemberships() {
         return memberships;
     }
 
-    public void setMemberships(List<Membership> memberships) {
+    public void setMemberships(Set<Membership> memberships) {
         this.memberships = memberships;
     }
 
@@ -149,8 +152,11 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
         Membership membershipt = new Membership();
         membershipt.setGroup(g);
         membershipt.setBussinesEntity(this);
+        System.err.print(">>>> antes: " + getMemberships());
         if (getMemberships().contains(membershipt)) {
             getMemberships().remove(membershipt);
+            
+            System.err.print(">>>> despues: " + getMemberships());
         }
     }
     

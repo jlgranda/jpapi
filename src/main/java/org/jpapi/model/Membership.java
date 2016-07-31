@@ -40,11 +40,11 @@ public class Membership extends BaseObject<Membership> implements Serializable {
     @EmbeddedId
     private Id id = new Id();
     
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "group_id", insertable=false, updatable=false, nullable=false)
     Group group;
     
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "bussinesentity_id", insertable=false, updatable=false, nullable=false)
     BussinesEntity bussinesEntity;
 
