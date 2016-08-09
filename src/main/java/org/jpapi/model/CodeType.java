@@ -37,7 +37,8 @@ public enum CodeType {
     TAG,
     CLAVE_CATASTRAL,
     CODIGO_IMPUESTO,
-    PARAMETRO_GENERAL;
+    PARAMETRO_GENERAL,
+    CLAVE_CATASTRAL_PERIODO;
     
     public static CodeType encode(String tipoIdentificacionComprador){
         CodeType t = NONE;
