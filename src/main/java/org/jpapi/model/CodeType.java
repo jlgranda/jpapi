@@ -34,7 +34,10 @@ public enum CodeType {
     NUMERO_FACTURA,
     CLAVE_ACCESO,
     GROUP,
-    TAG;
+    TAG,
+    CLAVE_CATASTRAL,
+    CODIGO_IMPUESTO,
+    PARAMETRO_GENERAL;
     
     public static CodeType encode(String tipoIdentificacionComprador){
         CodeType t = NONE;
@@ -56,19 +59,28 @@ public enum CodeType {
     
     public static String decode(CodeType t){
         String s = "";
-        if (RUC.equals(t)){
-            s = "04";
-        } else if (CEDULA.equals(t)){
-            s = "05";
-        } else if (PASSPORT.equals(t)){
-            s = "06";
-        } else if (DEFAULT_CUSTOMER.equals(t)){
-            s = "07";
-        } else if (DNI.equals(t)){
-            s = "08";
-        } else if (BADGE.equals(t)){
-            s = "09";
-        } 
+        if (null != t)switch (t) {
+            case RUC:
+                s = "04";
+                break;
+            case CEDULA:
+                s = "05";
+                break;
+            case PASSPORT:
+                s = "06";
+                break;
+            case DEFAULT_CUSTOMER:
+                s = "07";
+                break; 
+            case DNI:
+                s = "08";
+                break;
+            case BADGE:
+                s = "09";
+                break;
+            default:
+                break;
+        }
         return s;
     }
 }

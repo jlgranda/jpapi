@@ -46,6 +46,7 @@ import org.jpapi.util.Strings;
 @NamedQueries({
     @NamedQuery(name = "Subject.findUserByLogin", query = "select u from Subject u where u.username = ?1"),
     @NamedQuery(name = "Subject.findRoleById", query = "select u.role from Subject u where u.id = :id"),
+    @NamedQuery(name = "Subject.findByCode", query = "select s from Subject s where s.code = ?1"),
     /*@NamedQuery(name = "Subject.findGroupsByUserAndType", query = "select g FROM Subject u JOIN u.groups g WHERE u=:user and g.type=:groupType"),
      @NamedQuery(name = "Subject.findUserByGroupsAndRole", query = "select entity From Subject entity join entity.groups g where g in (:groups) and entity.role.name=:role"),*/
     @NamedQuery(name = "Subject.findUsersByNameOrUsername", query = "select u from Subject u where lower(u.username)  LIKE lower(:name) or lower(u.name) LIKE lower(:name)"),
