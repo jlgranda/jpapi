@@ -152,11 +152,8 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
         Membership membershipt = new Membership();
         membershipt.setGroup(g);
         membershipt.setBussinesEntity(this);
-        System.err.print(">>>> antes: " + getMemberships());
         if (getMemberships().contains(membershipt)) {
             getMemberships().remove(membershipt);
-            
-            System.err.print(">>>> despues: " + getMemberships());
         }
     }
     
