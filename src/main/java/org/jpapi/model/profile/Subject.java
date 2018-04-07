@@ -77,6 +77,8 @@ public class Subject extends BussinesEntity implements Serializable {
     private boolean confirmed;
     @Transient
     private boolean loggedIn;
+    @Transient
+    private boolean bussinesLoggedIn;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_profiles_keys")
     private Set<String> identityKeys = new HashSet<String>();
@@ -237,6 +239,14 @@ public class Subject extends BussinesEntity implements Serializable {
 
     public void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
+    }
+
+    public boolean isBussinesLoggedIn() {
+        return bussinesLoggedIn;
+    }
+
+    public void setBussinesLoggedIn(boolean bussinesLoggedIn) {
+        this.bussinesLoggedIn = bussinesLoggedIn;
     }
 
     public String getFedeEmail() {

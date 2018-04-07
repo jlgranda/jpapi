@@ -39,6 +39,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.jpapi.model.profile.Subject;
+import org.jpapi.model.statistics.Statistics;
 import org.jpapi.util.Dates;
 
 
@@ -87,6 +88,10 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     @ManyToOne
     @JoinColumn(name = "property_id", nullable = true)
     private Property property;
+    
+    
+    @Transient
+    private Statistics statistics = new Statistics();
     
     public Set<Membership> getMemberships() {
         return memberships;
@@ -256,6 +261,14 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
 
     public void setProperty(Property property) {
         this.property = property;
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(Statistics statistics) {
+        this.statistics = statistics;
     }
     
     /**
