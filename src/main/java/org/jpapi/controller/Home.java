@@ -449,12 +449,15 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                     ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.author, JoinType.LEFT);
 
                     Path<String> authorPath = joinBussinesEntity.get(BussinesEntity_.name); // mind these Path objects
+                    Path<String> namePath = bussinesEntity.get(BussinesEntity_.name); // mind these Path objects
                     Path<String> codePath = bussinesEntity.get(BussinesEntity_.code); // mind these Path objects
                     ParameterExpression<String> pexpAuthor = cb.parameter(String.class,
                             "author");
+                    ParameterExpression<String> pexpName = cb.parameter(String.class,
+                            "name");
                     ParameterExpression<String> pexpCode = cb.parameter(String.class,
                             "code");
-                    Predicate predicate = cb.or(cb.like(cb.lower(authorPath), pexpAuthor), cb.like(cb.lower(codePath), pexpCode));
+                    Predicate predicate = cb.or(cb.like(cb.lower(authorPath), pexpAuthor), cb.like(cb.lower(namePath), pexpName), cb.like(cb.lower(codePath), pexpCode));
                     criteria.add(predicate);
                 } else if (filterValue instanceof Map) { //has multiples values
                     predicates = new ArrayList<>();
@@ -559,8 +562,10 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                 } else if ("keyword".equalsIgnoreCase(filterProperty)) {
                     filterValue = "%" + filterValue.toString().toLowerCase() + "%";
                     q.setParameter("author", filterValue);
+                    q.setParameter("name", filterValue);
                     q.setParameter("code", filterValue);
                     countquery.setParameter("author", filterValue);
+                    countquery.setParameter("name", filterValue);
                     countquery.setParameter("code", filterValue);
                 } else if (filterValue instanceof Map) {
                     for (Object key : ((Map) filterValue).keySet()) {

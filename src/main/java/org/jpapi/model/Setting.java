@@ -48,10 +48,6 @@ public class Setting extends PersistentObject<Setting> implements Comparable<Set
     
     private String value;
     
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "owner", nullable = true)
-    private Subject owner;
-    
     @Column(nullable = true)
     private boolean overwritable = true; 
 
@@ -91,15 +87,6 @@ public class Setting extends PersistentObject<Setting> implements Comparable<Set
     public void setValue(String value) {
         this.value = value;
     }
-
-    public Subject getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Subject owner) {
-        this.owner = owner;
-    }
-
     public boolean isOverwritable() {
         return overwritable;
     }

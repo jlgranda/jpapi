@@ -22,7 +22,10 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import org.jpapi.model.profile.Subject;
 
 /**
  *
@@ -32,6 +35,8 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class PersistentObject<E extends PersistentObject<E>> extends BaseObject<E> {
 
+    private static final long serialVersionUID = 936139131004156038L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
@@ -40,6 +45,15 @@ public abstract class PersistentObject<E extends PersistentObject<E>> extends Ba
     public Long getId() {
         return id;
     }
+    
+        
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "author", nullable = true)
+    private Subject author;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "owner", nullable = true)
+    private Subject owner;
 
     
     public boolean isPersistent() {
@@ -53,6 +67,22 @@ public abstract class PersistentObject<E extends PersistentObject<E>> extends Ba
         }
         this.id = id;
         return (E) this;
+    }
+    
+    public Subject getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Subject author) {
+        this.author = author;
+    }
+
+    public Subject getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Subject owner) {
+        this.owner = owner;
     }
 
     

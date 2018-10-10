@@ -38,7 +38,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.jpapi.model.profile.Subject;
 import org.jpapi.model.statistics.Statistics;
 import org.jpapi.util.Dates;
 
@@ -67,14 +66,6 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
     public static final String SEPARATOR= " » ";
     
     private static final long serialVersionUID = -3282665873474370357L;
-    
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "author", nullable = true)
-    private Subject author;
-    
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "owner", nullable = true)
-    private Subject owner;
 
     //Best practice http://java.dzone.com/articles/deterring-%E2%80%9Ctomany%E2%80%9D?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3a+javalobby/frontpage+%28Javalobby+/+Java+Zone%29
     //Replace ManyToMany fro OneToMany and link entity
@@ -169,22 +160,6 @@ public class BussinesEntity extends DeletableObject<BussinesEntity> {
             }
         }
         return false;
-    }
-
-    public Subject getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Subject author) {
-        this.author = author;
-    }
-
-    public Subject getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Subject owner) {
-        this.owner = owner;
     }
 
     public BussinesEntityType getType() {

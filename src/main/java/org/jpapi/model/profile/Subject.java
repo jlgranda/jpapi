@@ -32,7 +32,7 @@ import org.jpapi.util.Strings;
 
 /**
  * Un sujeto que tiene acceso y usa el sistema. 
- * Puede ser un usuario, organización y/o sistema
+ * Puede ser una persona, organización y/o sistema
  * @author jlgranda
  */
 

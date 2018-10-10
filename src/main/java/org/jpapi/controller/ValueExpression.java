@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 jlgranda
+ * Copyright (C) 2018 jlgranda
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,25 +15,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package org.jpapi.model;
+package org.jpapi.controller;
 
 /**
  *
  * @author jlgranda
  */
-public enum StatusType {
-    ACTIVE,
-    INACTIVE,
-    LOCKED,
-    DEPRECATED,
-    IMPORTANT,
-    SUCCESS,
-    FAIL, 
-    //Estados para mesas
-    ATTEND, //Atendido
-    SET,//Servido
-    OPEN, //Agregar pedido
-    PAID, //PAGADO
-    PAID_DIRECT,
-    PRINTED //Impreso
+public class ValueExpression<T> {
+
+    public ValueExpression() {
+    }
+    
 }
