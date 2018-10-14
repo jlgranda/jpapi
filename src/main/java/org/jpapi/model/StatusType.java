@@ -33,6 +33,7 @@ public enum StatusType {
     ATTEND, //Atendido
     SET,//Servido
     OPEN, //Agregar pedido
+    CLOSE, //Cerrada pedido
     PAID, //PAGADO
     PAID_DIRECT,
     PRINTED //Impreso

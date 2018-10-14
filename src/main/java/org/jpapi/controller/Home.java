@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.NoResultException;
+import javax.persistence.Parameter;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
@@ -443,21 +444,25 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                 } else if ("keyword".equalsIgnoreCase(filterProperty)) {
                     Root<BussinesEntity> bussinesEntity = (Root<BussinesEntity>) root;
 
-                    Join<BussinesEntity, Subject> joinBussinesEntity = bussinesEntity.join(BussinesEntity_.author, JoinType.LEFT);
+                    //juntar con owner para hacer busqueda de propietarios de objetos
+                    Join<BussinesEntity, Subject> joinBussinesEntity = bussinesEntity.join(BussinesEntity_.owner, JoinType.LEFT);
 
                     //Agregar relación a rootCount
-                    ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.author, JoinType.LEFT);
+                    ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.owner, JoinType.LEFT);
 
-                    Path<String> authorPath = joinBussinesEntity.get(BussinesEntity_.name); // mind these Path objects
+                    Path<String> ownerPath = joinBussinesEntity.get(BussinesEntity_.name); // mind these Path objects
                     Path<String> namePath = bussinesEntity.get(BussinesEntity_.name); // mind these Path objects
                     Path<String> codePath = bussinesEntity.get(BussinesEntity_.code); // mind these Path objects
-                    ParameterExpression<String> pexpAuthor = cb.parameter(String.class,
-                            "author");
+                    Path<String> descriptionPath = bussinesEntity.get(BussinesEntity_.description); // mind these Path objects
+                    ParameterExpression<String> pexpOwner = cb.parameter(String.class,
+                            "onwerName");
                     ParameterExpression<String> pexpName = cb.parameter(String.class,
                             "name");
                     ParameterExpression<String> pexpCode = cb.parameter(String.class,
                             "code");
-                    Predicate predicate = cb.or(cb.like(cb.lower(authorPath), pexpAuthor), cb.like(cb.lower(namePath), pexpName), cb.like(cb.lower(codePath), pexpCode));
+                    ParameterExpression<String> pexpDescription = cb.parameter(String.class,
+                            "description");
+                    Predicate predicate = cb.or(cb.like(cb.lower(ownerPath), pexpOwner), cb.like(cb.lower(namePath), pexpName), cb.like(cb.lower(codePath), pexpCode),  cb.like(cb.lower(descriptionPath), pexpDescription));
                     criteria.add(predicate);
                 } else if (filterValue instanceof Map) { //has multiples values
                     predicates = new ArrayList<>();
@@ -560,13 +565,16 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                     q.setParameter(filterProperty, filterValue);
                     countquery.setParameter(filterProperty, filterValue);
                 } else if ("keyword".equalsIgnoreCase(filterProperty)) {
+                    //Establecer dinamicamente los parametros de búsqueda
                     filterValue = "%" + filterValue.toString().toLowerCase() + "%";
-                    q.setParameter("author", filterValue);
-                    q.setParameter("name", filterValue);
-                    q.setParameter("code", filterValue);
-                    countquery.setParameter("author", filterValue);
-                    countquery.setParameter("name", filterValue);
-                    countquery.setParameter("code", filterValue);
+                    for (Parameter parameter : q.getParameters()) {
+                        if (parameter.getParameterType().equals(String.class)){
+                            //System.err.println("---------------> parameter.getName(): " + parameter.getName() + ", filterValue: " + filterValue);
+                            q.setParameter(parameter.getName(), filterValue);
+                            countquery.setParameter(parameter.getName(), filterValue);
+                        }
+                    }
+                    
                 } else if (filterValue instanceof Map) {
                     for (Object key : ((Map) filterValue).keySet()) {
                         Object value = ((Map) filterValue).get((String) key);
