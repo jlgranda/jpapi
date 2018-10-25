@@ -98,6 +98,9 @@ public class Subject extends BussinesEntity implements Serializable {
     private String ruc;
     private String initials;
     private String numeroContribuyenteEspecial;
+    
+    @Column(nullable = true)
+    protected Boolean contactable;
 
     public enum Type {
         NATURAL,
@@ -287,6 +290,14 @@ public class Subject extends BussinesEntity implements Serializable {
 
     public void setNumeroContribuyenteEspecial(String numeroContribuyenteEspecial) {
         this.numeroContribuyenteEspecial = numeroContribuyenteEspecial;
+    }
+
+    public Boolean getContactable() {
+        return contactable;
+    }
+
+    public void setContactable(Boolean contactable) {
+        this.contactable = contactable;
     }
 
     @Override
