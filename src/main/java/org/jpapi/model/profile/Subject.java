@@ -64,6 +64,8 @@ public class Subject extends BussinesEntity implements Serializable {
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = true)
+    private String passwordSalt;
     @Column(length = 1024)
     @Basic(fetch = FetchType.LAZY)
     private byte[] photo;
@@ -157,6 +159,14 @@ public class Subject extends BussinesEntity implements Serializable {
 
     public String getPassword() {
         return this.password;
+    }
+
+    public String getPasswordSalt() {
+        return passwordSalt;
+    }
+
+    public void setPasswordSalt(String passwordSalt) {
+        this.passwordSalt = passwordSalt;
     }
 
     public boolean verifyPassword(String password) {
