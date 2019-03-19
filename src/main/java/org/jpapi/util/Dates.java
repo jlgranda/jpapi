@@ -30,15 +30,15 @@ import java.util.TimeZone;
 import org.apache.commons.beanutils.converters.DateConverter;
 
 public class Dates {
-    
-    private static String[] patterns = {"dd/MM/yyyy", "dd/MM/yyyy HH:mm","dd/MM/yyyy HH:mm:s", "dd/MM/yyyy HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"};
 
-    public static Date toDate(String value){
+    private static String[] patterns = {"dd/MM/yyyy", "dd/MM/yyyy HH:mm", "dd/MM/yyyy HH:mm:s", "dd/MM/yyyy HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"};
+
+    public static Date toDate(String value) {
         DateConverter dateConverter = new DateConverter(null);
         dateConverter.setPatterns(patterns);
         return dateConverter.convert(Timestamp.class, value);
     }
-    
+
     public static Date toDate(Object object) {
         Date value = null;
         if (object instanceof Date) {
@@ -72,6 +72,14 @@ public class Dates {
         return diffDays;
     }
 
+    public static long calculateNumberOfMinutesBetween(final Date one, final Date two) {
+        long diff = one.getTime() - two.getTime();
+        
+        //calculate difference in minutes
+        long diffMinutes = diff / 1000;
+        return diffMinutes;
+    }
+
     /**
      * Perform an inclusive date range comparison to a specific field precision
      *
@@ -87,33 +95,33 @@ public class Dates {
         }
         return false;
     }
-    
-    public static Date minimumDate(Date date){
+
+    public static Date minimumDate(Date date) {
         Date _date = new Date();
         _date.setTime(date.getTime());
-        _date= DateUtils.setHours(_date, 0);
-        _date= DateUtils.setMinutes(_date, 0);
-        _date= DateUtils.setSeconds(_date, 0);
-        _date= DateUtils.setMilliseconds(_date, 0);
+        _date = DateUtils.setHours(_date, 0);
+        _date = DateUtils.setMinutes(_date, 0);
+        _date = DateUtils.setSeconds(_date, 0);
+        _date = DateUtils.setMilliseconds(_date, 0);
         return _date;
     }
-    
-    public static Date maximumDate(Date date){
+
+    public static Date maximumDate(Date date) {
         Date _date = new Date();
         _date.setTime(date.getTime());
-        _date= DateUtils.setHours(_date, 23);
-        _date= DateUtils.setMinutes(_date, 59);
-        _date= DateUtils.setSeconds(_date, 59);
-        _date= DateUtils.setMilliseconds(_date, 999);
+        _date = DateUtils.setHours(_date, 23);
+        _date = DateUtils.setMinutes(_date, 59);
+        _date = DateUtils.setSeconds(_date, 59);
+        _date = DateUtils.setMilliseconds(_date, 999);
         return _date;
     }
-    
-    public static int get(Date date, int field){
+
+    public static int get(Date date, int field) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(field);
     }
-    
+
     public static boolean isInRange(final Date start, final Date end, final Date date) {
         if ((date.compareTo(start) >= 0) && (date.compareTo(end) <= 0)) {
             return true;
@@ -966,7 +974,7 @@ public class Dates {
                 return;
             }
 
-         // ----------------- Fix for LANG-59 ---------------------- START ---------------
+            // ----------------- Fix for LANG-59 ---------------------- START ---------------
             // see http://issues.apache.org/jira/browse/LANG-59
             //
             // Manually truncate milliseconds, seconds and minutes, rather than using
@@ -1013,7 +1021,7 @@ public class Dates {
                         // This is our field... we stop looping
                         if (round && roundUp) {
                             if (field == DateUtils.SEMI_MONTH) {
-                        // This is a special case that's hard to generalize
+                                // This is a special case that's hard to generalize
                                 // If the date is 1, we round up to 16, otherwise
                                 // we subtract 15 days and add 1 month
                                 if (val.get(Calendar.DATE) == 1) {
@@ -1023,7 +1031,7 @@ public class Dates {
                                     val.add(Calendar.MONTH, 1);
                                 }
                             } else {
-                        // We need at add one to this field since the
+                                // We need at add one to this field since the
                                 // last number causes us to round up
                                 val.add(field2[0], 1);
                             }
@@ -1038,11 +1046,11 @@ public class Dates {
                 switch (field) {
                     case DateUtils.SEMI_MONTH:
                         if (field2[0] == Calendar.DATE) {
-                  // If we're going to drop the DATE field's value,
+                            // If we're going to drop the DATE field's value,
                             // we want to do this our own way.
                             // We need to subtrace 1 since the date has a minimum of 1
                             offset = val.get(Calendar.DATE) - 1;
-                  // If we're above 15 days adjustment, that means we're in the
+                            // If we're above 15 days adjustment, that means we're in the
                             // bottom half of the month and should stay accordingly.
                             if (offset >= 15) {
                                 offset -= 15;
@@ -1054,7 +1062,7 @@ public class Dates {
                         break;
                     case Calendar.AM_PM:
                         if (field2[0] == Calendar.HOUR_OF_DAY) {
-                  // If we're going to drop the HOUR field's value,
+                            // If we're going to drop the HOUR field's value,
                             // we want to do this our own way.
                             offset = val.get(Calendar.HOUR_OF_DAY);
                             if (offset >= 12) {
@@ -1900,7 +1908,7 @@ public class Dates {
             }
         }
 
-      // -------------------------------------------------------------------------
+        // -------------------------------------------------------------------------
         // Deprecated int constants
         // TODO: Remove in 3.0
         /**
