@@ -327,25 +327,40 @@ public class Strings {
 //        System.out.println(Strings.splitNamesAt("José Granda"));
 //        System.out.println(Strings.splitNamesAt("José"));
 //        System.out.println(Strings.canonicalize("josé luis GRANDA Sivisapa"));
-        System.out.println(Strings.isUrl("josé luis GRANDA Sivisapa"));
+//        System.out.println(Strings.isUrl("josé luis GRANDA Sivisapa"));
+//        
+//        System.out.println(Strings.isUrl("dsadsadsa"));
+//        
+//        System.out.println(Strings.isUrl("http://jlgranda.com"));
+//        
+//        System.out.println(Strings.complete(55, 23L, '$'));
+//        System.out.println(Strings.toString(Dates.now(), Calendar.DAY_OF_WEEK));
+//        System.out.println(Strings.toString(Dates.addDays(Dates.now(), 1), Calendar.DAY_OF_WEEK));
+//        System.out.println(Strings.toString(Dates.addDays(Dates.now(), -1), Calendar.DAY_OF_WEEK));
+//        System.out.println(Strings.toString(Dates.addDays(Dates.now(), -2), Calendar.DAY_OF_WEEK));
+//        System.out.println(Strings.toString(Dates.addDays(Dates.now(), -4), Calendar.DAY_OF_WEEK));
+//        
+//        
+//        System.out.println(Dates.minimumDate(Dates.now()));
+//        System.out.println(Dates.maximumDate(Dates.now()));
+//        System.out.println(Strings.toString(Dates.minimumDate(Dates.now()), Calendar.DAY_OF_WEEK));
+//        
+        String test="Botella de vino reserva especial";
+//        System.out.println(test.toLowerCase().matches(".*full.*"));
+//        System.out.println(test.toLowerCase().matches(".*emp.*queso.*"));
+//        System.out.println(test.toLowerCase().matches(".*cebol.*"));
+//        System.out.println(test.toLowerCase().contains("queso"));
+//        System.out.println(test.toLowerCase().contains("emp"));
+        System.out.println("regex: " + Strings.toRegex("vino%especi"));
+        System.out.println(test.toLowerCase().matches(Strings.toRegex("vino%especi")));
+//        System.out.println(test.toLowerCase().matches(Strings.toRegex("cebolla")));
+//        System.out.println(test.toLowerCase().matches(Strings.toRegex("full")));
         
-        System.out.println(Strings.isUrl("dsadsadsa"));
-        
-        System.out.println(Strings.isUrl("http://jlgranda.com"));
-        
-        System.out.println(Strings.complete(55, 23L, '$'));
-        System.out.println(Strings.toString(Dates.now(), Calendar.DAY_OF_WEEK));
-        System.out.println(Strings.toString(Dates.addDays(Dates.now(), 1), Calendar.DAY_OF_WEEK));
-        System.out.println(Strings.toString(Dates.addDays(Dates.now(), -1), Calendar.DAY_OF_WEEK));
-        System.out.println(Strings.toString(Dates.addDays(Dates.now(), -2), Calendar.DAY_OF_WEEK));
-        System.out.println(Strings.toString(Dates.addDays(Dates.now(), -4), Calendar.DAY_OF_WEEK));
-        
-        
-        System.out.println(Dates.minimumDate(Dates.now()));
-        System.out.println(Dates.maximumDate(Dates.now()));
-        System.out.println(Strings.toString(Dates.minimumDate(Dates.now()), Calendar.DAY_OF_WEEK));
-        
-        
-        
+    }
+
+    public static String toRegex(String key) {
+        key = key.replaceAll("%",".*");
+        //for (String s: key.split(""));
+        return ".*" + key + ".*";
     }
 }
