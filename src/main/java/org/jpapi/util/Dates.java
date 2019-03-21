@@ -73,11 +73,8 @@ public class Dates {
     }
 
     public static long calculateNumberOfMinutesBetween(final Date one, final Date two) {
-        long diff = one.getTime() - two.getTime();
-        
-        //calculate difference in minutes
-        long diffMinutes = diff / 1000;
-        return diffMinutes;
+        long diffmillis = one.getTime() - two.getTime();
+        return java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(diffmillis);
     }
 
     /**
