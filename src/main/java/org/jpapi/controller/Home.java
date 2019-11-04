@@ -254,7 +254,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         }
 
         try {
-            return ((Number) query.getSingleResult()).intValue();
+            return query.getSingleResult() == null ? 0L : ((Number) query.getSingleResult()).intValue();
         } catch (javax.persistence.NoResultException nre) {
             return -1L;
         }
