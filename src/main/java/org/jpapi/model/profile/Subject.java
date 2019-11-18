@@ -101,8 +101,12 @@ public class Subject extends BussinesEntity implements Serializable {
     private String initials;
     private String numeroContribuyenteEspecial;
     
+    //Se establece a objeto Boolean por compatibilidad con los datos existentes
     @Column(nullable = true)
     protected Boolean contactable;
+    
+    @Column(nullable = true)
+    protected Boolean nonnative;
 
     public enum Type {
         NATURAL,
@@ -302,12 +306,28 @@ public class Subject extends BussinesEntity implements Serializable {
         this.numeroContribuyenteEspecial = numeroContribuyenteEspecial;
     }
 
-    public Boolean getContactable() {
-        return contactable;
-    }
+//    public boolean isContactable() {
+//        return  contactable == null ? false : contactable;
+//    }
 
     public void setContactable(Boolean contactable) {
         this.contactable = contactable;
+    }
+    
+    public Boolean getContactable() {
+        return this.contactable;
+    }
+
+//    public boolean isNonnative() {
+//        return nonnative == null ? false : nonnative;
+//    }
+
+    public void setNonnative(Boolean nonnative) {
+        this.nonnative = nonnative;
+    }
+
+    public Boolean getNonnative() {
+        return this.nonnative;
     }
 
     @Override

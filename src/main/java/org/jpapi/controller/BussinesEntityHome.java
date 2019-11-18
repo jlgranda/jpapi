@@ -18,6 +18,7 @@ package org.jpapi.controller;
 import java.io.Serializable;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 import org.jpapi.model.BussinesEntity;
 
@@ -144,6 +145,7 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
         return this.getInstance();
     }
     
+    @Transactional
     public E save(Object id, E _instance){
         this.setId(id);
         this.setInstance(_instance);
@@ -163,7 +165,6 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
         } 
         return this.getInstance();
     }
-    
     
     public long count(String namedQuery, Object... params) {
         return super.countByNamedQuery(namedQuery, params); 

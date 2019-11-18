@@ -143,7 +143,7 @@ public class StringValidations {
     }
 
     public static boolean isPassword(final String password) {
-        return isPassword(password, 8);
+        return isPassword(password, 5);
     }
     
     public static boolean isPassword(final String password, final int length) {
@@ -179,8 +179,8 @@ public class StringValidations {
     }
 
     public static void main(String args[]) {
-        String text = "JosÃ© Luis";
-        if (!StringValidations.isPunctuatedTextUTF8(text)) {
+        String text = "jlg%";
+        if (!StringValidations.isPassword(text)) {
 
             System.out.print("Este texto " + text + " no anda bien, evite usar caracteres extraños...");
 

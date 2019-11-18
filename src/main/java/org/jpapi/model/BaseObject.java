@@ -44,7 +44,7 @@ public abstract class BaseObject<E extends BaseObject<E>> implements Serializabl
     }
     @Column(nullable = true)
     protected String uuid;
-    @Column(nullable = true)
+    @Column(nullable = true, unique = false)
     protected String code;
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = true)
