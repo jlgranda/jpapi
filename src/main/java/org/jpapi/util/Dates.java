@@ -60,6 +60,10 @@ public class Dates {
     public static Date addDays(final Date date, final int amount) {
         return DateUtils.addDays(date, amount);
     }
+    
+    public static Date addMinutes(final Date date, final int amount) {
+        return DateUtils.addMinutes(date, amount);
+    }
 
     public static long calculateNumberOfDaysBetween(final Date one, final Date two) {
         long milisOne = one.getTime();
@@ -107,6 +111,26 @@ public class Dates {
         Date _date = new Date();
         _date.setTime(date.getTime());
         _date = DateUtils.setHours(_date, 23);
+        _date = DateUtils.setMinutes(_date, 59);
+        _date = DateUtils.setSeconds(_date, 59);
+        _date = DateUtils.setMilliseconds(_date, 999);
+        return _date;
+    }
+    
+    public static Date minimumDateHour(Date date) {
+        Date _date = new Date();
+        _date.setTime(date.getTime());
+        _date = DateUtils.setHours(_date, Dates.get(date, Calendar.HOUR_OF_DAY));
+        _date = DateUtils.setMinutes(_date, 0);
+        _date = DateUtils.setSeconds(_date, 0);
+        _date = DateUtils.setMilliseconds(_date, 0);
+        return _date;
+    }
+
+    public static Date maximumDateHour(Date date) {
+        Date _date = new Date();
+        _date.setTime(date.getTime());
+        _date = DateUtils.setHours(_date, Dates.get(date, Calendar.HOUR_OF_DAY));
         _date = DateUtils.setMinutes(_date, 59);
         _date = DateUtils.setSeconds(_date, 59);
         _date = DateUtils.setMilliseconds(_date, 999);

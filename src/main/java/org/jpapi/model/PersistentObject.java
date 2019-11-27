@@ -88,7 +88,8 @@ public abstract class PersistentObject<E extends PersistentObject<E>> extends Ba
     
     @Override
     public String toString() {
-        return String.valueOf(getId());
+        //return String.valueOf(getId());
+        return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
     }
 
 }

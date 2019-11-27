@@ -26,6 +26,7 @@ import org.jpapi.model.BussinesEntity;
 /**
  *
  * @author jlgranda
+ * @param <E>
  */
 public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> implements Serializable {
 

@@ -336,6 +336,20 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
     }
     
     @SuppressWarnings("unchecked")
+    public <E> List<E> findByNamedQueryWithLimitAndMapParams(final String namedQueryName, final int begin, final int limit, final Map<String, Object> params) {
+        Query query = getEntityManager().createNamedQuery(namedQueryName);
+        for (String key : params.keySet()) {
+            query.setParameter(key, params.get(key));
+        }
+        if (begin != -1 && limit != -1){
+            //limit = limit begin;
+            query.setFirstResult(begin);
+            query.setMaxResults(limit);
+        }
+        return query.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
     public List<Object[]> findObjectsByNamedQueryWithLimit(final String namedQueryName, final int limit, final Object... params) {
         Query query = getEntityManager().createNamedQuery(namedQueryName, Object[].class);
         int i = 1;
@@ -610,6 +624,18 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
 
         queryData.setResult(q.getResultList());
         Long totalResultCount = countquery.getSingleResult();
+        queryData.setTotalResultCount(totalResultCount);
+
+        return queryData;
+    }
+    
+    public QueryData<E> find(String namedQueryName, int start, int end, String sortField,
+            QuerySortOrder order, Map<String, Object> filters) {
+        
+        List<E> resultList = findByNamedQueryWithLimitAndMapParams(namedQueryName, start, end, filters); 
+        QueryData<E> queryData = new QueryData<>();
+        queryData.setResult(resultList);
+        Long totalResultCount = Long.valueOf(resultList.size());
         queryData.setTotalResultCount(totalResultCount);
 
         return queryData;
