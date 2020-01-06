@@ -322,12 +322,14 @@ public class Strings {
     }
     
     public static void main(String args[]){
-//        System.out.println(Strings.splitNamesAt("José Luis Granda Sivisapa"));
-//        System.out.println(Strings.splitNamesAt("José Luis Granda"));
-//        System.out.println(Strings.splitNamesAt("José Granda"));
-//        System.out.println(Strings.splitNamesAt("José"));
-//        System.out.println(Strings.canonicalize("josé luis GRANDA Sivisapa"));
-//        System.out.println(Strings.isUrl("josé luis GRANDA Sivisapa"));
+        System.out.println(Strings.splitNamesAt("José Luis Granda Sivisapa"));
+        System.out.println(Strings.splitNamesAt("José Luis Granda"));
+        System.out.println(Strings.splitNamesAt("José Granda"));
+        System.out.println(Strings.splitNamesAt("José"));
+        System.out.println(Strings.splitNamesAt("José del cisne Castro R"));
+        System.out.println(Strings.canonicalize("josé luis GRANDA Sivisapa"));
+        System.out.println(Strings.canonicalize("josé del luis GRANDA Sivisapa"));
+        System.out.println(Strings.isUrl("josé luis GRANDA Sivisapa"));
 //        
 //        System.out.println(Strings.isUrl("dsadsadsa"));
 //        
