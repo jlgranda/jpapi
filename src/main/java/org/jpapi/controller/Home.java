@@ -31,7 +31,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Path;
@@ -309,7 +308,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
 
     @SuppressWarnings("unchecked")
     public <E> List<E> findByNamedQuery(final String namedQueryName) {
-        return findByNamedQuery(namedQueryName, 0);
+        return findByNamedQuery(namedQueryName, Integer.MAX_VALUE);
     }
 
     @SuppressWarnings("unchecked")

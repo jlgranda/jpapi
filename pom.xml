@@ -12,7 +12,7 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hibernate.version>5.0.7.Final</hibernate.version>
+        <hibernate.version>5.3.6.Final</hibernate.version>
         <!-- PicketLink dependency versions -->
         <version.picketlink.javaee.bom>2.7.0.Final</version.picketlink.javaee.bom>
     </properties>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
-            <version>7.0</version>
+            <version>8.0</version>
             <scope>compile</scope>
         </dependency>
         
@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.2.4.Final</version>
+            <version>5.3.6.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -74,7 +74,7 @@
         <dependency>    
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.9.2</version>
+            <version>1.9.4</version>
         </dependency>
         
         <dependency>    

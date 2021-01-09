@@ -41,29 +41,43 @@ public enum TaxType {
     
     public static String decode(TaxType t){
         String s = "";
-        if (NONE.equals(t)){
-            s = "";
-        } else if (IVA.equals(t)){
-            s = "2";
-        } else if (ICE.equals(t)){
-            s = "3";
-        } else if (IRBPNR.equals(t)){
-            s = "5";
-        } 
+        if (null != t)switch (t) {
+            case NONE:
+                s = "";
+                break;
+            case IVA:
+                s = "2";
+                break;
+            case ICE:
+                s = "3"; 
+                break;
+            case IRBPNR:
+                s = "5";
+                break;
+            default:
+                break;
+        }
         return s;
     }
     
     public static String translate(TaxType t){
         String s = "";
-        if (NONE.equals(t)){
-            s = "";
-        } else if (IVA.equals(t)){
-            s = "IVA 12%";
-        } else if (ICE.equals(t)){
-            s = "ICE";
-        } else if (IRBPNR.equals(t)){
-            s = "IRBPNR";
-        } 
+        if (null != t)switch (t) {
+            case NONE:
+                s = "";
+                break;
+            case IVA:
+                s = "IVA 12%";
+                break;
+            case ICE:
+                s = "ICE"; 
+                break;
+            case IRBPNR:
+                s = "IRBPNR";
+                break;
+            default:
+                break;
+        }
         return s;
     }
 }
