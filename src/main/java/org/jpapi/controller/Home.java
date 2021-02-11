@@ -517,7 +517,8 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                     Predicate predicate = cb.like(cb.lower(root.<String>get(filterProperty)), pexp);
                     criteria.add(predicate);
                 } else {
-                    ParameterExpression<?> pexp = cb.parameter(filterValue != null ? filterValue.getClass() : Object.class,
+                    Class clazz = filterValue != null ? filterValue.getClass() : Object.class;
+                    ParameterExpression<?> pexp = cb.parameter(clazz ,
                             filterProperty);
                     Predicate predicate = null;
                     if (filterValue == null) {

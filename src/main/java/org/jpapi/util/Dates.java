@@ -18,6 +18,7 @@
 package org.jpapi.util;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -25,20 +26,41 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.beanutils.converters.DateConverter;
 
 public class Dates {
 
+    private Dates() {
+    }
+
+    /**
+     * The patterns.
+     */
     private static String[] patterns = {"dd/MM/yyyy", "dd/MM/yyyy HH:mm", "dd/MM/yyyy HH:mm:s", "dd/MM/yyyy HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"};
 
+    /**
+     * To date.
+     *
+     * @param value the value
+     * @return the date
+     */
     public static Date toDate(String value) {
         DateConverter dateConverter = new DateConverter(null);
         dateConverter.setPatterns(patterns);
         return dateConverter.convert(Timestamp.class, value);
     }
 
+    /**
+     * To date.
+     *
+     * @param object the object
+     * @return the date
+     */
     public static Date toDate(Object object) {
         Date value = null;
         if (object instanceof Date) {
@@ -49,117 +71,203 @@ public class Dates {
         return value;
     }
 
+    /**
+     * To date.
+     *
+     * @param date
+     * @param format
+     * @return the date
+     */
+    public static Date toDate(String date, String format) throws ParseException {
+        Date value = null;
+        value = new SimpleDateFormat(format).parse(date);
+        return value;
+    }
+
+    public static String toTimeString(Date date) {
+        if (date == null) {
+            return "";
+        }
+        Locale locale = Locale.getDefault();
+        DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT, locale);
+        return dateFormat.format(date);
+    }
+
+    public static String toDateString(Date date) {
+        if (date == null) {
+            return "";
+        }
+        Locale locale = Locale.getDefault();
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        return dateFormat.format(date);
+    }
+
+    public static String toString(Date date) {
+        if (date == null) {
+            return "";
+        }
+        Locale locale = Locale.getDefault();
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, locale);
+        return dateFormat.format(date);
+    }
+
+    public static String toString(Date date, String pattern) {
+        if (date == null) {
+            return "";
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(date);
+    }
+
+    /**
+     * Checks if is same day.
+     *
+     * @param one the one
+     * @param two the two
+     * @return true, if is same day
+     */
     public static boolean isSameDay(final Date one, final Date two) {
         return DateUtils.isSameDay(one, two);
     }
 
+    /**
+     * Now.
+     *
+     * @return the date
+     */
     public static Date now() {
         return new Date(System.currentTimeMillis());
     }
 
+    /**
+     * Adds the days.
+     *
+     * @param date the date
+     * @param amount the amount
+     * @return the date
+     */
     public static Date addDays(final Date date, final int amount) {
         return DateUtils.addDays(date, amount);
     }
-    
-    public static Date addMinutes(final Date date, final int amount) {
-        return DateUtils.addMinutes(date, amount);
-    }
 
+    /**
+     * Calculate number of days between.
+     *
+     * @param one the one
+     * @param two the two
+     * @return the long
+     */
     public static long calculateNumberOfDaysBetween(final Date one, final Date two) {
         long milisOne = one.getTime();
         long milisTwo = two.getTime();
         long diff = milisTwo - milisOne;
 
         // Calculate difference in days
-        long diffDays = diff / (24 * 60 * 60 * 1000);
-
-        return diffDays;
-    }
-
-    public static long calculateNumberOfMinutesBetween(final Date one, final Date two) {
-        long diffmillis = one.getTime() - two.getTime();
-        return java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(diffmillis);
+        return diff / (24 * 60 * 60 * 1000);
     }
 
     /**
-     * Perform an inclusive date range comparison to a specific field precision
+     * Perform an inclusive date range comparison to a specific field precision.
      *
+     * @param start the start
+     * @param end the end
+     * @param date the date
      * @param field see <i>java.util.Calendar</i> Millisecond, Second, Minute,
      * Hour, Day, Week, etc...
+     * @return true, if is in precision range
      */
     public static boolean isInPrecisionRange(Date start, Date end, Date date, final int field) {
         start = DateUtils.truncate(start, field);
         end = DateUtils.truncate(end, field);
         date = DateUtils.truncate(date, field);
-        if ((date.compareTo(start) >= 0) && (date.compareTo(end) <= 0)) {
-            return true;
-        }
-        return false;
+        return date.compareTo(start) >= 0 && date.compareTo(end) <= 0;
     }
 
-    public static Date minimumDate(Date date) {
-        Date _date = new Date();
-        _date.setTime(date.getTime());
-        _date = DateUtils.setHours(_date, 0);
-        _date = DateUtils.setMinutes(_date, 0);
-        _date = DateUtils.setSeconds(_date, 0);
-        _date = DateUtils.setMilliseconds(_date, 0);
-        return _date;
+    /**
+     * Minimum date.
+     *
+     * @param date the date
+     * @return the date
+     */
+    public static Date minimumDate(Date fecha) {
+        Date date = new Date();
+        date.setTime(fecha.getTime());
+        date = DateUtils.setHours(date, 0);
+        date = DateUtils.setMinutes(date, 0);
+        date = DateUtils.setSeconds(date, 0);
+        date = DateUtils.setMilliseconds(date, 0);
+        return date;
     }
 
-    public static Date maximumDate(Date date) {
-        Date _date = new Date();
-        _date.setTime(date.getTime());
-        _date = DateUtils.setHours(_date, 23);
-        _date = DateUtils.setMinutes(_date, 59);
-        _date = DateUtils.setSeconds(_date, 59);
-        _date = DateUtils.setMilliseconds(_date, 999);
-        return _date;
-    }
-    
-    public static Date minimumDateHour(Date date) {
-        Date _date = new Date();
-        _date.setTime(date.getTime());
-        _date = DateUtils.setHours(_date, Dates.get(date, Calendar.HOUR_OF_DAY));
-        _date = DateUtils.setMinutes(_date, 0);
-        _date = DateUtils.setSeconds(_date, 0);
-        _date = DateUtils.setMilliseconds(_date, 0);
-        return _date;
+    /**
+     * Maximum date.
+     *
+     * @param date the date
+     * @return the date
+     */
+    public static Date maximumDate(Date fecha) {
+        Date date = new Date();
+        date.setTime(fecha.getTime());
+        date = DateUtils.setHours(date, 23);
+        date = DateUtils.setMinutes(date, 59);
+        date = DateUtils.setSeconds(date, 59);
+        date = DateUtils.setMilliseconds(date, 999);
+        return date;
     }
 
-    public static Date maximumDateHour(Date date) {
-        Date _date = new Date();
-        _date.setTime(date.getTime());
-        _date = DateUtils.setHours(_date, Dates.get(date, Calendar.HOUR_OF_DAY));
-        _date = DateUtils.setMinutes(_date, 59);
-        _date = DateUtils.setSeconds(_date, 59);
-        _date = DateUtils.setMilliseconds(_date, 999);
-        return _date;
-    }
-
+    /**
+     * Gets the.
+     *
+     * @param date the date
+     * @param field the field
+     * @return the int
+     */
     public static int get(Date date, int field) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(field);
     }
 
+    /**
+     * Checks if is in range.
+     *
+     * @param start the start
+     * @param end the end
+     * @param date the date
+     * @return true, if is in range
+     */
     public static boolean isInRange(final Date start, final Date end, final Date date) {
-        if ((date.compareTo(start) >= 0) && (date.compareTo(end) <= 0)) {
-            return true;
-        }
-        return false;
+        return date.compareTo(start) >= 0 && date.compareTo(end) <= 0;
     }
 
+    /**
+     * Checks if is date in past.
+     *
+     * @param pastDate the past date
+     * @return true, if is date in past
+     */
     public static boolean isDateInPast(final Date pastDate) {
-        Date today = new Date();
-        return !isSameDay(today, pastDate) && (today.compareTo(pastDate) > 0);
+        return !isSameDay(Dates.now(), pastDate) && Dates.now().compareTo(pastDate) > 0;
     }
 
+    /**
+     * Checks if is date in future.
+     *
+     * @param futureDate the future date
+     * @return true, if is date in future
+     */
     public static boolean isDateInFuture(final Date futureDate) {
-        Date today = new Date();
-        return !isSameDay(today, futureDate) && (today.compareTo(futureDate) < 0);
+        return !isSameDay(Dates.now(), futureDate) && Dates.now().compareTo(futureDate) < 0;
     }
 
+    /**
+     * Any in range.
+     *
+     * @param start the start
+     * @param end the end
+     * @param dates the dates
+     * @return true, if successful
+     */
     public static boolean anyInRange(final Date start, final Date end, final Date... dates) {
         for (Date d : dates) {
             if (isInRange(start, end, d)) {
@@ -169,6 +277,14 @@ public class Dates {
         return false;
     }
 
+    /**
+     * Any in range.
+     *
+     * @param start the start
+     * @param end the end
+     * @param dates the dates
+     * @return true, if successful
+     */
     public static boolean anyInRange(final Date start, final Date end, final List<Date> dates) {
         for (Date d : dates) {
             if (isInRange(start, end, d)) {
@@ -178,6 +294,14 @@ public class Dates {
         return false;
     }
 
+    /**
+     * All in range.
+     *
+     * @param start the start
+     * @param end the end
+     * @param dates the dates
+     * @return true, if successful
+     */
     public static boolean allInRange(final Date start, final Date end, final Date... dates) {
         for (Date d : dates) {
             if (!isInRange(start, end, d)) {
@@ -205,19 +329,17 @@ public class Dates {
      * for instance milliseconds or days.
      * </p>
      *
-     *
-     *
      * @author <a href="mailto:sergek@lokitech.com">Serge Knystautas</a>
      * @author Stephen Colebourne
      * @author Janek Bogucki
      * @author <a href="mailto:ggregory@seagullsw.com">Gary Gregory</a>
      * @author Phil Steitz
      * @author Robert Scholte
-     * @since 2.0
      * @version $Id: DateUtils.java 634096 2008-03-06 00:58:11Z niallp $
+     * @since 2.0
      */
     @SuppressWarnings({"unused", "rawtypes"})
-    private static class DateUtils {
+    private static class DateUtils { // NOPMD
 
         /**
          * The UTC time zone (often referred to as GMT).
@@ -254,6 +376,9 @@ public class Dates {
          */
         public final static int SEMI_MONTH = 1001;
 
+        /**
+         * The Constant fields.
+         */
         private static final int[][] fields = {
             {Calendar.MILLISECOND},
             {Calendar.SECOND},
@@ -330,7 +455,7 @@ public class Dates {
          * @since 2.1
          */
         public static boolean isSameDay(final Date date1, final Date date2) {
-            if ((date1 == null) || (date2 == null)) {
+            if (date1 == null || date2 == null) {
                 throw new IllegalArgumentException("The date must not be null");
             }
             Calendar cal1 = Calendar.getInstance();
@@ -358,12 +483,12 @@ public class Dates {
          * @since 2.1
          */
         public static boolean isSameDay(final Calendar cal1, final Calendar cal2) {
-            if ((cal1 == null) || (cal2 == null)) {
+            if (cal1 == null || cal2 == null) {
                 throw new IllegalArgumentException("The date must not be null");
             }
-            return ((cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA))
-                    && (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)) && (cal1.get(Calendar.DAY_OF_YEAR) == cal2
-                    .get(Calendar.DAY_OF_YEAR)));
+            return cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
+                    && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                    && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
         }
 
         // -----------------------------------------------------------------------
@@ -383,7 +508,7 @@ public class Dates {
          * @since 2.1
          */
         public static boolean isSameInstant(final Date date1, final Date date2) {
-            if ((date1 == null) || (date2 == null)) {
+            if (date1 == null || date2 == null) {
                 throw new IllegalArgumentException("The date must not be null");
             }
             return date1.getTime() == date2.getTime();
@@ -405,7 +530,7 @@ public class Dates {
          * @since 2.1
          */
         public static boolean isSameInstant(final Calendar cal1, final Calendar cal2) {
-            if ((cal1 == null) || (cal2 == null)) {
+            if (cal1 == null || cal2 == null) {
                 throw new IllegalArgumentException("The date must not be null");
             }
             return cal1.getTime().getTime() == cal2.getTime().getTime();
@@ -429,16 +554,17 @@ public class Dates {
          * @since 2.1
          */
         public static boolean isSameLocalTime(final Calendar cal1, final Calendar cal2) {
-            if ((cal1 == null) || (cal2 == null)) {
+            if (cal1 == null || cal2 == null) {
                 throw new IllegalArgumentException("The date must not be null");
             }
-            return ((cal1.get(Calendar.MILLISECOND) == cal2.get(Calendar.MILLISECOND))
-                    && (cal1.get(Calendar.SECOND) == cal2.get(Calendar.SECOND))
-                    && (cal1.get(Calendar.MINUTE) == cal2.get(Calendar.MINUTE))
-                    && (cal1.get(Calendar.HOUR) == cal2.get(Calendar.HOUR))
-                    && (cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR))
-                    && (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR))
-                    && (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)) && (cal1.getClass() == cal2.getClass()));
+            return cal1.get(Calendar.MILLISECOND) == cal2.get(Calendar.MILLISECOND)
+                    && cal1.get(Calendar.SECOND) == cal2.get(Calendar.SECOND)
+                    && cal1.get(Calendar.MINUTE) == cal2.get(Calendar.MINUTE)
+                    && cal1.get(Calendar.HOUR) == cal2.get(Calendar.HOUR)
+                    && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+                    && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                    && cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
+                    && cal1.getClass() == cal2.getClass();
         }
 
         // -----------------------------------------------------------------------
@@ -458,12 +584,12 @@ public class Dates {
          * @param parsePatterns the date format patterns to use, see
          * SimpleDateFormat, not null
          * @return the parsed date
+         * @throws ParseException if none of the date patterns were suitable
          * @throws IllegalArgumentException if the date string or pattern array
          * is null
-         * @throws ParseException if none of the date patterns were suitable
          */
         public static Date parseDate(final String str, final String[] parsePatterns) throws ParseException {
-            if ((str == null) || (parsePatterns == null)) {
+            if (str == null || parsePatterns == null) {
                 throw new IllegalArgumentException("Date and Patterns must not be null");
             }
 
@@ -477,7 +603,7 @@ public class Dates {
                 }
                 pos.setIndex(0);
                 Date date = parser.parse(str, pos);
-                if ((date != null) && (pos.getIndex() == str.length())) {
+                if (date != null && pos.getIndex() == str.length()) {
                     return date;
                 }
             }
@@ -495,7 +621,10 @@ public class Dates {
          * @throws IllegalArgumentException if the date is null
          */
         public static Date addYears(final Date date, final int amount) {
-            return add(date, Calendar.YEAR, amount);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.YEAR, amount);
+            return calendar.getTime();
         }
 
         // -----------------------------------------------------------------------
@@ -509,7 +638,10 @@ public class Dates {
          * @throws IllegalArgumentException if the date is null
          */
         public static Date addMonths(final Date date, final int amount) {
-            return add(date, Calendar.MONTH, amount);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.MONTH, amount);
+            return calendar.getTime();
         }
 
         // -----------------------------------------------------------------------
@@ -523,7 +655,10 @@ public class Dates {
          * @throws IllegalArgumentException if the date is null
          */
         public static Date addWeeks(final Date date, final int amount) {
-            return add(date, Calendar.WEEK_OF_YEAR, amount);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.WEEK_OF_YEAR, amount);
+            return calendar.getTime();
         }
 
         // -----------------------------------------------------------------------
@@ -537,7 +672,10 @@ public class Dates {
          * @throws IllegalArgumentException if the date is null
          */
         public static Date addDays(final Date date, final int amount) {
-            return add(date, Calendar.DAY_OF_MONTH, amount);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DAY_OF_MONTH, amount);
+            return calendar.getTime();
         }
 
         // -----------------------------------------------------------------------
@@ -551,7 +689,10 @@ public class Dates {
          * @throws IllegalArgumentException if the date is null
          */
         public static Date addHours(final Date date, final int amount) {
-            return add(date, Calendar.HOUR_OF_DAY, amount);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.HOUR_OF_DAY, amount);
+            return calendar.getTime();
         }
 
         // -----------------------------------------------------------------------
@@ -565,7 +706,10 @@ public class Dates {
          * @throws IllegalArgumentException if the date is null
          */
         public static Date addMinutes(final Date date, final int amount) {
-            return add(date, Calendar.MINUTE, amount);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.MINUTE, amount);
+            return calendar.getTime();
         }
 
         // -----------------------------------------------------------------------
@@ -579,7 +723,10 @@ public class Dates {
          * @throws IllegalArgumentException if the date is null
          */
         public static Date addSeconds(final Date date, final int amount) {
-            return add(date, Calendar.SECOND, amount);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.SECOND, amount);
+            return calendar.getTime();
         }
 
         // -----------------------------------------------------------------------
@@ -593,7 +740,10 @@ public class Dates {
          * @throws IllegalArgumentException if the date is null
          */
         public static Date addMilliseconds(final Date date, final int amount) {
-            return add(date, Calendar.MILLISECOND, amount);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.MILLISECOND, amount);
+            return calendar.getTime();
         }
 
         // -----------------------------------------------------------------------
@@ -1006,7 +1156,7 @@ public class Dates {
 
             // truncate milliseconds
             int millisecs = val.get(Calendar.MILLISECOND);
-            if (!round || (millisecs < 500)) {
+            if (!round || millisecs < 500) {
                 time = time - millisecs;
             }
             if (field == Calendar.SECOND) {
@@ -1015,7 +1165,7 @@ public class Dates {
 
             // truncate seconds
             int seconds = val.get(Calendar.SECOND);
-            if (!done && (!round || (seconds < 30))) {
+            if (!done && !round || seconds < 30) {
                 time = time - (seconds * 1000L);
             }
             if (field == Calendar.MINUTE) {
@@ -1024,7 +1174,7 @@ public class Dates {
 
             // truncate minutes
             int minutes = val.get(Calendar.MINUTE);
-            if (!done && (!round || (minutes < 30))) {
+            if (!done && !round || minutes < 30) {
                 time = time - (minutes * 60000L);
             }
 
@@ -1093,6 +1243,8 @@ public class Dates {
                             offsetSet = true;
                         }
                         break;
+                    default:
+                        break;
                 }
                 if (!offsetSet) {
                     int min = val.getActualMinimum(field2[0]);
@@ -1136,7 +1288,6 @@ public class Dates {
          *           {@link DateUtils#RANGE_WEEK_MONDAY}, {@link DateUtils#RANGE_WEEK_RELATIVE},
          *           {@link DateUtils#RANGE_WEEK_CENTER}
          * @return the date iterator, which always returns Calendar instances
-         * @throws IllegalArgumentException if the date is <code>null</code>
          * @throws IllegalArgumentException if the rangeStyle is invalid
          */
         public static Iterator iterator(final Date focus, final int rangeStyle) {
@@ -1172,7 +1323,6 @@ public class Dates {
          *           {@link DateUtils#RANGE_WEEK_MONDAY}, {@link DateUtils#RANGE_WEEK_RELATIVE},
          *           {@link DateUtils#RANGE_WEEK_CENTER}
          * @return the date iterator
-         * @throws IllegalArgumentException if the date is <code>null</code>
          * @throws IllegalArgumentException if the rangeStyle is invalid
          */
         public static Iterator iterator(final Calendar focus, final int rangeStyle) {
@@ -1220,6 +1370,8 @@ public class Dates {
                         case RANGE_WEEK_CENTER:
                             startCutoff = focus.get(Calendar.DAY_OF_WEEK) - 3;
                             endCutoff = focus.get(Calendar.DAY_OF_WEEK) + 3;
+                            break;
+                        default:
                             break;
                     }
                     break;
@@ -1763,7 +1915,7 @@ public class Dates {
         }
 
         /**
-         * Date-version for fragment-calculation in any unit
+         * Date-version for fragment-calculation in any unit.
          *
          * @param date the date to work with, not null
          * @param fragment the Calendar field part of date to calculate
@@ -1783,7 +1935,7 @@ public class Dates {
         }
 
         /**
-         * Calendar-version for fragment-calculation in any unit
+         * Calendar-version for fragment-calculation in any unit.
          *
          * @param calendar the calendar to work with, not null
          * @param fragment the Calendar field part of calendar to calculate
@@ -1808,21 +1960,29 @@ public class Dates {
                 case Calendar.MONTH:
                     result += (calendar.get(Calendar.DAY_OF_MONTH) * MILLIS_PER_DAY) / millisPerUnit;
                     break;
+                default:
+                    break;
             }
 
             switch (fragment) {
                 // Number of days already calculated for these cases
                 case Calendar.YEAR:
+                    break;
                 case Calendar.MONTH:
+                    break;
 
                 // The rest of the valid cases
                 case Calendar.DAY_OF_YEAR:
+                    break;
                 case Calendar.DATE:
                     result += (calendar.get(Calendar.HOUR_OF_DAY) * MILLIS_PER_HOUR) / millisPerUnit;
+                    break;
                 case Calendar.HOUR_OF_DAY:
                     result += (calendar.get(Calendar.MINUTE) * MILLIS_PER_MINUTE) / millisPerUnit;
+                    break;
                 case Calendar.MINUTE:
                     result += (calendar.get(Calendar.SECOND) * MILLIS_PER_SECOND) / millisPerUnit;
+                    break;
                 case Calendar.SECOND:
                     result += (calendar.get(Calendar.MILLISECOND) * 1) / millisPerUnit;
                     break;
@@ -1836,7 +1996,7 @@ public class Dates {
 
         /**
          * Returns the number of millis of a datefield, if this is a constant
-         * value
+         * value.
          *
          * @param unit A Calendar field which is a valid unit for a fragment
          * @return number of millis
@@ -1876,7 +2036,14 @@ public class Dates {
          */
         static class DateIterator implements Iterator {
 
+            /**
+             * The end final.
+             */
             private final Calendar endFinal;
+
+            /**
+             * The spot.
+             */
             private final Calendar spot;
 
             /**
@@ -1893,7 +2060,7 @@ public class Dates {
             }
 
             /**
-             * Has the iterator not reached the end date yet?
+             * Has the iterator not reached the end date yet?.
              *
              * @return <code>true</code> if the iterator has yet to reach the
              * end date
@@ -1904,7 +2071,7 @@ public class Dates {
             }
 
             /**
-             * Return the next calendar in the iteration
+             * Return the next calendar in the iteration.
              *
              * @return Object calendar for the next date
              */
@@ -1920,7 +2087,8 @@ public class Dates {
             /**
              * Always throws UnsupportedOperationException.
              *
-             * @throws UnsupportedOperationException
+             * @throws UnsupportedOperationException the unsupported operation
+             * exception
              * @see java.util.Iterator#remove()
              */
             @Override
@@ -1965,6 +2133,19 @@ public class Dates {
         @Deprecated
         public static final int MILLIS_IN_DAY = 24 * 60 * 60 * 1000;
 
+    }
+
+    public static void main(String[] args) throws ParseException {
+        try {
+            System.out.println(">>> 01/03/1981 " + Dates.toDate("01/03/1981", "dd/MM/yyy"));
+            System.out.println(">>> 2005-05-10 " + Dates.toDate("2005-05-10", "yyy-MM-dd"));
+        } catch (ParseException ex) {
+            Logger.getLogger(Dates.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        System.out.println(">>> " + Dates.toString(Dates.now()));
+
+        System.out.println(">>> Convertir a formato: " + Dates.toString(Dates.toDate("01-03-1981", "dd-MM-yyyy"), "yyyy-MM-dd"));
     }
 
 }
