@@ -329,7 +329,7 @@ public class Subject extends BussinesEntity implements Serializable {
     public Boolean getNonnative() {
         return this.nonnative;
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
