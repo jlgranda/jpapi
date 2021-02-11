@@ -358,7 +358,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         query.setMaxResults(limit);
         return query.getResultList();
     }
-
+    
     protected <E> List<E> findAll(final Class<E> type) {
         CriteriaQuery<E> query = getEntityManager().getCriteriaBuilder().createQuery(type);
         query.from(type);
