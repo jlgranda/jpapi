@@ -149,6 +149,10 @@ public class Dates {
     public static Date addDays(final Date date, final int amount) {
         return DateUtils.addDays(date, amount);
     }
+    
+    public static Date addMinutes(final Date date, final int amount) {
+        return DateUtils.addMinutes(date, amount);
+    }
 
     /**
      * Calculate number of days between.
@@ -164,6 +168,11 @@ public class Dates {
 
         // Calculate difference in days
         return diff / (24 * 60 * 60 * 1000);
+    }
+
+    public static long calculateNumberOfMinutesBetween(final Date one, final Date two) {
+        long diffmillis = one.getTime() - two.getTime();
+        return java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(diffmillis);
     }
 
     /**
@@ -213,6 +222,26 @@ public class Dates {
         date = DateUtils.setSeconds(date, 59);
         date = DateUtils.setMilliseconds(date, 999);
         return date;
+    }
+    
+    public static Date minimumDateHour(Date date) {
+        Date _date = new Date();
+        _date.setTime(date.getTime());
+        _date = DateUtils.setHours(_date, Dates.get(date, Calendar.HOUR_OF_DAY));
+        _date = DateUtils.setMinutes(_date, 0);
+        _date = DateUtils.setSeconds(_date, 0);
+        _date = DateUtils.setMilliseconds(_date, 0);
+        return _date;
+    }
+
+    public static Date maximumDateHour(Date date) {
+        Date _date = new Date();
+        _date.setTime(date.getTime());
+        _date = DateUtils.setHours(_date, Dates.get(date, Calendar.HOUR_OF_DAY));
+        _date = DateUtils.setMinutes(_date, 59);
+        _date = DateUtils.setSeconds(_date, 59);
+        _date = DateUtils.setMilliseconds(_date, 999);
+        return _date;
     }
 
     /**

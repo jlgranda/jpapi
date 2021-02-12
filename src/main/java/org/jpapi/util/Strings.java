@@ -84,9 +84,7 @@ public final class Strings {
      */
     public static String join(final String delim, final List<String> strings) {
         String result = "";
-        for (String string : strings) {
-            result += delim + string;
-        }
+        result = strings.stream().map(string -> delim + string).reduce(result, String::concat);
 
         if (delim != null) {
             result = result.substring(delim.length());
@@ -603,6 +601,12 @@ public final class Strings {
         partes.add(test.substring(index2, test.length()));
         
         return partes;
+    }
+    
+    public static String toRegex(String key) {
+        key = key.replaceAll("%",".*");
+        //for (String s: key.split(""));
+        return ".*" + key + ".*";
     }
 
     /**
