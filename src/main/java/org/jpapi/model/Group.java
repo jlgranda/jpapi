@@ -59,36 +59,38 @@ public class Group extends BussinesEntity implements Serializable {
 
     private static final long serialVersionUID = 5665775223006691311L;
     private static Logger log = LoggerFactory.getLogger(Group.class);
-    
+
     public enum Type {
         GROUP,
         LABEL,
+        PRODUCT,
         APPICATION;
+
         private Type() {
         }
     }
-    
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Group.Type groupType;
-    
+
     /*
     HTML code color valid
-    */
+     */
     private String color;
-    
+
     /*
     Bootstraps valid icon
-    */
+     */
     private String icon;
-    
+
     private String module;
 
     public Group() {
         super();
         setGroupType(Type.GROUP);
     }
-    
+
     public Group(String code, String name) {
         super();
         setCode(code);
@@ -212,4 +214,9 @@ public class Group extends BussinesEntity implements Serializable {
                 append(getGroupType(), other.getGroupType()).
                 isEquals();
     }
-}
+
+    @Override
+    public String toString() {
+        return String.valueOf(getId());
+    }
+} 
