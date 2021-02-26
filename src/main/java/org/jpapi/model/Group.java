@@ -54,7 +54,10 @@ import org.slf4j.LoggerFactory;
      @NamedQuery(name = "Group.findGroupById", query = "from Group g where g.id = :id"),
      @NamedQuery(name = "Group.findGroupsByType", query = "from Group g where g.type = :type"),
      @NamedQuery(name = "Group.findGroupByName", query = "from Group g where lower(g.name) = lower(:name) and g.type = :type"),
-    @NamedQuery(name = "Group.findByBussinesEntityIdAndPropertyId", query = "Select m.group from BussinesEntity be JOIN be.memberships m where m.bussinesEntity.id = :bussinesEntityId and m.group.property.id = :propertyId")*/})
+    @NamedQuery(name = "Group.findByBussinesEntityIdAndPropertyId", query = "Select m.group from BussinesEntity be JOIN be.memberships m where m.bussinesEntity.id = :bussinesEntityId and m.group.property.id = :propertyId"),*/
+    @NamedQuery(name = "Group.findById", query = "select g FROM Group g WHERE g.id = ?1"),
+    @NamedQuery(name = "Group.findByGroup", query = "select g.name, g.icon, g.type, g.createdOn FROM Group g WHERE g.createdOn>=?1 AND g.createdOn<=?2 ORDER BY 2 DESC"),
+})
 public class Group extends BussinesEntity implements Serializable {
 
     private static final long serialVersionUID = 5665775223006691311L;
@@ -69,26 +72,31 @@ public class Group extends BussinesEntity implements Serializable {
         private Type() {
         }
     }
-
+    /*
+    Tipo de grupo
+     */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false)    
     private Group.Type groupType;
 
     /*
     HTML code color valid
      */
+    @Column
     private String color;
 
     /*
     Bootstraps valid icon
      */
+    @Column
     private String icon;
 
+    @Column
     private String module;
 
     public Group() {
         super();
-        setGroupType(Type.GROUP);
+        setGroupType(Type.GROUP); //type by default
     }
 
     public Group(String code, String name) {
@@ -97,11 +105,17 @@ public class Group extends BussinesEntity implements Serializable {
         setName(name);
         setGroupType(Type.GROUP);
     }
-
+    
+    public Type getGroupType() {
+        return groupType;
+    }    
+    public void setGroupType(Type groupType) {
+        this.groupType = groupType;
+    }
+    
     public String getColor() {
         return color;
     }
-
     public void setColor(String color) {
         this.color = color;
     }
@@ -109,27 +123,19 @@ public class Group extends BussinesEntity implements Serializable {
     public String getIcon() {
         return icon;
     }
-
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public Type getGroupType() {
-        return groupType;
     }
 
     public String getModule() {
         return module;
     }
-
     public void setModule(String module) {
         this.module = module;
     }
 
-    public void setGroupType(Type groupType) {
-        this.groupType = groupType;
-    }
-
+    
+    
     public List<BussinesEntity> getMembers() {
         List<BussinesEntity> members = new ArrayList<>();
         for (Membership m : getMemberships()) {
@@ -141,7 +147,6 @@ public class Group extends BussinesEntity implements Serializable {
 
     public void setMembers(List<BussinesEntity> members) {
         // this.members = members;
-        //TODO
     }
 
     public List<BussinesEntity> findOtherMembers(BussinesEntity me) {
