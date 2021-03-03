@@ -57,6 +57,8 @@ import org.slf4j.LoggerFactory;
     @NamedQuery(name = "Group.findByBussinesEntityIdAndPropertyId", query = "Select m.group from BussinesEntity be JOIN be.memberships m where m.bussinesEntity.id = :bussinesEntityId and m.group.property.id = :propertyId"),*/
     @NamedQuery(name = "Group.findById", query = "select g FROM Group g WHERE g.id = ?1"),
     @NamedQuery(name = "Group.findByGroup", query = "select g.name, g.icon, g.type, g.createdOn FROM Group g WHERE g.createdOn>=?1 AND g.createdOn<=?2 ORDER BY 2 DESC"),
+    @NamedQuery(name = "Group.findLastGroup", query = "select g FROM Group g ORDER BY g.id DESC")
+    
 })
 public class Group extends BussinesEntity implements Serializable {
 
