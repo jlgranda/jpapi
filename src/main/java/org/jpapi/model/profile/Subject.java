@@ -81,6 +81,7 @@ public class Subject extends BussinesEntity implements Serializable {
     private boolean loggedIn;
     @Transient
     private boolean bussinesLoggedIn;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_profiles_keys")
     private Set<String> identityKeys = new HashSet<String>();
@@ -306,10 +307,6 @@ public class Subject extends BussinesEntity implements Serializable {
         this.numeroContribuyenteEspecial = numeroContribuyenteEspecial;
     }
 
-//    public boolean isContactable() {
-//        return  contactable == null ? false : contactable;
-//    }
-
     public void setContactable(Boolean contactable) {
         this.contactable = contactable;
     }
@@ -317,10 +314,6 @@ public class Subject extends BussinesEntity implements Serializable {
     public Boolean getContactable() {
         return this.contactable;
     }
-
-//    public boolean isNonnative() {
-//        return nonnative == null ? false : nonnative;
-//    }
 
     public void setNonnative(Boolean nonnative) {
         this.nonnative = nonnative;
@@ -404,11 +397,6 @@ public class Subject extends BussinesEntity implements Serializable {
     @Override
     public String toString() {
         return String.valueOf(getId());
-        /*return Subject.class.getName()
-                + "id=" + getId() + ","
-                + "fullName=" + getFullName() + ","
-                + "IdentityKeys=" + getIdentityKeys() + ","
-                + " ]";*/
     }
     
     public List<Subject.Type> getSubjectTypes() {

@@ -320,7 +320,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
 
     @SuppressWarnings("unchecked")
     public <E> List<E> findByNamedQuery(final String namedQueryName, final Object... params) {
-        return findByNamedQueryWithLimit(namedQueryName, 0, params);
+        return findByNamedQueryWithLimit(namedQueryName, Integer.MAX_VALUE, params);
     }
 
     @SuppressWarnings("unchecked")

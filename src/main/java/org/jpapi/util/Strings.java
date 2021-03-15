@@ -608,7 +608,6 @@ public final class Strings {
         //for (String s: key.split(""));
         return ".*" + key + ".*";
     }
-
     /**
      * The main method.
      *

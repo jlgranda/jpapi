@@ -54,7 +54,6 @@ public abstract class PersistentObject<E extends PersistentObject<E>> extends Ba
     @ManyToOne(optional = true)
     @JoinColumn(name = "owner", nullable = true)
     private Subject owner;
-
     
     public boolean isPersistent() {
         return getId() != null;
