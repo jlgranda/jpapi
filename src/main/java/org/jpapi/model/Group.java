@@ -64,7 +64,12 @@ public class Group extends BussinesEntity implements Serializable {
 
     private static final long serialVersionUID = 5665775223006691311L;
     private static Logger log = LoggerFactory.getLogger(Group.class);
-
+    
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "organization_id", insertable=true, updatable=true, nullable=true)
+    private Organization organization;
+    
     public enum Type {
         GROUP,
         LABEL,
@@ -136,8 +141,14 @@ public class Group extends BussinesEntity implements Serializable {
         this.module = module;
     }
 
-    
-    
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+
     public List<BussinesEntity> getMembers() {
         List<BussinesEntity> members = new ArrayList<>();
         for (Membership m : getMemberships()) {

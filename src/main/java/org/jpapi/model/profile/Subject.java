@@ -108,7 +108,7 @@ public class Subject extends BussinesEntity implements Serializable {
     
     @Column(nullable = true)
     protected Boolean nonnative;
-
+    
     public enum Type {
         NATURAL,
         GOVERMENT,
@@ -368,7 +368,7 @@ public class Subject extends BussinesEntity implements Serializable {
     public void setBio(String bio) {
         this.bio = bio;
     }
-
+    
     @Transient
     public String getFullName() {
         StringBuilder builder = new StringBuilder();
