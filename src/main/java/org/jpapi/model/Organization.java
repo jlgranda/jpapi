@@ -18,26 +18,21 @@
 package org.jpapi.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 //import org.jlgranda.fede.model.management.Mission;
 //import org.jlgranda.fede.model.management.Principle;
 //import org.jlgranda.fede.model.management.Proprietor;
 //import org.jlgranda.fede.model.management.Theme;
 //import org.jlgranda.fede.model.management.Vision;
-import org.jpapi.model.DeletableObject;
 
 /**
  *
