@@ -568,7 +568,6 @@ public final class Strings {
         double wb = 0;
 
         for (int i = 0; i <= wced.length() - 1; i = i + 2) {
-            System.out.println("wa " + i + ": " + wced.substring(i, i + 1));
             wa = Double.parseDouble(wced.substring(i, i + 1));
             wb = wa * 2;
             wc = wb;
@@ -579,7 +578,6 @@ public final class Strings {
         }
 
         for (int i = 1; i <= wced.length() - 1; i = i + 2) {
-            System.out.println("wa " + i + ": " + wced.substring(i, i + 1));
             wa = Double.parseDouble(wced.substring(i, i + 1));
             wd = wd + wa;
         }
