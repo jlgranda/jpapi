@@ -34,7 +34,6 @@ import javax.persistence.Version;
 /**
  *
  * @author jlgranda
- * @param <E>
  */
 @MappedSuperclass
 public abstract class BaseObject<E extends BaseObject<E>> implements Serializable {

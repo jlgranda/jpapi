@@ -38,7 +38,8 @@ public enum CodeType {
     CLAVE_CATASTRAL,
     CODIGO_IMPUESTO,
     PARAMETRO_GENERAL,
-    CLAVE_CATASTRAL_PERIODO;
+    CLAVE_CATASTRAL_PERIODO,
+    DENOMINATION;
     
     public static CodeType encode(String tipoIdentificacionComprador){
         CodeType t = NONE;

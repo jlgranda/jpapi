@@ -34,7 +34,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Entity
 @Table(name = "Setting")
 @NamedQueries({ @NamedQuery(name = "Setting.findByName", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-    @NamedQuery(name = "Setting.findByNameAndOwner", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1")})
+    @NamedQuery(name = "Setting.findByNameAndOwner", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+    @NamedQuery(name = "Setting.findByCodeType", query = "select s FROM Setting s WHERE s.codeType = ?1 ORDER BY 1"),
+    @NamedQuery(name = "Setting.findByCodeTypeAndCategory", query = "select s FROM Setting s WHERE s.codeType = ?1 and s.category = ?2 ORDER BY 1")})
 public class Setting extends PersistentObject<Setting> implements Comparable<Setting>, Serializable {
 
     private static final long serialVersionUID = -7485883311296510018L;

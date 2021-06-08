@@ -1,17 +1,19 @@
 /*
- * Copyright 2012  SIGCATASTROS TECNOPRO CIA. LTDA.
+ * Copyright (C) 2015 jlgranda
  *
- * Licensed under the TECNOPRO License, Version 1.0 (the "License");
- * you may not use this file or reproduce complete or any part without express autorization from TECNOPRO CIA LTDA.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- *     http://www.tecnopro.net
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package org.jpapi.util;
 
@@ -568,6 +570,7 @@ public final class Strings {
         double wb = 0;
 
         for (int i = 0; i <= wced.length() - 1; i = i + 2) {
+            System.out.println("wa " + i + ": " + wced.substring(i, i + 1));
             wa = Double.parseDouble(wced.substring(i, i + 1));
             wb = wa * 2;
             wc = wb;
@@ -578,6 +581,7 @@ public final class Strings {
         }
 
         for (int i = 1; i <= wced.length() - 1; i = i + 2) {
+            System.out.println("wa " + i + ": " + wced.substring(i, i + 1));
             wa = Double.parseDouble(wced.substring(i, i + 1));
             wd = wd + wa;
         }

@@ -19,6 +19,7 @@ package org.jpapi.model.profile;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -108,6 +109,10 @@ public class Subject extends BussinesEntity implements Serializable {
     
     @Column(nullable = true)
     protected Boolean nonnative;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = true)
+    private Date date_birth;
     
     public enum Type {
         NATURAL,
@@ -321,6 +326,14 @@ public class Subject extends BussinesEntity implements Serializable {
 
     public Boolean getNonnative() {
         return this.nonnative;
+    }
+
+    public Date getDate_birth() {
+        return date_birth;
+    }
+
+    public void setDate_birth(Date date_birth) {
+        this.date_birth = date_birth;
     }
     
     @Override
