@@ -178,7 +178,6 @@ public final class Strings {
      *
      * @param value
      * @param pattern
-     * @param object the object
      * @return the string
      */
     public static String format(double value, String pattern) {
