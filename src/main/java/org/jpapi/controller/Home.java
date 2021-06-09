@@ -439,6 +439,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         if (filters != null) {
             for (String filterProperty : filters.keySet()) {
                 Object filterValue = filters.get(filterProperty);
+                //System.err.println("---------------> filterProperty: " + filterProperty + ", filterValue: " + filterValue);
                 if ("tag".equalsIgnoreCase(filterProperty)) {
                     Root<BussinesEntity> bussinesEntity = (Root<BussinesEntity>) root;
 
