@@ -41,6 +41,8 @@ import javax.persistence.criteria.SetJoin;
 import org.jpapi.controller.Expressions.ValueExpression;
 import org.jpapi.model.BussinesEntity;
 import org.jpapi.model.BussinesEntity_;
+import org.jpapi.model.profile.Subject;
+import org.jpapi.model.profile.Subject_;
 import org.jpapi.model.Group;
 import org.jpapi.model.Membership;
 import org.jpapi.model.Membership_;
@@ -459,12 +461,13 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                     Root<BussinesEntity> bussinesEntity = (Root<BussinesEntity>) root;
 
                     //juntar con owner para hacer busqueda de propietarios de objetos
-                    Join<BussinesEntity, Subject> joinBussinesEntity = bussinesEntity.join(BussinesEntity_.owner, JoinType.LEFT);
+                    Join<BussinesEntity, Subject> joinSubject = bussinesEntity.join(BussinesEntity_.owner, JoinType.LEFT);
 
                     //Agregar relación a rootCount
                     ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.owner, JoinType.LEFT);
 
-                    Path<String> ownerPath = joinBussinesEntity.get(BussinesEntity_.name); // mind these Path objects
+                    Path<String> ownerfirstnamePath = joinSubject.get(Subject_.firstname); // mind these Path objects
+                    Path<String> ownersurnamePath = joinSubject.get(Subject_.surname); // mind these Path objects
                     Path<String> namePath = bussinesEntity.get(BussinesEntity_.name); // mind these Path objects
                     Path<String> codePath = bussinesEntity.get(BussinesEntity_.code); // mind these Path objects
                     Path<String> descriptionPath = bussinesEntity.get(BussinesEntity_.description); // mind these Path objects
@@ -476,7 +479,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                             "code");
                     ParameterExpression<String> pexpDescription = cb.parameter(String.class,
                             "description");
-                    Predicate predicate = cb.or(cb.like(cb.lower(ownerPath), pexpOwner), cb.like(cb.lower(namePath), pexpName), cb.like(cb.lower(codePath), pexpCode),  cb.like(cb.lower(descriptionPath), pexpDescription));
+                    Predicate predicate = cb.or(cb.like(cb.lower(ownerfirstnamePath), pexpOwner), cb.like(cb.lower(ownersurnamePath), pexpOwner), cb.like(cb.lower(namePath), pexpName), cb.like(cb.lower(codePath), pexpCode),  cb.like(cb.lower(descriptionPath), pexpDescription));
                     criteria.add(predicate);
                 } else if (filterValue instanceof Map) { //has multiples values
                     predicates = new ArrayList<>();
@@ -518,17 +521,19 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                     Predicate predicate = cb.like(cb.lower(root.<String>get(filterProperty)), pexp);
                     criteria.add(predicate);
                 } else {
-                    Class clazz = filterValue != null ? filterValue.getClass() : Object.class;
-                    ParameterExpression<?> pexp = cb.parameter(clazz ,
-                            filterProperty);
-                    Predicate predicate = null;
-                    if (filterValue == null) {
-                        predicate = cb.isNull(root.get(filterProperty));
-                    } else {
-                        predicate = cb.equal(root.get(filterProperty), pexp);
-                    }
+                    if (!"summary".equalsIgnoreCase(filterProperty)){
+                        Class clazz = filterValue != null ? filterValue.getClass() : Object.class;
+                        ParameterExpression<?> pexp = cb.parameter(clazz ,
+                                filterProperty);
+                        Predicate predicate = null;
+                        if (filterValue == null) {
+                            predicate = cb.isNull(root.get(filterProperty));
+                        } else {
+                            predicate = cb.equal(root.get(filterProperty), pexp);
+                        }
 
-                    criteria.add(predicate);
+                        criteria.add(predicate);
+                    }
                 }
             }
         }
@@ -612,8 +617,10 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
                     countquery.setParameter(filterProperty, filterValue);
                 } else if (filterValue != null) {
                     //System.err.println("--------------->Setted filterProperty: " + filterProperty + ", filterValue: " + filterValue);
-                    q.setParameter(filterProperty, filterValue);
-                    countquery.setParameter(filterProperty, filterValue);
+                    if (!"summary".equalsIgnoreCase(filterProperty)){
+                        q.setParameter(filterProperty, filterValue);
+                        countquery.setParameter(filterProperty, filterValue);
+                    }
                 }
             }
         }

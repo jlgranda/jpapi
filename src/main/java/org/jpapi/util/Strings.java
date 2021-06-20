@@ -609,6 +609,24 @@ public final class Strings {
         //for (String s: key.split(""));
         return ".*" + key + ".*";
     }
+    
+    public static String toNextCode(String code, String separator) {
+        
+        String ultimoGrupo =  Strings.extractLast(code, separator);
+        
+        if (Strings.isNullOrEmpty(ultimoGrupo)) {
+            return code + "1";
+        }
+            
+        String prefix = Strings.extractFirst(code, separator);
+        int value = 0;
+        if (Strings.isNumeric(ultimoGrupo)){
+            value = Strings.toInteger(ultimoGrupo);
+            value++;
+        }
+        
+        return prefix + separator + Strings.complete(ultimoGrupo.length(), Long.valueOf(value), '0');
+    }
     /**
      * The main method.
      *
@@ -717,6 +735,34 @@ public final class Strings {
 //                String test = "\"parroquia_ubi_id_padre\"  = current_value('${PREFIX}6_canton_domicilio')";
 //                List<String> partes = Strings.splitAt(test, regexp);
 //                System.out.println(Strings.join(Strings.extractBefore(prefijo, "_") + "_", Strings.splitAt(test, regexp)));
-                
+          
+        
+//        String prefix = "10.02";
+//        String ultimoGrupo =  Strings.extractLast(code, ".");
+//        int value = 0;
+//        if (Strings.isNumeric(ultimoGrupo)){
+//            System.out.println("Numero");
+//            value = Strings.toInteger(ultimoGrupo);
+//            value++;
+//        }
+        String code = "10.02.09";
+        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
+        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
+        
+        code = "10.02.003";
+        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
+        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
+        
+        code = "10.02.0005";
+        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
+        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
+        
+        code = "10.02.0009";
+        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
+        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
+
+        code = "10.02.";
+        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
+        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
     }
 }
