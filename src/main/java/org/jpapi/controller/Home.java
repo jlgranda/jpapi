@@ -478,24 +478,40 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
 
                     //juntar con owner para hacer busqueda de propietarios de objetos
                     Join<BussinesEntity, Subject> joinSubject = bussinesEntity.join(BussinesEntity_.owner, JoinType.LEFT);
+                    Join<BussinesEntity, Subject> joinAuthor = bussinesEntity.join(BussinesEntity_.author, JoinType.LEFT);
 
                     //Agregar relación a rootCount
                     ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.owner, JoinType.LEFT);
+                    ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.author, JoinType.LEFT);
 
-                    Path<String> ownerfirstnamePath = joinSubject.get(Subject_.firstname); // mind these Path objects
-                    Path<String> ownersurnamePath = joinSubject.get(Subject_.surname); // mind these Path objects
+                    Path<String> ownerFirstnamePath = joinSubject.get(Subject_.firstname); // mind these Path objects
+                    Path<String> ownerSurnamePath = joinSubject.get(Subject_.surname); // mind these Path objects
+                    Path<String> ownerInitialsPath = joinSubject.get(Subject_.surname); // mind these Path objects
+                    Path<String> authorFirstnamePath = joinAuthor.get(Subject_.firstname); // mind these Path objects
+                    Path<String> authorSurnamePath = joinAuthor.get(Subject_.surname); // mind these Path objects
+                    Path<String> authorInitialsPath = joinAuthor.get(Subject_.initials); // mind these Path objects
                     Path<String> namePath = bussinesEntity.get(BussinesEntity_.name); // mind these Path objects
                     Path<String> codePath = bussinesEntity.get(BussinesEntity_.code); // mind these Path objects
                     Path<String> descriptionPath = bussinesEntity.get(BussinesEntity_.description); // mind these Path objects
                     ParameterExpression<String> pexpOwner = cb.parameter(String.class,
                             "onwerName");
+                    ParameterExpression<String> pexpAuthor = cb.parameter(String.class,
+                            "authorName");
                     ParameterExpression<String> pexpName = cb.parameter(String.class,
                             "name");
                     ParameterExpression<String> pexpCode = cb.parameter(String.class,
                             "code");
                     ParameterExpression<String> pexpDescription = cb.parameter(String.class,
                             "description");
-                    Predicate predicate = cb.or(cb.like(cb.lower(ownerfirstnamePath), pexpOwner), cb.like(cb.lower(ownersurnamePath), pexpOwner), cb.like(cb.lower(namePath), pexpName), cb.like(cb.lower(codePath), pexpCode),  cb.like(cb.lower(descriptionPath), pexpDescription));
+                    Predicate predicate = cb.or(cb.like(cb.lower(ownerFirstnamePath), pexpOwner), 
+                            cb.like(cb.lower(ownerSurnamePath), pexpOwner), 
+                            cb.like(cb.lower(ownerInitialsPath), pexpOwner),
+                            cb.like(cb.lower(authorFirstnamePath), pexpAuthor), 
+                            cb.like(cb.lower(authorSurnamePath), pexpAuthor), 
+                            cb.like(cb.lower(authorInitialsPath), pexpAuthor), 
+                            cb.like(cb.lower(namePath), pexpName), 
+                            cb.like(cb.lower(codePath), pexpCode),  
+                            cb.like(cb.lower(descriptionPath), pexpDescription));
                     criteria.add(predicate);
                 } else if (filterValue instanceof Map) { //has multiples values
                     predicates = new ArrayList<>();
