@@ -50,6 +50,7 @@ public class Organization  extends DeletableObject<Organization> implements Seri
     private static final long serialVersionUID = 3095488521256724258L;
     private String ruc;
     private String initials;
+    private String url;
 //    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    private List<Proprietor> proprietors = new ArrayList<>();
 //    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -97,6 +98,15 @@ public class Organization  extends DeletableObject<Organization> implements Seri
     public void setInitials(String initials) {
         this.initials = initials;
     }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    
 
 //    public List<Proprietor> getProprietors() {
 //        return proprietors;

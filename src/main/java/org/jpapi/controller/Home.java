@@ -18,6 +18,7 @@ package org.jpapi.controller;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -258,6 +259,21 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
             return query.getSingleResult() == null ? 0L : ((Number) query.getSingleResult()).intValue();
         } catch (javax.persistence.NoResultException nre) {
             return -1L;
+        }
+    }
+    
+    public <E> BigDecimal findBigDecimal (final String namedQueryName, final Object... params) {
+
+        Query query = getEntityManager().createNamedQuery(namedQueryName);
+        int i = 1;
+        for (Object p : params) {
+            query.setParameter(i++, p);
+        }
+
+        try {
+            return query.getSingleResult() == null ? BigDecimal.ZERO : BigDecimal.valueOf( ((Number) query.getSingleResult()).doubleValue());
+        } catch (javax.persistence.NoResultException nre) {
+            return BigDecimal.ZERO;
         }
     }
 
