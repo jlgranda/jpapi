@@ -18,6 +18,7 @@
 package org.jpapi.model.statistics;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -27,13 +28,13 @@ public class Statistics implements Serializable{
 
     private static final long serialVersionUID = -3341857100124128997L;
     
-    private Double count;
+    private BigDecimal count;
 
-    public Double getCount() {
+    public BigDecimal getCount() {
         return count;
     }
 
-    public void setCount(Double count) {
+    public void setCount(BigDecimal count) {
         this.count = count;
     }
     
