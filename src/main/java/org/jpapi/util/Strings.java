@@ -745,24 +745,25 @@ public final class Strings {
 //            value = Strings.toInteger(ultimoGrupo);
 //            value++;
 //        }
-        String code = "10.02.09";
-        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
-        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
+//        String code = "10.02.09";
+//        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
+//        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
+//        
+//        code = "10.02.003";
+//        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
+//        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
+//        
+//        code = "10.02.0005";
+//        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
+//        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
+//        
+//        code = "10.02.0009";
+//        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
+//        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
+//
+//        code = "10.02.";
+//        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
+//        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
         
-        code = "10.02.003";
-        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
-        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
-        
-        code = "10.02.0005";
-        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
-        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
-        
-        code = "10.02.0009";
-        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
-        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
-
-        code = "10.02.";
-        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
-        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
     }
 }
