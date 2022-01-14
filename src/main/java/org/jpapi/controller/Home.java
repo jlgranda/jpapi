@@ -669,6 +669,210 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         return queryData;
     }
     
+    /**
+     * 
+     * @param filters
+     * @return 
+     */
+    public QueryData<E> find(Map<String, Object> filters) {
+
+        QueryData<E> queryData = new QueryData<>();
+
+        CriteriaBuilder cb = getCriteriaBuilder();
+        CriteriaQuery<E> c = cb.createQuery(entityClass);
+        Root<E> root = c.from(entityClass);
+        c.select(root);
+
+        CriteriaQuery<Long> countQ = cb.createQuery(Long.class);
+        Root<E> rootCount = countQ.from(entityClass);
+        countQ.select(cb.count(rootCount));
+
+        List<Predicate> criteria = new ArrayList<>();
+        List<Predicate> predicates = null;
+        if (filters != null) {
+            for (String filterProperty : filters.keySet()) {
+                Object filterValue = filters.get(filterProperty);
+                //System.err.println("---------------> filterProperty: " + filterProperty + ", filterValue: " + filterValue);
+                if ("tag".equalsIgnoreCase(filterProperty)) {
+                    Root<BussinesEntity> bussinesEntity = (Root<BussinesEntity>) root;
+
+                    SetJoin<BussinesEntity, Membership> joinBussinesEntity = bussinesEntity.join(BussinesEntity_.memberships, JoinType.LEFT);
+                    Join<Membership, Group> joinMembershipGroup = joinBussinesEntity.join(Membership_.group, JoinType.LEFT);
+
+                    //Agregar relación a rootCount
+                    SetJoin<BussinesEntity, Membership> joinCountBussinesEntity = ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.memberships, JoinType.LEFT);
+                    joinCountBussinesEntity.join(Membership_.group, JoinType.LEFT);
+
+                    Path<String> groupPath = joinMembershipGroup.get(BussinesEntity_.code); // mind these Path objects
+                    ParameterExpression<String> pexpGroup = cb.parameter(String.class,
+                            filterProperty);
+                    Predicate predicate = cb.equal(groupPath, pexpGroup);
+                    criteria.add(predicate);
+                } else if ("keyword".equalsIgnoreCase(filterProperty)) {
+                    Root<BussinesEntity> bussinesEntity = (Root<BussinesEntity>) root;
+
+                    //juntar con owner para hacer busqueda de propietarios de objetos
+                    Join<BussinesEntity, Subject> joinSubject = bussinesEntity.join(BussinesEntity_.owner, JoinType.LEFT);
+                    Join<BussinesEntity, Subject> joinAuthor = bussinesEntity.join(BussinesEntity_.author, JoinType.LEFT);
+
+                    //Agregar relación a rootCount
+                    ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.owner, JoinType.LEFT);
+                    ((Root<BussinesEntity>) rootCount).join(BussinesEntity_.author, JoinType.LEFT);
+
+                    Path<String> ownerFirstnamePath = joinSubject.get(Subject_.firstname); // mind these Path objects
+                    Path<String> ownerSurnamePath = joinSubject.get(Subject_.surname); // mind these Path objects
+                    Path<String> ownerInitialsPath = joinSubject.get(Subject_.surname); // mind these Path objects
+                    Path<String> authorFirstnamePath = joinAuthor.get(Subject_.firstname); // mind these Path objects
+                    Path<String> authorSurnamePath = joinAuthor.get(Subject_.surname); // mind these Path objects
+                    Path<String> authorInitialsPath = joinAuthor.get(Subject_.initials); // mind these Path objects
+                    Path<String> namePath = bussinesEntity.get(BussinesEntity_.name); // mind these Path objects
+                    Path<String> codePath = bussinesEntity.get(BussinesEntity_.code); // mind these Path objects
+                    Path<String> descriptionPath = bussinesEntity.get(BussinesEntity_.description); // mind these Path objects
+                    ParameterExpression<String> pexpOwner = cb.parameter(String.class,
+                            "onwerName");
+                    ParameterExpression<String> pexpAuthor = cb.parameter(String.class,
+                            "authorName");
+                    ParameterExpression<String> pexpName = cb.parameter(String.class,
+                            "name");
+                    ParameterExpression<String> pexpCode = cb.parameter(String.class,
+                            "code");
+                    ParameterExpression<String> pexpDescription = cb.parameter(String.class,
+                            "description");
+                    Predicate predicate = cb.or(cb.like(cb.lower(ownerFirstnamePath), pexpOwner), 
+                            cb.like(cb.lower(ownerSurnamePath), pexpOwner), 
+                            cb.like(cb.lower(ownerInitialsPath), pexpOwner),
+                            cb.like(cb.lower(authorFirstnamePath), pexpAuthor), 
+                            cb.like(cb.lower(authorSurnamePath), pexpAuthor), 
+                            cb.like(cb.lower(authorInitialsPath), pexpAuthor), 
+                            cb.like(cb.lower(namePath), pexpName), 
+                            cb.like(cb.lower(codePath), pexpCode),  
+                            cb.like(cb.lower(descriptionPath), pexpDescription));
+                    criteria.add(predicate);
+                } else if (filterValue instanceof Map) { //has multiples values
+                    predicates = new ArrayList<>();
+                    for (Object key : ((Map) filterValue).keySet()) {
+                        Object value = ((Map) filterValue).get((String) key);
+                        //Verify data content for build
+                        if (value instanceof Date) {
+                            Path<Date> filterPropertyPath = root.<Date>get(filterProperty);
+                            ParameterExpression<Date> pexpStart = cb.parameter(Date.class,
+                                    "start");
+                            ParameterExpression<Date> pexpEnd = cb.parameter(Date.class,
+                                    "end");
+                            Predicate predicate = cb.between(filterPropertyPath, pexpStart, pexpEnd);
+                            criteria.add(predicate);
+                            break;
+                        } else if (value instanceof String) { //busqueda de palabra clave en varias columnas
+                            Path<String> filterPropertyPath = root.<String>get((String) key);
+                            ParameterExpression<String> pexp = cb.parameter(String.class,
+                                    (String) key);
+                            Predicate predicate = cb.like(cb.lower(filterPropertyPath), pexp);
+                            predicates.add(predicate);
+                        }
+                    }
+                    //Si se han definido 
+                    if (!predicates.isEmpty()) {
+                        Predicate[] array = new Predicate[predicates.size()];
+                        criteria.add(cb.or(predicates.toArray(array)));
+                    }
+                } else if (filterValue instanceof List) { //has multiples values for a column
+                    Path<String> filterPropertyPath = root.<String>get((String) filterProperty);
+                    ParameterExpression<List> pexp = cb.parameter(List.class,
+                            filterProperty);
+                    Predicate predicate = filterPropertyPath.in(pexp);
+                    criteria.add(predicate);
+
+                } else if (filterValue instanceof String) {
+                    ParameterExpression<String> pexp = cb.parameter(String.class,
+                            filterProperty);
+                    Predicate predicate = cb.like(cb.lower(root.<String>get(filterProperty)), pexp);
+                    criteria.add(predicate);
+                } else {
+                    if (!"summary".equalsIgnoreCase(filterProperty)){
+                        Class clazz = filterValue != null ? filterValue.getClass() : Object.class;
+                        ParameterExpression<?> pexp = cb.parameter(clazz ,
+                                filterProperty);
+                        Predicate predicate = null;
+                        if (filterValue == null) {
+                            predicate = cb.isNull(root.get(filterProperty));
+                        } else {
+                            predicate = cb.equal(root.get(filterProperty), pexp);
+                        }
+
+                        criteria.add(predicate);
+                    }
+                }
+            }
+        }
+
+        if (criteria.size() == 1) {
+            c.where(criteria.get(0));
+            countQ.where(criteria.get(0));
+        } else if (criteria.size() > 1) {
+            c.where(cb.and(criteria.toArray(new Predicate[0])));
+            countQ.where(cb.and(criteria.toArray(new Predicate[0])));
+        }
+
+        TypedQuery<E> q = (TypedQuery<E>) createQuery(c);
+        q.setHint("org.hibernate.cacheable", true);
+        TypedQuery<Long> countquery = (TypedQuery<Long>) createQuery(countQ);
+        countquery.setHint("org.hibernate.cacheable", true);
+
+        if (filters != null) {
+            for (String filterProperty : filters.keySet()) {
+                Object filterValue = filters.get(filterProperty);
+                //System.err.println("---------------> filterProperty: " + filterProperty + ", filterValue: " + filterValue);
+                if ("tag".equalsIgnoreCase(filterProperty)) {
+                    q.setParameter(filterProperty, filterValue);
+                    countquery.setParameter(filterProperty, filterValue);
+                } else if ("keyword".equalsIgnoreCase(filterProperty)) {
+                    //Establecer dinamicamente los parametros de búsqueda
+                    filterValue = "%" + filterValue.toString().toLowerCase() + "%";
+                    for (Parameter parameter : q.getParameters()) {
+                        if (parameter.getParameterType().equals(String.class)){
+                            //System.err.println("---------------> parameter.getName(): " + parameter.getName() + ", filterValue: " + filterValue);
+                            q.setParameter(parameter.getName(), filterValue);
+                            countquery.setParameter(parameter.getName(), filterValue);
+                        }
+                    }
+                    
+                } else if (filterValue instanceof Map) {
+                    for (Object key : ((Map) filterValue).keySet()) {
+                        Object value = ((Map) filterValue).get((String) key);
+                        //Verify data content for build
+                        if (value instanceof Date) {
+                            q.setParameter(q.getParameter((String) key, Date.class), (Date) value, TemporalType.TIMESTAMP);
+                            countquery.setParameter(q.getParameter((String) key, Date.class), (Date) value, TemporalType.TIMESTAMP);
+                        } else {
+                            String _filterValue = "%" + (String) value + "%";
+                            q.setParameter(q.getParameter((String) key, String.class), _filterValue);
+                            countquery.setParameter(q.getParameter((String) key, String.class), _filterValue);
+                        }
+                    }
+                } else if (filterValue instanceof List) { //has multiples values for a column
+                    q.setParameter(filterProperty, filterValue);
+                    countquery.setParameter(filterProperty, filterValue);
+                } else if (filterValue instanceof String) {
+                    filterValue = "%" + filterValue + "%";
+                    q.setParameter(filterProperty, filterValue);
+                    countquery.setParameter(filterProperty, filterValue);
+                } else if (filterValue != null) {
+                    //System.err.println("--------------->Setted filterProperty: " + filterProperty + ", filterValue: " + filterValue);
+                    if (!"summary".equalsIgnoreCase(filterProperty)){
+                        q.setParameter(filterProperty, filterValue);
+                        countquery.setParameter(filterProperty, filterValue);
+                    }
+                }
+            }
+        }
+
+        queryData.setResult(q.getResultList());
+        Long totalResultCount = countquery.getSingleResult();
+        queryData.setTotalResultCount(totalResultCount);
+
+        return queryData;
+    }
+    
     public QueryData<E> find(String namedQueryName, int start, int end, String sortField,
             QuerySortOrder order, Map<String, Object> filters) {
         
