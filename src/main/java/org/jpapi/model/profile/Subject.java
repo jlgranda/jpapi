@@ -27,7 +27,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.jasypt.util.password.BasicPasswordEncryptor;
-import org.jpapi.model.BussinesEntity;
+import org.jpapi.model.DeletableObject;
 import org.jpapi.model.Group;
 import org.jpapi.util.Strings;
 
@@ -38,9 +38,7 @@ import org.jpapi.util.Strings;
  */
 
 @Entity
-@Table(name = "SUBJECT")
-@DiscriminatorValue(value = "SBJ")
-@PrimaryKeyJoinColumn(name = "id")
+@Table(name = "Subject")
 /*
  * Consultas nombradas para Subject
  */
@@ -53,8 +51,8 @@ import org.jpapi.util.Strings;
     @NamedQuery(name = "Subject.findUsersByNameOrUsername", query = "select u from Subject u where lower(u.username)  LIKE lower(:name) or lower(u.name) LIKE lower(:name)"),
     @NamedQuery(name = "Subject.findUserByEmail", query = "from Subject u where u.email = ?1"),
     @NamedQuery(name = "Subject.findUserByUUID", query = "from Subject u where u.uuid = ?1")})
-@XmlRootElement
-public class Subject extends BussinesEntity implements Serializable {
+
+public class Subject extends DeletableObject<Subject> implements Serializable {
 
     private static final long serialVersionUID = 274770881776410973L;
     @Column(nullable = true)
@@ -335,6 +333,16 @@ public class Subject extends BussinesEntity implements Serializable {
     public void setDate_birth(Date date_birth) {
         this.date_birth = date_birth;
     }
+    
+    /**
+     * Return for each BussinesEntity te canonical path ....
+     * @return 
+     */
+    @Transient
+    public String getCanonicalPath(){
+        return getName();
+    }
+
     
     @Override
     public int hashCode() {

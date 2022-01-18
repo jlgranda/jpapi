@@ -74,6 +74,9 @@ public class Group extends BussinesEntity implements Serializable {
         GROUP,
         LABEL,
         PRODUCT,
+        CATEGORY,
+        WAREHOUSE,
+        TRADEMARK,
         APPICATION;
 
         private Type() {

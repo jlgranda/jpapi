@@ -45,7 +45,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "Organization.countByOwner", query = "select count(o) FROM Organization o WHERE o.owner = ?1"),
     @NamedQuery(name = "Organization.findByEmployee", query = "select o FROM Employee e JOIN e.organization o WHERE e.owner = ?1 and e.deleted = false"),
 })
-public class Organization  extends DeletableObject<Organization> implements Serializable {
+public class Organization extends DeletableObject<Organization> implements Serializable {
 
     private static final long serialVersionUID = 3095488521256724258L;
     private String ruc;
