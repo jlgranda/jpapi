@@ -135,6 +135,7 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
         } else {
             this.persist();
         }
+        
         return this.getInstance();
     }
     

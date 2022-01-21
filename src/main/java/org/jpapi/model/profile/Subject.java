@@ -111,6 +111,15 @@ public class Subject extends DeletableObject<Subject> implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true)
     private Date date_birth;
+
+    /**
+     * Return for each BussinesEntity te canonical path ....
+     * @return 
+     */
+    @Transient
+    public String getCanonicalPath(){
+        return getName();
+    }
     
     public enum Type {
         NATURAL,
@@ -333,16 +342,6 @@ public class Subject extends DeletableObject<Subject> implements Serializable {
     public void setDate_birth(Date date_birth) {
         this.date_birth = date_birth;
     }
-    
-    /**
-     * Return for each BussinesEntity te canonical path ....
-     * @return 
-     */
-    @Transient
-    public String getCanonicalPath(){
-        return getName();
-    }
-
     
     @Override
     public int hashCode() {
