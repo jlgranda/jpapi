@@ -81,6 +81,7 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
 
     public String persist() {
         super.create(getInstance());
+        getEntityManager().flush();
         createdMessage();
         return "persisted";
     }
@@ -147,7 +148,7 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
         return this.getInstance();
     }
     
-    @Transactional
+    //@Transactional
     public E save(Object id, E _instance){
         this.setId(id);
         this.setInstance(_instance);

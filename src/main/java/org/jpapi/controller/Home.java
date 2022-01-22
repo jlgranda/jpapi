@@ -277,8 +277,9 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
         }
     }
 
-    protected <E> void create(final E entity) {
+    protected <E> void create(E entity) {
         getEntityManager().persist(entity);
+        
     }
 
     protected <E> void update(final E entity) {
@@ -286,6 +287,7 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
             throw new IllegalStateException("Must initialize EntityManager before using Services!");
         }
         getEntityManager().merge(entity);
+        
     }
 
     protected <E> void refresh(final E entity) {
