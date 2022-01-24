@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jpapi.model.DeletableObject;
