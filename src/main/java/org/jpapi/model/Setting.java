@@ -34,8 +34,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Entity
 @Table(name = "Setting")
 @NamedQueries({ @NamedQuery(name = "Setting.findByName", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-    @NamedQuery(name = "Setting.findByNameAndOwnerIsNull", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner is null ORDER BY 1"),
-    @NamedQuery(name = "Setting.findByNameAndOwner", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner = ?2 ORDER BY 1"),
+    @NamedQuery(name = "Setting.findByNameAndOwnerIsNullAndOrganizationIsNull", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner is null and s.organizationId is null ORDER BY 1"),
+    @NamedQuery(name = "Setting.findByNameAndOwnerIsNullAndOrganization", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner is null and s.organizationId = ?2 ORDER BY 1"),
+    @NamedQuery(name = "Setting.findByNameAndOwnerAndOrganization", query = "select s FROM Setting s WHERE s.name = ?1 and s.owner = ?2  and s.organizationId = ?3 ORDER BY 1"),
     @NamedQuery(name = "Setting.findByCodeType", query = "select s FROM Setting s WHERE s.codeType = ?1 ORDER BY 1"),
     @NamedQuery(name = "Setting.findByCodeTypeAndCategory", query = "select s FROM Setting s WHERE s.codeType = ?1 and s.category = ?2 ORDER BY 1")})
 public class Setting extends PersistentObject<Setting> implements Comparable<Setting>, Serializable {
@@ -47,6 +48,10 @@ public class Setting extends PersistentObject<Setting> implements Comparable<Set
     private String label;
     
     private String value;
+    
+    @Column(name = "organization_id")
+    private Long organizationId;
+
     
     @Column(nullable = true)
     private boolean overwritable = true; 
@@ -94,6 +99,15 @@ public class Setting extends PersistentObject<Setting> implements Comparable<Set
     public void setOverwritable(boolean overwritable) {
         this.overwritable = overwritable;
     }
+
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
+    }
+    
 
     @Override
     public int hashCode() {
