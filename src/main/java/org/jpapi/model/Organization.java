@@ -51,6 +51,9 @@ public class Organization extends DeletableObject<Organization> implements Seria
     private String ruc;
     private String initials;
     private String url;
+    
+    @Column (name = "registro_contable_habilitado")
+    private Boolean accountingEnabled = Boolean.TRUE;
 //    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    private List<Proprietor> proprietors = new ArrayList<>();
 //    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -106,7 +109,22 @@ public class Organization extends DeletableObject<Organization> implements Seria
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public Boolean getAccountingEnabled() {
+        return accountingEnabled;
+    }
+
+    public void setAccountingEnabled(Boolean accountingEnabled) {
+        this.accountingEnabled = accountingEnabled;
+    }
     
+    public void setAccountingEnabled(boolean accountingEnabled) {
+        this.accountingEnabled = accountingEnabled;
+    }
+    
+    public boolean isAccountingEnabled(){
+        return getAccountingEnabled();
+    }
 
 //    public List<Proprietor> getProprietors() {
 //        return proprietors;
