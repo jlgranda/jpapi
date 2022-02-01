@@ -24,9 +24,9 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import jdk.internal.joptsimple.internal.Strings;
 import org.jpapi.util.Constantes;
 import org.jpapi.util.Dates;
+import org.jpapi.util.Strings;
 
 @MappedSuperclass
 public abstract class DeletableObject<E extends DeletableObject<E>> extends PersistentObject<E>
