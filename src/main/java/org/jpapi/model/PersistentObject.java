@@ -17,6 +17,7 @@
  */
 package org.jpapi.model;
 
+import java.util.UUID;
 import javax.persistence.Column;
 
 import javax.persistence.GeneratedValue;
@@ -25,7 +26,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import org.jpapi.model.profile.Subject;
+import org.jpapi.util.Dates;
+import org.jpapi.util.Strings;
 
 /**
  *
@@ -46,6 +51,18 @@ public abstract class PersistentObject<E extends PersistentObject<E>> extends Ba
         return id;
     }
     
+    @PrePersist
+    @Override
+    void prePersist() {
+        this.createdOn = Dates.now();
+        this.uuid = UUID.randomUUID().toString();
+        this.status = StatusType.ACTIVE.toString();
+        if (Strings.isNullOrEmpty(this.code)){
+            this.code = this.uuid; //Asignar un código si no se ha definido nada
+        }
+        super.prePersist();
+    }
+   
         
     @ManyToOne(optional = true)
     @JoinColumn(name = "author", nullable = true)

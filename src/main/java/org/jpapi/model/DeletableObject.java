@@ -18,11 +18,15 @@
 package org.jpapi.model;
 
 import java.util.Date;
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import jdk.internal.joptsimple.internal.Strings;
+import org.jpapi.util.Constantes;
+import org.jpapi.util.Dates;
 
 @MappedSuperclass
 public abstract class DeletableObject<E extends DeletableObject<E>> extends PersistentObject<E>
@@ -50,10 +54,16 @@ public abstract class DeletableObject<E extends DeletableObject<E>> extends Pers
    @Override
    void preUpdate()
    {
-      if (isDeleted() && (getDeletedOn() == null))
-      {
-         setDeletedOn(new Date());
-      }
+      if (isDeleted() && (getDeletedOn() == null)) {
+           setDeletedOn(new Date());
+           setStatus(StatusType.INACTIVE.toString());
+           setName(getName().concat(Constantes.ESTADO_ELIMINADO).concat("" + Dates.now().getTime()));
+           if ( Strings.isNullOrEmpty(getCode()) && Strings.isNullOrEmpty(getUuid()) ){ //corregir
+               this.uuid = UUID.randomUUID().toString();
+               this.code = this.uuid;
+           }
+           setCode(getCode().concat(Constantes.ESTADO_ELIMINADO).concat("" + Dates.now().getTime()));
+       }
       super.preUpdate();
    }
 

@@ -20,6 +20,7 @@ package org.jpapi.model;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -30,6 +31,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
+import org.jpapi.util.Strings;
 
 /**
  *
@@ -86,6 +88,12 @@ public abstract class BaseObject<E extends BaseObject<E>> implements Serializabl
 
     @PreUpdate
     void preUpdate() {
+        if (Strings.isNullOrEmpty(this.uuid)){
+            this.uuid = UUID.randomUUID().toString();
+        }
+        if (Strings.isNullOrEmpty(this.code)){
+            this.code = this.uuid; //Asignar un código si no se ha definido nada
+        }
         lastUpdate = new Date();
     }
 

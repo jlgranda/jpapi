@@ -54,6 +54,13 @@ public class Organization extends DeletableObject<Organization> implements Seria
     
     @Column (name = "registro_contable_habilitado")
     private Boolean accountingEnabled = Boolean.TRUE;
+    
+    @Column (name = "vista_ventas")
+    private String vistaVentas;
+    
+    @Column (name = "vista_venta")
+    private String vistaVenta;
+    
 //    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    private List<Proprietor> proprietors = new ArrayList<>();
 //    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -126,6 +133,22 @@ public class Organization extends DeletableObject<Organization> implements Seria
         return getAccountingEnabled();
     }
 
+    public String getVistaVentas() {
+        return vistaVentas;
+    }
+
+    public void setVistaVentas(String vistaVentas) {
+        this.vistaVentas = vistaVentas;
+    }
+
+    public String getVistaVenta() {
+        return vistaVenta;
+    }
+
+    public void setVistaVenta(String vistaVenta) {
+        this.vistaVenta = vistaVenta;
+    }
+    
 //    public List<Proprietor> getProprietors() {
 //        return proprietors;
 //    }
