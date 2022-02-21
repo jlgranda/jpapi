@@ -16,11 +16,18 @@
 package org.jpapi.controller;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.jpapi.model.BussinesEntity;
+import org.jpapi.util.Strings;
 
 
 /**
@@ -171,5 +178,64 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
     
     public long count(String namedQuery, Object... params) {
         return super.countByNamedQuery(namedQuery, params); 
+    }
+    
+    //////////////////////////////////////////////////////////////////////////
+    // SQL Utils
+    /////////////////////////////////////////////////////////////////////////
+    
+    /**
+     * Ejecuta sentencia SQL INSERT o UPDATE, no SELECT
+     * @param sql la sentencia SQL INSERT o UPDATE, no SELECT
+     * @return el número de entidades actualizadas
+     */
+    public int ejecutarNativeQuery(String sql){
+        Query nativeQuery = getEntityManager().createNativeQuery(sql);
+        getEntityManager().joinTransaction();
+        return nativeQuery.executeUpdate();
+    }
+    
+    /**
+     * Ejecuta sentencia SQL INSERT o UPDATE, no SELECT
+     * @param sql la sentencia SQL INSERT o UPDATE, no SELECT
+     * @return el número de entidades actualizadas
+     */
+    public BigInteger ejecutarCountNativeQuery(String sql){
+        if (Strings.isNullOrEmpty(sql)){
+            return BigInteger.ZERO;
+        } else if (!sql.toLowerCase().contains("count(")){
+            return BigInteger.ZERO;
+        }
+        //Es una consulta con count
+        Query nativeQuery = getEntityManager().createNativeQuery(sql);
+        return (BigInteger) nativeQuery.getSingleResult();
+    }
+    
+    public Collection<? extends Object> ejecutarNativeQuery(String query, List<String> columnas) {
+        Query nativeQuery = getEntityManager().createNativeQuery(query);
+        return nativeQuery.getResultList();
+        
+    }
+    
+    
+    /**
+     * Encuentra la lista de valores númericos listados en la consulta SQL que retorna una sóla columna
+     *
+     * @param sql
+     * @return una colección de objetos <tt>Option</tt>
+     */
+    public List<BigDecimal> findBigDecimalResultSet(String sql) {
+        Collection<? extends Object> resultList = this.ejecutarNativeQuery(sql, new ArrayList<>());
+        List<BigDecimal> result = new ArrayList<>();
+        //Object[] rows = null;
+        if (resultList != null){
+            for (Object row : resultList) {
+                //rows = ((Object[]) row);
+                //for (Object row1 : rows) {
+                    result.add(row != null ? (BigDecimal) row : BigDecimal.ZERO);
+                //}
+            }
+        }
+        return result;
     }
 }

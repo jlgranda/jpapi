@@ -80,9 +80,9 @@ public class Subject extends DeletableObject<Subject> implements Serializable {
     @Transient
     private boolean bussinesLoggedIn;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_profiles_keys")
-    private Set<String> identityKeys = new HashSet<String>();
+    //@ElementCollection(fetch = FetchType.EAGER)
+    //@CollectionTable(name = "user_profiles_keys")
+    //private Set<String> identityKeys = new HashSet<String>();
     @Column
     private boolean emailSecret = true;
     @Column(length = 50)
@@ -97,7 +97,9 @@ public class Subject extends DeletableObject<Subject> implements Serializable {
     
     @Column(nullable = true, unique = true)
     private String ruc;
+    @Column(nullable = true, unique = true)
     private String initials;
+    @Column(nullable = true, unique = true)
     private String numeroContribuyenteEspecial;
     
     //Se establece a objeto Boolean por compatibilidad con los datos existentes
@@ -246,13 +248,13 @@ public class Subject extends DeletableObject<Subject> implements Serializable {
         this.emailSecret = emailSecret;
     }
 
-    public Set<String> getIdentityKeys() {
-        return identityKeys;
-    }
-
-    public void setIdentityKeys(final Set<String> keys) {
-        this.identityKeys = keys;
-    }
+//    public Set<String> getIdentityKeys() {
+//        return identityKeys;
+//    }
+//
+//    public void setIdentityKeys(final Set<String> keys) {
+//        this.identityKeys = keys;
+//    }
 
     public boolean isUsernameConfirmed() {
         return confirmed;

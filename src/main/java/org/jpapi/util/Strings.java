@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -475,6 +476,32 @@ public final class Strings {
         int value = calendar.get(field);
         return map.get(field + "_" + value);
     }
+    
+    /**
+     * To string.
+     *
+     * @param month
+     * @param tipo
+     * @return the string
+     */
+    public static String toString(String month, String tipo) {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("1", "ENE");
+        map.put("2", "FEB");
+        map.put("3", "MAR");
+        map.put("4", "ABR");
+        map.put("5", "MAY");
+        map.put("6", "JUN");
+        map.put("7", "JUL");
+        map.put("8", "AGO");
+        map.put("9", "SEP");
+        map.put("10", "OCT");
+        map.put("11", "NOV");
+        map.put("12", "DIC");
+
+        return map.get(month);
+    }
 
     /**
      * Separar codigo catastral.
@@ -627,6 +654,15 @@ public final class Strings {
         
         return prefix + separator + Strings.complete(ultimoGrupo.length(), Long.valueOf(value), '0');
     }
+    
+    public static String render(String text, Object ... params) {
+        Formatter fmt;
+        StringBuilder txt = new StringBuilder();
+        fmt = new Formatter(txt);
+        fmt.format(text, params);
+        return txt.toString();
+    }
+
     /**
      * The main method.
      *
@@ -719,8 +755,8 @@ public final class Strings {
 //                }
 //                
 //                
-//                String regexInicio = "\\[\\[\\[";
-//                String regexFin = "\\]\\]\\]";
+//                String regexInicio = "\[\[\[";
+//                String regexFin = "\]\]\]";
 //                //Corregir [[[ por [[[[
 //                String geometryText = "dasdasdasd{type:'', geometry:[[a,b]]};";
 //                if (geometryText.contains("[[[")){
@@ -764,6 +800,12 @@ public final class Strings {
 //        code = "10.02.";
 //        System.out.println(">>>>>>>>>>>>>>>>>> Codigo: " + code);
 //        System.out.println(">>>>>>>>>>>>>>>>>> nuevo codigo: " + Strings.toNextCode(code, "."));
-        
+        //System.out.println("{\r\n   \"id\":\"comprobante\",\r\n   \"version\":\"1.0.0\",\r\n   \"infoTributaria\":{\r\n      \"ambiente\":\"1\",\r\n      \"tipoEmision\":\"1\",\r\n      \"razonSocial\":\"Distribuidora de Suministros Nacional S.A.\",\r\n      \"nombreComercial\":\"Empresa Importadora y Exportadora de Piezas\",\r\n      \"ruc\":\"1091701991001\",\r\n      \"codDoc\":\"01\",\r\n      \"estab\":\"001\",\r\n      \"ptoEmi\":\"001\",\r\n      \"secuencial\":\"000000400\",\r\n      \"dirMatriz\":\"Enrique Guerrero Portilla OE1-34 AV. Galo Plaza Lasso\"\r\n   },\r\n   \"infoFactura\":{\r\n      \"fechaEmision\":\"26/12/2019\",\r\n      \"dirEstablecimiento\":\"Sebastián Moreno S/N Francisco García\",\r\n      \"contribuyenteEspecial\":\"5368\",\r\n      \"obligadoContabilidad\":\"SI\",\r\n      \"tipoIdentificacionComprador\":\"04\",\r\n      \"guiaRemision\":\"001-001-000000001\",\r\n      \"razonSocialComprador\":\"PRUEBAS SERVICIO DE RENTAS INTERNAS\",\r\n      \"identificacionComprador\":\"1713328506001\",\r\n      \"direccionComprador\":\"salinas y santiago\",\r\n      \"totalSinImpuestos\":295000.00,\r\n      \"totalDescuento\":5005.00,\r\n      \"totalImpuesto\":[\r\n         {\r\n         \t\"codigo\":\"3\",\r\n         \t\"codigoPorcentaje\":\"3072\",\r\n            \"baseImponible\":295000.00,\r\n            \"valor\":14750.00\r\n         },\r\n         {\r\n            \"codigo\":\"2\",\r\n            \"codigoPorcentaje\":\"2\",\r\n            \"descuentoAdicional\":5.00,\r\n            \"baseImponible\":309750.00,\r\n            \"valor\":37169.40\r\n         },\r\n         {\r\n            \"codigo\":\"5\",\r\n            \"codigoPorcentaje\":\"5001\",\r\n            \"baseImponible\":12000.00,\r\n            \"valor\":240.00\r\n         }\r\n      ],\r\n      \"propina\":0,\r\n      \"importeTotal\":347159.40,\r\n      \"moneda\":\"DOLAR\",\r\n      \"pagos\":[\r\n         {\r\n            \"formaPago\":\"01\",\r\n            \"total\":347159.40,\r\n            \"plazo\":\"30\",\r\n            \"unidadTiempo\":\"dias\"\r\n         }\r\n      ],\r\n      \"valorRetIva\":10620.00,\r\n      \"valorRetRenta\":2950.00\r\n   },\r\n   \"detalle\":[\r\n      {\r\n         \"codigoPrincipal\":\"125BJC-01\",\r\n         \"codigoAuxiliar\":\"1234D56789-A\",\r\n         \"descripcion\":\"CAMIONETA 4X4 DIESEL 3.7\",\r\n         \"cantidad\":1.00,\r\n         \"precioUnitario\":300000.00,\r\n         \"descuento\":5000.00,\r\n         \"precioTotalSinImpuesto\":295000.00,\r\n         \"detAdicional\":[\r\n            {\r\n               \"nombre\":\"Marca Chevrolet\",\r\n               \"valor\":\"Chevrolet\"\r\n            },\r\n            {\r\n               \"nombre\":\"Modelo\",\r\n               \"valor\":\"2012\"\r\n            },\r\n            {\r\n               \"nombre\":\"Chasis\",\r\n               \"valor\":\"8LDETA03V20003289\"\r\n            }\r\n         ],\r\n         \"impuesto\":[\r\n            {\r\n               \"codigo\":\"3\",\r\n               \"codigoPorcentaje\":\"3072\",\r\n               \"tarifa\":5,\r\n               \"baseImponible\":295000.00,\r\n               \"valor\":14750.00\r\n            },\r\n            {\r\n               \"codigo\":\"2\",\r\n               \"codigoPorcentaje\":\"2\",\r\n               \"tarifa\":12,\r\n               \"baseImponible\":309750.00,\r\n               \"valor\":37170.00\r\n            },\r\n            {\r\n               \"codigo\":\"5\",\r\n               \"codigoPorcentaje\":\"5001\",\r\n               \"tarifa\":0.02,\r\n               \"baseImponible\":12000.00,\r\n               \"valor\":240.00\r\n            }\r\n         ]\r\n      }\r\n   ],\r\n   \"campoAdicional\":[\r\n      {\r\n         \"nombre\":\"Codigo Impuesto ISD\",\r\n         \"value\":\"4580\"\r\n      },\r\n      {\r\n         \"nombre\":\"Impuesto ISD\",\r\n         \"value\":\"15.42x\"\r\n      }\r\n   ]\r\n}");
+        //System.out.println("{\r\n  \"certificado\": \"\",\r\n  \"password\": \"\"\r\n}");
+        List<String> params = new ArrayList<>();
+        params.add("1,2,3");
+        params.add("5899");
+        String text ="SELECT * from test where id in (%s) where id=%s";
+        System.out.println(Strings.render(text, params.get(0), params.get(1)));
     }
 }
