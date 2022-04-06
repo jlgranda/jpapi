@@ -58,6 +58,8 @@ public abstract class PersistentObject<E extends PersistentObject<E>> extends Ba
         this.status = StatusType.ACTIVE.toString();
         if (Strings.isNullOrEmpty(this.code)){
             this.code = this.uuid; //Asignar un código si no se ha definido nada
+        } else {
+            this.code = this.code.trim(); //Quitar espacios en blanco inicio o final
         }
         super.prePersist();
     }
