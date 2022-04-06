@@ -29,7 +29,6 @@ import javax.transaction.Transactional;
 import org.jpapi.model.BussinesEntity;
 import org.jpapi.util.Strings;
 
-
 /**
  *
  * @author jlgranda
@@ -39,7 +38,6 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
 
     private static final long serialVersionUID = -8910921676468441272L;
 
-
     private boolean editionEnabled = true;
     /**
      * Bandera para detectar cambios
@@ -47,7 +45,6 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
     private boolean modified;
 
     protected BussinesEntity bussinesEntity;
-
 
     public boolean isEditionEnabled() {
         return editionEnabled;
@@ -64,7 +61,6 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
     public void setModified(boolean modified) {
         this.modified = modified;
     }
-
 
     @Override
     public void create() {
@@ -135,91 +131,91 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
     public void setBussinesEntity(BussinesEntity bussinesEntity) {
         this.bussinesEntity = bussinesEntity;
     }
-    
-    public E save(E _instance){
+
+    public E save(E _instance) {
         this.setInstance(_instance);
-        if (isIdDefined()){
+        if (isIdDefined()) {
             this.update();
         } else {
             this.persist();
         }
-        
         return this.getInstance();
     }
-    
-    public E remove(E _instance){
+
+    public E remove(E _instance) {
         this.setInstance(_instance);
-        if (isIdDefined()){
+        if (isIdDefined()) {
             this.remove();
-        } 
+        }
         return this.getInstance();
     }
-    
+
     //@Transactional
-    public E save(Object id, E _instance){
+    public E save(Object id, E _instance) {
         this.setId(id);
         this.setInstance(_instance);
-        if (isIdDefined()){
+        if (isIdDefined()) {
             this.update();
         } else {
             this.persist();
         }
         return this.getInstance();
     }
-    
-    public E remove(Object id, E _instance){
+
+    public E remove(Object id, E _instance) {
         this.setId(id);
         this.setInstance(_instance);
-        if (isIdDefined()){
+        if (isIdDefined()) {
             this.remove();
-        } 
+        }
         return this.getInstance();
     }
-    
+
     public long count(String namedQuery, Object... params) {
-        return super.countByNamedQuery(namedQuery, params); 
+        return super.countByNamedQuery(namedQuery, params);
     }
-    
+
     //////////////////////////////////////////////////////////////////////////
     // SQL Utils
     /////////////////////////////////////////////////////////////////////////
-    
     /**
      * Ejecuta sentencia SQL INSERT o UPDATE, no SELECT
+     *
      * @param sql la sentencia SQL INSERT o UPDATE, no SELECT
      * @return el número de entidades actualizadas
      */
-    public int ejecutarNativeQuery(String sql){
+    public int ejecutarNativeQuery(String sql) {
         Query nativeQuery = getEntityManager().createNativeQuery(sql);
         getEntityManager().joinTransaction();
         return nativeQuery.executeUpdate();
     }
-    
+
     /**
      * Ejecuta sentencia SQL INSERT o UPDATE, no SELECT
+     *
      * @param sql la sentencia SQL INSERT o UPDATE, no SELECT
      * @return el número de entidades actualizadas
      */
-    public BigInteger ejecutarCountNativeQuery(String sql){
-        if (Strings.isNullOrEmpty(sql)){
+    public BigInteger ejecutarCountNativeQuery(String sql) {
+        if (Strings.isNullOrEmpty(sql)) {
             return BigInteger.ZERO;
-        } else if (!sql.toLowerCase().contains("count(")){
+        } else if (!sql.toLowerCase().contains("count(")) {
             return BigInteger.ZERO;
         }
         //Es una consulta con count
         Query nativeQuery = getEntityManager().createNativeQuery(sql);
         return (BigInteger) nativeQuery.getSingleResult();
     }
-    
+
     public Collection<? extends Object> ejecutarNativeQuery(String query, List<String> columnas) {
         Query nativeQuery = getEntityManager().createNativeQuery(query);
         return nativeQuery.getResultList();
-        
+
     }
-    
-    
+
     /**
-     * Encuentra la lista de valores númericos listados en la consulta SQL que retorna una sóla columna
+     * Encuentra la lista de valores númericos listados en la consulta SQL que
+     * retorna una sóla columna
      *
      * @param sql
      * @return una colección de objetos <tt>Option</tt>
@@ -228,11 +224,11 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
         Collection<? extends Object> resultList = this.ejecutarNativeQuery(sql, new ArrayList<>());
         List<BigDecimal> result = new ArrayList<>();
         //Object[] rows = null;
-        if (resultList != null){
+        if (resultList != null) {
             for (Object row : resultList) {
                 //rows = ((Object[]) row);
                 //for (Object row1 : rows) {
-                    result.add(row != null ? (BigDecimal) row : BigDecimal.ZERO);
+                result.add(row != null ? (BigDecimal) row : BigDecimal.ZERO);
                 //}
             }
         }

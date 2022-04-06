@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 
@@ -36,7 +37,6 @@ import org.apache.commons.validator.routines.UrlValidator;
  * The Class Strings.
  */
 public final class Strings {
-
 
     private Strings() {
     }
@@ -56,7 +56,7 @@ public final class Strings {
         }
         return result;
     }
-    
+
     /**
      * Join all strings, using the delim character as the delimeter. E.g.: a
      * delim of "-", and strings of "foo", "bar" would produce "foo-bar"
@@ -109,7 +109,7 @@ public final class Strings {
         }
         return result;
     }
-    
+
     /**
      * Canonicalize with '_'.
      *
@@ -173,7 +173,7 @@ public final class Strings {
     public static String toString(Object object) {
         return object != null ? object.toString() : "";
     }
-    
+
     /**
      * To string format
      *
@@ -186,7 +186,7 @@ public final class Strings {
         String output = myFormatter.format(value);
         return output;
     }
-    
+
     /**
      * To string.
      *
@@ -194,7 +194,9 @@ public final class Strings {
      * @return the string
      */
     public static String toString(Map<String, String> map) {
-        if (map == null) return "";
+        if (map == null) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         map.keySet().forEach((k) -> {
             sb.append(k).append(": ").append(map.get(k)).append("\n");
@@ -476,7 +478,7 @@ public final class Strings {
         int value = calendar.get(field);
         return map.get(field + "_" + value);
     }
-    
+
     /**
      * To string.
      *
@@ -521,14 +523,15 @@ public final class Strings {
         }
         return partes;
     }
-    
+
     /**
      * Extrae la subcadena antes de la primera ocurrencia del separator
+     *
      * @param str
      * @param separator
-     * @return 
+     * @return
      */
-    public static String extractBefore(String str, String separator){
+    public static String extractBefore(String str, String separator) {
         String token = "";
         if (!Strings.isNullOrEmpty(str)) {
             int index = str.indexOf(separator);
@@ -539,7 +542,8 @@ public final class Strings {
 
         return token;
     }
-    public static String extractAfter(String str, String separator){
+
+    public static String extractAfter(String str, String separator) {
         String token = "";
         if (!Strings.isNullOrEmpty(str)) {
             int index = str.indexOf(separator);
@@ -550,8 +554,8 @@ public final class Strings {
 
         return token;
     }
-    
-    public static String extractLast(String str, String separator){
+
+    public static String extractLast(String str, String separator) {
         String token = "";
         if (!Strings.isNullOrEmpty(str)) {
             int index = str.lastIndexOf(separator);
@@ -562,8 +566,8 @@ public final class Strings {
 
         return token;
     }
-    
-    public static String extractFirst(String str, String separator){
+
+    public static String extractFirst(String str, String separator) {
         String token = "";
         if (!Strings.isNullOrEmpty(str)) {
             int index = str.lastIndexOf(separator);
@@ -574,7 +578,7 @@ public final class Strings {
 
         return token;
     }
-    
+
     public static boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false;
@@ -586,7 +590,7 @@ public final class Strings {
         }
         return true;
     }
-    
+
     public static boolean verifyNationalIdentityDocument(String nid) {
         String wced = nid.substring(0, 9);
         String verif = nid.substring(9, 10);
@@ -617,50 +621,125 @@ public final class Strings {
         wn2 = wn2 * 10;
         double digit = wn2 - wd;
 
-       return digit == Double.parseDouble(verif);
+        return digit == Double.parseDouble(verif);
     }
-    
+
     public static List<String> splitAt(String test, String separator) {
         int index1 = test.indexOf(separator);
         int index2 = index1 + separator.length();
-        
+
         List<String> partes = new ArrayList<>();
         partes.add(test.substring(0, index1));
         partes.add(test.substring(index2, test.length()));
-        
+
         return partes;
     }
-    
+
     public static String toRegex(String key) {
-        key = key.replaceAll("%",".*");
+        key = key.replaceAll("%", ".*");
         //for (String s: key.split(""));
         return ".*" + key + ".*";
     }
-    
+
     public static String toNextCode(String code, String separator) {
-        
-        String ultimoGrupo =  Strings.extractLast(code, separator);
-        
+
+        String ultimoGrupo = Strings.extractLast(code, separator);
+
         if (Strings.isNullOrEmpty(ultimoGrupo)) {
             return code + "1";
         }
-            
+
         String prefix = Strings.extractFirst(code, separator);
         int value = 0;
-        if (Strings.isNumeric(ultimoGrupo)){
+        if (Strings.isNumeric(ultimoGrupo)) {
             value = Strings.toInteger(ultimoGrupo);
             value++;
         }
-        
+
         return prefix + separator + Strings.complete(ultimoGrupo.length(), Long.valueOf(value), '0');
     }
-    
-    public static String render(String text, Object ... params) {
+
+    public static String render(String text, Object... params) {
         Formatter fmt;
         StringBuilder txt = new StringBuilder();
         fmt = new Formatter(txt);
         fmt.format(text, params);
         return txt.toString();
+    }
+
+    public static boolean verifyTaxPayerPrivate(String nid) {
+        int[] coeficientes = {4, 3, 2, 7, 6, 5, 4, 3, 2};
+        int module = 11;
+        String wced = nid.substring(0, 9);
+        String verif = nid.substring(9, 10);
+        int sum_coef = 0;
+        int wa;
+        for (int i = 0; i < coeficientes.length; i++) {
+            wa = Integer.parseInt(wced.substring(i, i + 1));
+            sum_coef = sum_coef + (wa * coeficientes[i]);
+        }
+        int residue = sum_coef % module;
+        int digit_verify = residue == 0 ? residue : module - residue;
+        if (digit_verify != Integer.parseInt(verif)) {
+            return false;
+        }
+        String _main = nid.substring(10, nid.length());
+        return _main.matches("[0-9]{2}[0-9&&[^0]]");
+    }
+
+    public static boolean verifyTaxPayerPublic(String nid) {
+        int[] coeficientes = {3, 2, 7, 6, 5, 4, 3, 2};
+        int module = 11;
+        String wced = nid.trim().substring(0, 8);
+        String verif = nid.trim().substring(8, 9);
+        int sum_coef = 0;
+        int wa;
+        for (int i = 0; i < coeficientes.length; i++) {
+            wa = Integer.parseInt(wced.substring(i, i + 1));
+            sum_coef = sum_coef + (wa * coeficientes[i]);
+        }
+        int residue = sum_coef % module;
+        int digit_verify = residue == 0 ? residue : module - residue;
+        if (digit_verify != Integer.parseInt(verif)) {
+            return false;
+        }
+        String _main = nid.substring(9, nid.length());
+        return _main.matches("[0-9]{3}[0-9&&[^0]]");
+    }
+
+    public static boolean validateTaxpayerDocument(String nid) {
+
+        if (nid == null) {
+            return false;
+        }
+
+        if (nid.length() < 13) {
+            return false;
+        }
+        String spatron = "[0-9]{13}";// \\d{10}
+        if (!Pattern.matches(spatron, nid)) {
+            return false;
+        }
+        // TODO Chequeo de RUC
+        /**
+         * Extraer tercer digito para saber si es: 9 para sociedades privadas y
+         * extranjeros 6 para sociedades publicas menor que 6 (0,1,2,3,4,5) para
+         * personas naturales
+         */
+        nid = nid.trim();
+        char typeRucChar = nid.charAt(2);
+        int typeRuc = Integer.parseInt(typeRucChar + "");
+        if (typeRuc < 6) {
+            return Strings.verifyNationalIdentityDocument(nid);
+            //return false;
+        } else if (typeRuc == 6) {
+            return Strings.verifyTaxPayerPublic(nid);
+        } else if (typeRuc == 9) {
+            return Strings.verifyTaxPayerPrivate(nid);
+        }
+
+        String _main = nid.substring(9, nid.length());
+        return _main.matches("[0-9]{3}[1-9]");
     }
 
     /**
@@ -722,31 +801,30 @@ public final class Strings {
 //          System.out.println(">>>>>>>>>>>>><<: " + String.format("%.2f", 288651f).replace(",", "."));
 //          System.out.println(">>>>>>>>>>>>><<: " + String.format("%.2f", 0f).replace(",", "."));
 
-
-            String json = "    \"nombreEntidad\": \"Datos Demográficos (Registro Civil)\",\n" +
-"    \"nui\": \"0910985993\",\n" +
-"    \"condicionCedulado\": \"FALLECIDO\",\n" +
-"    \"conyuge\": \"CARRIEL VERA JANETH MAGDALENA\",\n" +
-"    \"estadoCivil\": \"CASADO\",\n" +
-"    \"fechaDefuncion\": \"27/10/2016\",\n" +
-"    \"fechaNacimiento\": \"24/03/1967\",\n" +
-"    \"edad\": \"53\",\n" +
-"    \"lugarNacimiento\": \"GUAYAS/GUAYAQUIL/CARBO (CONCEPCION)\",\n" +
-"    \"nombre\": \"GARCIA MORENO FRANCISCO XAVIER\",\n" +
-"    \"nacionalidad\": \"ECUATORIANA\",\n" +
-"    \"nombreMadre\": \"MORENO B LUZMILA RAQUEL\",\n" +
-"    \"nombrePadre\": \"GARCIA RAMOS JUAN GILBERTO\",\n" +
-"    \"fechaInscripcionGenero\": \" \",\n" +
-"    \"genero\": \" \",\n" +
-"    \"lugarInscripcionGenero\": \" \",\n" +
-"    \"sexo\": \"HOMBRE\",\n" +
-"    \"instruccion\": \"SECUNDARIA\",\n" +
-"    \"numeroCasa\": \"00000\",\n" +
-"    \"calle\": \"HUANCAVILCA Y LA L5\",\n" +
-"    \"codigoDomicilio\": \"93905355\",\n" +
-"    \"domicilio\": \"GUAYAS/GUAYAQUIL/FEBRES CORDERO\",\n" +
-"    \"origen\": \"Dinardap cod1\"\n" +
-"}";
+        String json = "    \"nombreEntidad\": \"Datos Demográficos (Registro Civil)\",\n"
+                + "    \"nui\": \"0910985993\",\n"
+                + "    \"condicionCedulado\": \"FALLECIDO\",\n"
+                + "    \"conyuge\": \"CARRIEL VERA JANETH MAGDALENA\",\n"
+                + "    \"estadoCivil\": \"CASADO\",\n"
+                + "    \"fechaDefuncion\": \"27/10/2016\",\n"
+                + "    \"fechaNacimiento\": \"24/03/1967\",\n"
+                + "    \"edad\": \"53\",\n"
+                + "    \"lugarNacimiento\": \"GUAYAS/GUAYAQUIL/CARBO (CONCEPCION)\",\n"
+                + "    \"nombre\": \"GARCIA MORENO FRANCISCO XAVIER\",\n"
+                + "    \"nacionalidad\": \"ECUATORIANA\",\n"
+                + "    \"nombreMadre\": \"MORENO B LUZMILA RAQUEL\",\n"
+                + "    \"nombrePadre\": \"GARCIA RAMOS JUAN GILBERTO\",\n"
+                + "    \"fechaInscripcionGenero\": \" \",\n"
+                + "    \"genero\": \" \",\n"
+                + "    \"lugarInscripcionGenero\": \" \",\n"
+                + "    \"sexo\": \"HOMBRE\",\n"
+                + "    \"instruccion\": \"SECUNDARIA\",\n"
+                + "    \"numeroCasa\": \"00000\",\n"
+                + "    \"calle\": \"HUANCAVILCA Y LA L5\",\n"
+                + "    \"codigoDomicilio\": \"93905355\",\n"
+                + "    \"domicilio\": \"GUAYAS/GUAYAQUIL/FEBRES CORDERO\",\n"
+                + "    \"origen\": \"Dinardap cod1\"\n"
+                + "}";
 //                String key = "\"condicionCedulado\": \"FALLECIDO\"";
 //                if (json.contains(key)){
 //                    int index = json.indexOf(key);
@@ -771,8 +849,7 @@ public final class Strings {
 //                String test = "\"parroquia_ubi_id_padre\"  = current_value('${PREFIX}6_canton_domicilio')";
 //                List<String> partes = Strings.splitAt(test, regexp);
 //                System.out.println(Strings.join(Strings.extractBefore(prefijo, "_") + "_", Strings.splitAt(test, regexp)));
-          
-        
+
 //        String prefix = "10.02";
 //        String ultimoGrupo =  Strings.extractLast(code, ".");
 //        int value = 0;
@@ -805,7 +882,7 @@ public final class Strings {
         List<String> params = new ArrayList<>();
         params.add("1,2,3");
         params.add("5899");
-        String text ="SELECT * from test where id in (%s) where id=%s";
+        String text = "SELECT * from test where id in (%s) where id=%s";
         System.out.println(Strings.render(text, params.get(0), params.get(1)));
     }
 }

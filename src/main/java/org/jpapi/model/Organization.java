@@ -21,10 +21,12 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -41,26 +43,29 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Organization")
 @NamedQueries({
-    @NamedQuery(name = "Organization.findByOwner", query = "select o FROM Organization o WHERE o.owner=?1 ORDER BY o.name ASC"),
+    @NamedQuery(name = "Organization.findByOwner", query = "select o FROM Organization o WHERE o.owner=?1 and o.deleted = false ORDER BY o.createdOn DESC"),
+    @NamedQuery(name = "Organization.findByRuc", query = "select o FROM Organization o WHERE o.ruc=?1 and o.deleted = false ORDER BY o.createdOn DESC"),
     @NamedQuery(name = "Organization.countByOwner", query = "select count(o) FROM Organization o WHERE o.owner = ?1"),
-    @NamedQuery(name = "Organization.findByEmployee", query = "select o FROM Employee e JOIN e.organization o WHERE e.owner = ?1 and e.deleted = false"),
-})
+    @NamedQuery(name = "Organization.findByEmployee", query = "select o FROM Employee e JOIN e.organization o WHERE e.owner = ?1 and e.deleted = false"),})
 public class Organization extends DeletableObject<Organization> implements Serializable {
 
     private static final long serialVersionUID = 3095488521256724258L;
     private String ruc;
     private String initials;
     private String url;
-    
-    @Column (name = "registro_contable_habilitado")
+
+    @Column(name = "registro_contable_habilitado")
     private Boolean accountingEnabled = Boolean.TRUE;
-    
-    @Column (name = "vista_ventas")
+
+    @Column(name = "vista_ventas")
     private String vistaVentas;
-    
-    @Column (name = "vista_venta")
+
+    @Column(name = "vista_venta")
     private String vistaVenta;
-    
+
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] photo;
+
 //    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    private List<Proprietor> proprietors = new ArrayList<>();
 //    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -72,12 +77,12 @@ public class Organization extends DeletableObject<Organization> implements Seria
 //    private List<Vision> vissions = new org.apache.commons.collections.list.TreeList();
 //    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Principle> principles = new org.apache.commons.collections.list.TreeList();
-
     public enum Type {
         GOVERMENT,
         PUBLIC,
         PRIVATE,
         NATURAL;
+
         private Type() {
         }
     }
@@ -124,12 +129,12 @@ public class Organization extends DeletableObject<Organization> implements Seria
     public void setAccountingEnabled(Boolean accountingEnabled) {
         this.accountingEnabled = accountingEnabled;
     }
-    
+
     public void setAccountingEnabled(boolean accountingEnabled) {
         this.accountingEnabled = accountingEnabled;
     }
-    
-    public boolean isAccountingEnabled(){
+
+    public boolean isAccountingEnabled() {
         return getAccountingEnabled();
     }
 
@@ -148,7 +153,15 @@ public class Organization extends DeletableObject<Organization> implements Seria
     public void setVistaVenta(String vistaVenta) {
         this.vistaVenta = vistaVenta;
     }
-    
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
 //    public List<Proprietor> getProprietors() {
 //        return proprietors;
 //    }
@@ -156,7 +169,6 @@ public class Organization extends DeletableObject<Organization> implements Seria
 //    public void setProprietors(List<Proprietor> proprietors) {
 //        this.proprietors = proprietors;
 //    }
-
 //    public boolean addProprietor(Proprietor proprietor) {
 //        proprietor.setOrganization(this);
 //        return getProprietors().add(proprietor);
@@ -166,7 +178,6 @@ public class Organization extends DeletableObject<Organization> implements Seria
 //        proprietor.setOrganization(null);
 //        return getProprietors().remove(proprietor);
 //    }
-
 //    public List<Theme> getThemes() {
 //        return themes;
 //    }
@@ -198,7 +209,6 @@ public class Organization extends DeletableObject<Organization> implements Seria
 //    public void setPrinciples(List<Principle> principles) {
 //        this.principles = principles;
 //    }
-
     public String getCanonicalPath() {
         StringBuilder path = new StringBuilder();
         path.append(getName());
@@ -257,6 +267,7 @@ public class Organization extends DeletableObject<Organization> implements Seria
 //        return this.getThemes().remove(theme);
 //    }
 //    
+
     public List<Organization.Type> getOrganizationTypes() {
         return Arrays.asList(Organization.Type.values());
     }
@@ -289,9 +300,7 @@ public class Organization extends DeletableObject<Organization> implements Seria
         }
         return true;
     }
-    
-    
-    
+
     @Override
     public String toString() {
         return String.format("%s[id=%d]", getClass().getSimpleName(), getId());
