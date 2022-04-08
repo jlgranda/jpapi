@@ -57,12 +57,18 @@ public abstract class DeletableObject<E extends DeletableObject<E>> extends Pers
       if (isDeleted() && (getDeletedOn() == null)) {
            setDeletedOn(new Date());
            setStatus(StatusType.INACTIVE.toString());
-           setName(getName().concat(Constantes.ESTADO_ELIMINADO).concat("" + Dates.now().getTime()));
            if ( Strings.isNullOrEmpty(getCode()) && Strings.isNullOrEmpty(getUuid()) ){ //corregir
                this.uuid = UUID.randomUUID().toString();
                this.code = this.uuid;
            }
+           
+           //Marcar como eliminados
            setCode(getCode().concat(Constantes.ESTADO_ELIMINADO).concat("" + Dates.now().getTime()));
+           
+           if (Strings.isNullOrEmpty(getName())){
+               setName(getCode());
+           }
+           setName(getName().concat(Constantes.ESTADO_ELIMINADO).concat("" + Dates.now().getTime()));
        }
       super.preUpdate();
    }
