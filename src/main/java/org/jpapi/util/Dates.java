@@ -149,7 +149,7 @@ public class Dates {
     public static Date addDays(final Date date, final int amount) {
         return DateUtils.addDays(date, amount);
     }
-    
+
     public static Date addMinutes(final Date date, final int amount) {
         return DateUtils.addMinutes(date, amount);
     }
@@ -223,7 +223,7 @@ public class Dates {
         date = DateUtils.setMilliseconds(date, 999);
         return date;
     }
-    
+
     public static Date minimumDateHour(Date date) {
         Date _date = new Date();
         _date.setTime(date.getTime());
@@ -255,6 +255,42 @@ public class Dates {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar.get(field);
+    }
+
+    /**
+     * Gets the.
+     *
+     * @param date the date
+     * @return the int
+     */
+    public static int getDayOfWeek(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    /**
+     * Gets the.
+     *
+     * @param date the date
+     * @return the int
+     */
+    public static int getDayOfMonth(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
+     * Gets the.
+     *
+     * @param date the date
+     * @return the int
+     */
+    public static int getDayOfYear(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.DAY_OF_YEAR);
     }
 
     /**
