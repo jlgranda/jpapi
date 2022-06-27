@@ -239,6 +239,9 @@ public abstract class Home<T, E> extends MutableController<T> implements Seriali
      * ****************************************************
      * Adapted from PersistenceUtil
      *****************************************************
+     * @param <E>
+     * @param type
+     * @return 
      */
     protected <E> long count(final Class<E> type) {
         CriteriaBuilder qb = getEntityManager().getCriteriaBuilder();

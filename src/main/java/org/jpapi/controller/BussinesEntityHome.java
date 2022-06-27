@@ -150,7 +150,7 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
         return this.getInstance();
     }
 
-    //@Transactional
+    @Transactional
     public E save(Object id, E _instance) {
         this.setId(id);
         this.setInstance(_instance);
@@ -173,6 +173,40 @@ public abstract class BussinesEntityHome<E> extends Home<EntityManager, E> imple
 
     public long count(String namedQuery, Object... params) {
         return super.countByNamedQuery(namedQuery, params);
+    }
+    
+    
+    private int batchSize = 100;
+
+    /**
+     * Batch inserts using JPA EntityManager
+     * https://stackoverflow.com/questions/10584179/batch-inserts-using-jpa-entitymanager
+     * @param <T>
+     * @param entities
+     * @return 
+     */
+    public <T extends E> Collection<T> bulkSave(Collection<T> entities) {
+      final List<T> savedEntities = new ArrayList<>(entities.size());
+      int i = 0;
+      for (T t : entities) {
+        savedEntities.add(persistOrMerge(t));
+        i++;
+        if (i % batchSize == 0) {
+          // Flush a batch of inserts and release memory.
+          getEntityManager().flush();
+          getEntityManager().clear();
+        }
+      }
+      return savedEntities;
+    }
+
+    private <T extends E> T persistOrMerge(T t) {
+      if (!isIdDefined()) {
+        getEntityManager().persist(t);
+        return t;
+      } else {
+        return getEntityManager().merge(t);
+      }
     }
 
     //////////////////////////////////////////////////////////////////////////
