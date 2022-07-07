@@ -79,6 +79,7 @@ public class Dates {
      * @return the date
      */
     public static Date toDate(String date, String format) throws ParseException {
+        if (date == null) return null;
         Date value = null;
         value = new SimpleDateFormat(format).parse(date);
         return value;
