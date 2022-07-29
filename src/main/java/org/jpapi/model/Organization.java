@@ -45,8 +45,8 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "Organization.findByOwner", query = "select o FROM Organization o WHERE o.owner=?1 and o.deleted = false ORDER BY o.createdOn DESC"),
     @NamedQuery(name = "Organization.findByRuc", query = "select o FROM Organization o WHERE o.ruc=?1 and o.deleted = false ORDER BY o.createdOn DESC"),
-    @NamedQuery(name = "Organization.countByOwner", query = "select count(o) FROM Organization o WHERE o.owner = ?1"),
-    @NamedQuery(name = "Organization.findByEmployee", query = "select o FROM Employee e JOIN e.organization o WHERE e.owner = ?1 and e.deleted = false"),})
+    @NamedQuery(name = "Organization.countByOwner", query = "select count(o) FROM Organization o WHERE o.owner = ?1 and o.active = true and o.deleted = false"),
+    @NamedQuery(name = "Organization.findByEmployee", query = "select o FROM Employee e JOIN e.organization o WHERE e.owner = ?1 and e.active = true and e.deleted = false"),})
 public class Organization extends DeletableObject<Organization> implements Serializable {
 
     private static final long serialVersionUID = 3095488521256724258L;

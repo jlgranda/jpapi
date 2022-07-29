@@ -111,7 +111,7 @@ public class Subject extends DeletableObject<Subject> implements Serializable {
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true)
-    private Date date_birth;
+    private Date birthDate;
 
     /**
      * Return for each BussinesEntity te canonical path ....
@@ -336,12 +336,12 @@ public class Subject extends DeletableObject<Subject> implements Serializable {
         return this.nonnative;
     }
 
-    public Date getDate_birth() {
-        return date_birth;
+    public Date getBirthDate() {
+        return birthDate;
     }
 
-    public void setDate_birth(Date date_birth) {
-        this.date_birth = date_birth;
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
     
     @Override
